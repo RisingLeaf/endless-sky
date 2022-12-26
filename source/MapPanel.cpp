@@ -1045,7 +1045,7 @@ void MapPanel::DrawEscorts()
 void MapPanel::DrawWormholes()
 {
 	// Keep track of what arrows and links need to be drawn.
-	set<pair<pair<const System *, const System *>, const Color *>> arrowsToDraw;
+	set<WormholeArrow> arrowsToDraw;
 
 	// A system can host more than one set of wormholes (e.g. Cardea), and some wormholes may even
 	// share a link vector.
@@ -1061,7 +1061,7 @@ void MapPanel::DrawWormholes()
 		for(auto &&link : it.second.Links())
 			if(p.IsInSystem(link.first)
 					&& player.HasVisited(*link.first) && player.HasVisited(*link.second))
-				arrowsToDraw.emplace(make_pair(link.first, link.second), it.second.GetLinkColor());
+				arrowsToDraw.emplace(link.first, link.second, it.second.GetLinkColor());
 	}
 
 	static const double ARROW_LENGTH = 4.;
@@ -1070,22 +1070,22 @@ void MapPanel::DrawWormholes()
 	static const Angle RIGHT(-30.);
 	const double zoom = Zoom();
 
-	for(const pair<pair<const System *, const System *>, const Color *> &link : arrowsToDraw)
+	for(const WormholeArrow &link : arrowsToDraw)
 	{
 		// Get the wormhole link color.
-		const Color &arrowColor = *link.second;
+		const Color &arrowColor = *link.color;
 		const Color &wormholeDim = Color::Combine(1.f, arrowColor, -0.66f, arrowColor);
 
 		// Compute the start and end positions of the wormhole link.
-		Point from = zoom * (link.first.first->Position() + center);
-		Point to = zoom * (link.first.second->Position() + center);
+		Point from = zoom * (link.from->Position() + center);
+		Point to = zoom * (link.to->Position() + center);
 		Point offset = (from - to).Unit() * LINK_OFFSET;
 		from -= offset;
 		to += offset;
 
 		// If an arrow is being drawn, the link will always be drawn too. Draw
 		// the link only for the first instance of it in this set.
-		if(link.first.first < link.first.second || !arrowsToDraw.count(link))
+		if(link.from < link.to || !arrowsToDraw.count(link))
 			LineShader::Draw(from, to, LINK_WIDTH, wormholeDim);
 
 		// Compute the start and end positions of the arrow edges.
