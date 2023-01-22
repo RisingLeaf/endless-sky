@@ -5028,6 +5028,7 @@ system Arcturus
 	link Holeb
 	link Mizar
 	link Rutilicus
+	haze _menu/haze-pug
 	asteroids "small rock" 4 2.86
 	asteroids "medium rock" 3 2.508
 	asteroids "large rock" 5 2.288
