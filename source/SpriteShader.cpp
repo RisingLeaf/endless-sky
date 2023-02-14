@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <sstream>
 #include <vector>
+#include <iostream>
 
 #ifdef ES_GLES
 // ES_GLES always uses the shader, not this, so use a dummy value to compile.
@@ -42,6 +43,10 @@ namespace {
 	GLint clipI;
 	GLint alphaI;
 	GLint swizzlerI;
+
+	GLint shroudI;
+	GLint dimensionsI;
+	GLint zoomI;
 
 	GLuint vao;
 	GLuint vbo;
@@ -94,6 +99,7 @@ void SpriteShader::Init(bool useShaderSwizzle)
 		"uniform mat2 transform;\n"
 		"uniform vec2 blur;\n"
 		"uniform float clip;\n"
+		"uniform float dimensions;\n"
 
 		"in vec2 vert;\n"
 		"out vec2 fragTexCoord;\n"
@@ -102,6 +108,7 @@ void SpriteShader::Init(bool useShaderSwizzle)
 		"void main() {\n"
 		"  vec2 blurOff = 2.f * vec2(vert.x * abs(blur.x), vert.y * abs(blur.y));\n"
 		"  fragPos = (transform * (vert + blurOff) + position) * scale;\n"
+		"  fragPos.y *= dimensions;\n"
 		"  gl_Position = vec4((transform * (vert + blurOff) + position) * scale, 0, 1);\n"
 		"  vec2 texCoord = vert + vec2(.5, .5);\n"
 		"  fragTexCoord = vec2(texCoord.x, min(clip, texCoord.y)) + blurOff;\n"
@@ -122,6 +129,8 @@ void SpriteShader::Init(bool useShaderSwizzle)
 		"uniform int swizzler;\n";
 	fragmentCodeStream <<
 		"uniform float alpha;\n"
+		"uniform int shroud;\n"
+		"uniform float zoom;\n"
 		"const int range = 5;\n"
 
 		"in vec2 fragTexCoord;\n"
@@ -255,14 +264,19 @@ void SpriteShader::Init(bool useShaderSwizzle)
 		"  }\n";
 	}
 	fragmentCodeStream <<
-		"  float distanceAlpha = 0.f;\n"
-		"  if(length(fragPos) < 0.5f)\n"
-		"  {"
-		"    if(length(fragPos) > 0.25f)\n"
-		"      distanceAlpha = 1.f - 4 * (length(fragPos) - 0.25);\n"
-		"    else"
-		"      distanceAlpha = 1.f;"
-		"  }"
+		"  float distanceAlpha = 1.f;\n"
+		"  if(shroud > 0)\n"
+		"  {\n"
+		"    distanceAlpha = 0.f;\n"
+		"    float length = length(fragPos) * zoom;\n"
+		"    if(length < 0.5f)\n"
+		"    {\n"
+		"      if(length > 0.25f)\n"
+		"        distanceAlpha = 1.f - 4 * (length - 0.25);\n"
+		"      else"
+		"        distanceAlpha = 1.f;"
+		"    }\n"
+		"  }\n"
 		"  finalColor = color * alpha * distanceAlpha;\n"
 		"}\n";
 
@@ -278,6 +292,9 @@ void SpriteShader::Init(bool useShaderSwizzle)
 	blurI = shader.Uniform("blur");
 	clipI = shader.Uniform("clip");
 	alphaI = shader.Uniform("alpha");
+	shroudI = shader.Uniform("shroud");
+	dimensionsI = shader.Uniform("dimensions");
+	zoomI = shader.Uniform("zoom");
 	if(useShaderSwizzle)
 		swizzlerI = shader.Uniform("swizzler");
 
@@ -310,7 +327,7 @@ void SpriteShader::Init(bool useShaderSwizzle)
 
 
 
-void SpriteShader::Draw(const Sprite *sprite, const Point &position, float zoom, int swizzle, float frame, bool shroud)
+void SpriteShader::Draw(const Sprite *sprite, const Point &position, float zoom, int swizzle, float frame)
 {
 	if(!sprite)
 		return;
@@ -357,7 +374,7 @@ void SpriteShader::Bind()
 
 
 
-void SpriteShader::Add(const Item &item, bool withBlur)
+void SpriteShader::Add(const Item &item, bool withBlur, bool shroud, double zoom)
 {
 	glBindTexture(GL_TEXTURE_2D_ARRAY, item.texture);
 
@@ -370,6 +387,14 @@ void SpriteShader::Add(const Item &item, bool withBlur)
 	glUniform2fv(blurI, 1, withBlur ? item.blur : UNBLURRED);
 	glUniform1f(clipI, item.clip);
 	glUniform1f(alphaI, item.alpha);
+
+	glUniform1i(shroudI, shroud ? 1 : 0);
+
+	float dimensions = static_cast<float>(Screen::RawHeight()) / static_cast<float>(Screen::RawWidth());
+	std::cout<<"Dimensions:"<<dimensions<<", "<<dimensionsI<<std::endl;
+	glUniform1f(dimensionsI, dimensions);
+
+	glUniform1f(zoomI, 1 / zoom);
 
 	// Bounds check for the swizzle value:
 	int swizzle = (static_cast<size_t>(item.swizzle) >= SWIZZLE.size() ? 0 : item.swizzle);

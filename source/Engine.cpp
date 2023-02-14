@@ -977,7 +977,7 @@ void Engine::Draw() const
 	for(const PlanetLabel &label : labels)
 		label.Draw();
 
-	draw[drawTickTock].Draw();
+	draw[drawTickTock].Draw(zoom);
 	batchDraw[drawTickTock].Draw();
 
 	for(const auto &it : statuses)
