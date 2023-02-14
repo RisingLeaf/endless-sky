@@ -97,9 +97,11 @@ void SpriteShader::Init(bool useShaderSwizzle)
 
 		"in vec2 vert;\n"
 		"out vec2 fragTexCoord;\n"
+		"out vec2 fragPos;\n"
 
 		"void main() {\n"
 		"  vec2 blurOff = 2.f * vec2(vert.x * abs(blur.x), vert.y * abs(blur.y));\n"
+		"  fragPos = (transform * (vert + blurOff) + position) * scale;\n"
 		"  gl_Position = vec4((transform * (vert + blurOff) + position) * scale, 0, 1);\n"
 		"  vec2 texCoord = vert + vec2(.5, .5);\n"
 		"  fragTexCoord = vec2(texCoord.x, min(clip, texCoord.y)) + blurOff;\n"
@@ -123,6 +125,7 @@ void SpriteShader::Init(bool useShaderSwizzle)
 		"const int range = 5;\n"
 
 		"in vec2 fragTexCoord;\n"
+		"in vec2 fragPos;\n"
 
 		"out vec4 finalColor;\n"
 
@@ -252,7 +255,15 @@ void SpriteShader::Init(bool useShaderSwizzle)
 		"  }\n";
 	}
 	fragmentCodeStream <<
-		"  finalColor = color * alpha;\n"
+		"  float distanceAlpha = 0.f;\n"
+		"  if(length(fragPos) < 0.5f)\n"
+		"  {"
+		"    if(length(fragPos) > 0.25f)\n"
+		"      distanceAlpha = 1.f - 4 * (length(fragPos) - 0.25);\n"
+		"    else"
+		"      distanceAlpha = 1.f;"
+		"  }"
+		"  finalColor = color * alpha * distanceAlpha;\n"
 		"}\n";
 
 	static const string fragmentCodeString = fragmentCodeStream.str();
@@ -299,7 +310,7 @@ void SpriteShader::Init(bool useShaderSwizzle)
 
 
 
-void SpriteShader::Draw(const Sprite *sprite, const Point &position, float zoom, int swizzle, float frame)
+void SpriteShader::Draw(const Sprite *sprite, const Point &position, float zoom, int swizzle, float frame, bool shroud)
 {
 	if(!sprite)
 		return;
