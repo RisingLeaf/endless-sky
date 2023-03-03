@@ -321,7 +321,7 @@ void MissionAction::Do(PlayerInfo &player, UI *ui, const System *destination,
 	else if(isOffer && ui)
 		player.MissionCallback(Conversation::ACCEPT);
 
-	action.Do(player, ui);
+	action.Do(player, ui, conversation->IsEmpty());
 }
 
 
@@ -365,4 +365,11 @@ MissionAction MissionAction::Instantiate(map<string, string> &subs, const System
 int64_t MissionAction::Payment() const noexcept
 {
 	return action.Payment();
+}
+
+
+
+bool MissionAction::HasRelocation() const
+{
+	return action.HasRelocation();
 }

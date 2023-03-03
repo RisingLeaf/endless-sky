@@ -46,9 +46,9 @@ using namespace std;
 
 
 
-PlanetPanel::PlanetPanel(PlayerInfo &player, function<void()> callback)
+PlanetPanel::PlanetPanel(PlayerInfo &player, function<void()> callback, const Planet &planet)
 	: player(player), callback(callback),
-	planet(*player.GetPlanet()), system(*player.GetSystem()),
+	planet(planet), system(*planet.GetSystem()),
 	ui(*GameData::Interfaces().Get("planet"))
 {
 	trading.reset(new TradingPanel(player));
@@ -71,6 +71,20 @@ PlanetPanel::PlanetPanel(PlayerInfo &player, function<void()> callback)
 
 void PlanetPanel::Step()
 {
+	// If the player is relocating, simulate a TakeOff followed
+	// by a forced landing. No transition will be noticeable.
+	if(player.RelocationStatus() == PlayerInfo::RelocateStatus::IN_PROGRESS)
+	{
+		player.SetRelocationStatus(PlayerInfo::RelocateStatus::COMPLETE);
+		UI *ui = GetUI();
+		player.Save();
+		player.Relocate(ui);
+		if(callback)
+			callback();
+		if(selectedPanel)
+			ui->Pop(selectedPanel);
+		ui->PopThrough(this);
+	}
 	// If the previous mission callback resulted in a "launch", take off now.
 	const Ship *flagship = player.Flagship();
 	if(flagship && flagship->CanBeFlagship() && (player.ShouldLaunch() || requestedLaunch))
