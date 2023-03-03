@@ -236,7 +236,7 @@ namespace {
 
 	const double RADAR_SCALE = .025;
 	const double MAX_FUEL_DISPLAY = 5000.;
-	constexpr static double OFFSET_CHANGE = 0.01;
+	constexpr static double OFFSET_CHANGE = 0.001;
 }
 
 
@@ -1543,7 +1543,7 @@ void Engine::CalculateStep()
 		double prefMul = Preferences::CameraAcceleration() == "on" ? 1.
 			: (Preferences::CameraAcceleration() == "reversed" ? -1. : 0.);
 
-		offset = prefMul * flagship->Velocity() * 2.5 * zoom * smoothStep;
+		offset = prefMul * flagship->Velocity() * 2.5 * (2 / zoom) * smoothStep;
 
 		newCenter = !flagship->IsHyperspacing() ?
 			flagship->Position() + offset : flagship->Position();
