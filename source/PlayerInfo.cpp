@@ -1358,20 +1358,11 @@ int64_t PlayerInfo::GetBasis(const string &commodity, int tons) const
 // ships, check for mission completion, and apply fines for contraband.
 void PlayerInfo::Land(UI *ui)
 {
-	// This can only be done while landed.
-	if(!system || !planet)
+	if(!EnterPlanet(ui))
 		return;
 
 	if(!freshlyLoaded)
-	{
 		Audio::Play(Audio::Get("landing"));
-		Audio::PlayMusic(planet->MusicName());
-	}
-
-	// Mark this planet as visited.
-	Visit(*planet);
-	if(planet == travelDestination)
-		travelDestination = nullptr;
 
 	// Remove any ships that have been destroyed or captured.
 	map<string, int> lostCargo;
@@ -1421,6 +1412,40 @@ void PlayerInfo::Land(UI *ui)
 	for(const auto &it : lostCargo)
 		AdjustBasis(it.first, -(costBasis[it.first] * it.second) / (cargo.Get(it.first) + it.second));
 
+	// Hire extra crew back if any were lost in-flight (i.e. boarding) or
+	// some bunks were freed up upon landing (i.e. completed missions).
+	if(Preferences::Has("Rehire extra crew when lost") && hasSpaceport && flagship)
+	{
+		int added = desiredCrew - flagship->Crew();
+		if(added > 0)
+		{
+			flagship->AddCrew(added);
+			Messages::Add("You hire " + to_string(added) + (added == 1
+					? " extra crew member to fill your now-empty bunk."
+					: " extra crew members to fill your now-empty bunks."), Messages::Importance::High);
+		}
+	}
+
+	freshlyLoaded = false;
+	flagship.reset();
+}
+
+
+
+bool PlayerInfo::EnterPlanet(UI *ui)
+{
+	// This can only be done while landed.
+	if(!system || !planet)
+		return false;
+
+	if(!freshlyLoaded)
+		Audio::PlayMusic(planet->MusicName());
+
+	// Mark this planet as visited.
+	Visit(*planet);
+	if(planet == travelDestination)
+		travelDestination = nullptr;
+
 	// Evaluate changes to NPC spawning criteria.
 	if(!freshlyLoaded)
 		UpdateMissionNPCs();
@@ -1457,22 +1482,7 @@ void PlayerInfo::Land(UI *ui)
 		ui->Push(new Dialog(message));
 	}
 
-	// Hire extra crew back if any were lost in-flight (i.e. boarding) or
-	// some bunks were freed up upon landing (i.e. completed missions).
-	if(Preferences::Has("Rehire extra crew when lost") && hasSpaceport && flagship)
-	{
-		int added = desiredCrew - flagship->Crew();
-		if(added > 0)
-		{
-			flagship->AddCrew(added);
-			Messages::Add("You hire " + to_string(added) + (added == 1
-					? " extra crew member to fill your now-empty bunk."
-					: " extra crew members to fill your now-empty bunks."), Messages::Importance::High);
-		}
-	}
-
-	freshlyLoaded = false;
-	flagship.reset();
+	return true;
 }
 
 
@@ -1481,28 +1491,25 @@ void PlayerInfo::Land(UI *ui)
 // which case a message will be returned.
 bool PlayerInfo::TakeOff(UI *ui)
 {
-	// This can only be done while landed.
-	if(!system || !planet)
+	if(!LeavePlanet())
 		return false;
 
 	flagship = FlagshipPtr();
 	if(!flagship)
 		return false;
 
-	shouldLaunch = false;
 	Audio::Play(Audio::Get("takeoff"));
 
-	// Jobs are only available when you are landed.
-	availableJobs.clear();
-	availableMissions.clear();
-	doneMissions.clear();
-	stock.clear();
+	// Move the flagship to the start of the list of ships and ensure that all
+	// escorts know which ship is acting as flagship.
+	SetFlagship(*flagship);
 
 	// Special persons who appeared last time you left the planet, can appear again.
 	GameData::ResetPersons();
 
 	// Store the total cargo counts in case we need to adjust cost bases below.
 	map<string, int> originalTotals = cargo.Commodities();
+
 
 	// Move the flagship to the start of the list of ships and ensure that all
 	// escorts know which ship is acting as flagship.
@@ -1693,6 +1700,56 @@ bool PlayerInfo::TakeOff(UI *ui)
 			out << ".";
 		Messages::Add(out.str(), Messages::Importance::High);
 	}
+
+	return true;
+}
+
+
+
+bool PlayerInfo::LeavePlanet()
+{
+	// This can only be done while landed.
+	if(!system || !planet)
+		return false;
+
+	shouldLaunch = false;
+
+	// Jobs are only available when you are landed.
+	availableJobs.clear();
+	availableMissions.clear();
+	doneMissions.clear();
+	stock.clear();
+
+	// Recharge any ships that can be recharged, and load available cargo.
+	bool hasSpaceport = planet->HasSpaceport() && planet->CanUseServices();
+	for(const shared_ptr<Ship> &ship : ships)
+		if(!ship->IsParked() && !ship->IsDisabled())
+		{
+			if(ship->GetSystem() != system)
+			{
+				ship->Recharge(false);
+				continue;
+			}
+			else
+				ship->Recharge(hasSpaceport);
+
+			if(ship != flagship)
+			{
+				ship->Cargo().SetBunks(ship->Attributes().Get("bunks") - ship->RequiredCrew());
+				cargo.TransferAll(ship->Cargo());
+			}
+			else
+			{
+				// Your flagship takes first priority for passengers but last for cargo.
+				desiredCrew = ship->Crew();
+				ship->Cargo().SetBunks(ship->Attributes().Get("bunks") - desiredCrew);
+				for(const auto &it : cargo.PassengerList())
+					cargo.TransferPassengers(it.first, it.second, ship->Cargo());
+			}
+		}
+	// Load up your flagship last, so that it will have space free for any
+	// plunder that you happen to acquire.
+	cargo.TransferAll(flagship->Cargo());
 
 	return true;
 }
@@ -2036,6 +2093,7 @@ void PlayerInfo::MissionCallback(int response)
 		mission.Do(Mission::DEFER, *this);
 		missionList.pop_front();
 	}
+	DoQueuedRelocation();
 }
 
 
@@ -2045,6 +2103,7 @@ void PlayerInfo::MissionCallback(int response)
 void PlayerInfo::BasicCallback(int response)
 {
 	// If landed, this conversation may require the player to immediately depart.
+	DoQueuedRelocation();
 	shouldLaunch |= (GetPlanet() && Conversation::RequiresLaunch(response));
 }
 
@@ -2316,6 +2375,73 @@ void PlayerInfo::SetTravelDestination(const Planet *planet)
 	travelDestination = planet;
 	if(planet && planet->IsInSystem(system) && Flagship())
 		Flagship()->SetTargetStellar(system->FindStellar(planet));
+}
+
+
+
+void PlayerInfo::QueueRelocation(const Planet *destination, bool flagshipOnly)
+{
+	relocation = Relocation(destination, flagshipOnly);
+}
+
+
+
+void PlayerInfo::DoQueuedRelocation()
+{
+	if(!relocation.relocationPlanet || !FlagshipPtr())
+		return;
+	if(!planet)
+	{
+		relocation.relocationPlanet = nullptr;
+		return;
+	}
+
+	Visit(*relocation.relocationPlanet->GetSystem());
+	Visit(*relocation.relocationPlanet);
+
+	flagship->SetSystem(relocation.relocationPlanet->GetSystem());
+	flagship->SetPlanet(relocation.relocationPlanet);
+	if(!relocation.relocateFlagshipOnly)
+		for(const shared_ptr<Ship> &ship : ships)
+			if(!ship->IsParked() && !ship->IsDestroyed() && ship->GetPlanet() == planet)
+			{
+				ship->SetSystem(relocation.relocationPlanet->GetSystem());
+				ship->SetPlanet(relocation.relocationPlanet);
+			}
+	system = relocation.relocationPlanet->GetSystem();
+	planet = relocation.relocationPlanet;
+	relocation.relocationStatus = RelocateStatus::IN_PROGRESS;
+	relocation.oldRelocationPlanet = relocation.relocationPlanet;
+	relocation.relocationPlanet = nullptr;
+}
+
+
+
+void PlayerInfo::Relocate(UI *ui)
+{
+	LeavePlanet();
+	EnterPlanet(ui);
+}
+
+
+
+PlayerInfo::RelocateStatus PlayerInfo::RelocationStatus() const
+{
+	return relocation.relocationStatus;
+}
+
+
+
+void PlayerInfo::SetRelocationStatus(PlayerInfo::RelocateStatus status)
+{
+	relocation.relocationStatus = status;
+}
+
+
+
+const Planet *PlayerInfo::OldRelocationPlanet() const
+{
+	return relocation.oldRelocationPlanet;
 }
 
 
