@@ -545,6 +545,13 @@ const Set<GameEvent> &GameData::Events()
 
 
 
+const Set<FormationPattern> &GameData::Formations()
+{
+	return objects.formations;
+}
+
+
+
 const Set<Fleet> &GameData::Fleets()
 {
 	return objects.fleets;

@@ -29,6 +29,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <vector>
 
 class DataNode;
+class FormationPattern;
 class Government;
 class Outfit;
 class Phrase;
@@ -87,6 +88,10 @@ private:
 	const Phrase *names = nullptr;
 	const Phrase *fighterNames = nullptr;
 	WeightedList<Variant> variants;
+
+	const FormationPattern *formation = nullptr;
+	// The sum of all available variant weights.
+	int total = 0;
 	// The number of different items the ships in this fleet will carry in cargo.
 	int cargo = 3;
 	std::vector<std::string> commodities;
