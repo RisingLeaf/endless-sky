@@ -7,20 +7,21 @@ Foundation, either version 3 of the License, or (at your option) any later versi
 
 Endless Sky is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-*/
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #ifndef FORMATION_PATTERN_H_
 #define FORMATION_PATTERN_H_
 
-#include "DataNode.h"
 #include "Point.h"
 
 #include <string>
 #include <vector>
 
 class DataNode;
-class Body;
 
 
 
@@ -31,12 +32,9 @@ class Body;
 class FormationPattern {
 public:
 	// Iterator that provides sequential access to all formation positions.
-	class PositionIterator
-	{
+	class PositionIterator {
 	public:
-		PositionIterator(const FormationPattern &pattern,
-			double diameterToPx, double widthToPx, double heightToPx,
-			double centerBodyRadius, unsigned int startRing, unsigned int shipsToPlace);
+		PositionIterator(const FormationPattern &pattern);
 		PositionIterator() = delete;
 
 		// Iterator traits
@@ -101,6 +99,8 @@ public:
 
 	// Get an iterator to iterate over the formation positions in this pattern.
 	PositionIterator begin() const;
+	PositionIterator begin(double diameterToPx, double widthToPx, double heightToPx,
+						   double centerBodyRadius, unsigned int startRing = 0, unsigned int shipsToPlace = 0) const;
 
 	// Retrieve properties like number of lines and arcs, number of repeat sections and number of positions.
 	// TODO: Should we hide those properties and just provide a position iterator instead?

@@ -90,6 +90,7 @@ private:
 	WeightedList<Variant> variants;
 
 	const FormationPattern *formation = nullptr;
+
 	// The sum of all available variant weights.
 	int total = 0;
 	// The number of different items the ships in this fleet will carry in cargo.

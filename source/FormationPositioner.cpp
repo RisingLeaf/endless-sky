@@ -118,8 +118,7 @@ void FormationPositioner::CalculatePositions()
 		startRing = max(startRing, desiredRing);
 
 		// Initialize the new iterator for use for the current ring-section.
-		auto itPos = pattern->begin(diameterToPx, widthToPx, heightToPx,
-			centerBodyRadius, startRing, shipsInRing.size());
+		auto itPos = pattern->begin();
 
 		// Run the iterator.
 		size_t shipIndex = 0;

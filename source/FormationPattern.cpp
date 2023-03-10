@@ -28,6 +28,14 @@ namespace {
 
 
 
+FormationPattern::PositionIterator::PositionIterator(const FormationPattern &pattern)
+: pattern(pattern)
+{
+	positionIt = pattern.positions.begin();
+}
+
+
+
 const Point &FormationPattern::PositionIterator::operator*()
 {
 	if(positionIt == pattern.positions.end())

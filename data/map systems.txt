@@ -27949,10 +27949,7 @@ system Rutilicus
 	trade Medical 590
 	trade Metal 468
 	trade Plastic 415
-	fleet "Small Southern Merchants" 600
-	fleet "Large Southern Merchants" 2000
-	fleet "Small Militia" 6000
-	fleet "Human Miners" 3000
+	fleet "Small Southern Merchants" 100
 	object
 		sprite star/g5
 		period 10
