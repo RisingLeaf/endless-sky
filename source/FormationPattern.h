@@ -101,8 +101,6 @@ public:
 
 	// Get an iterator to iterate over the formation positions in this pattern.
 	PositionIterator begin() const;
-	// Load formation from a datafile.
-	void Load(const DataNode &node);
 
 	// Retrieve properties like number of lines and arcs, number of repeat sections and number of positions.
 	// TODO: Should we hide those properties and just provide a position iterator instead?
@@ -189,7 +187,6 @@ private:
 	std::string name;
 	// The positions that define the formation.
 	std::vector<Point> positions;
-};
 
 	// Indicates if the formation is rotatable, a value of -1 means not
 	// rotatable, while a positive value is taken as the rotation angle

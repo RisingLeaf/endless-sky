@@ -28,14 +28,6 @@ namespace {
 
 
 
-FormationPattern::PositionIterator::PositionIterator(const FormationPattern &pattern)
-	: pattern(pattern)
-{
-	positionIt = pattern.positions.begin();
-}
-
-
-
 const Point &FormationPattern::PositionIterator::operator*()
 {
 	if(positionIt == pattern.positions.end())
@@ -248,20 +240,6 @@ void FormationPattern::Load(const DataNode &node)
 		}
 		else
 			child.PrintTrace("Skipping unrecognized attribute:");
-}
-
-
-
-const string &FormationPattern::Name() const
-{
-	return name;
-}
-
-
-
-void FormationPattern::SetName(const std::string &name)
-{
-	this->name = name;
 }
 
 
