@@ -74,23 +74,6 @@ private:
 	std::string name;
 	// The positions that define the formation.
 	std::vector<Point> positions;
-
-	// Indicates if the formation is rotatable, a value of -1 means not
-	// rotatable, while a positive value is taken as the rotation angle
-	// in relation to the full 360 degrees full angle:
-	// Square and Diamond shapes could get a value of 90, since you can
-	// rotate such a shape over 90 degrees and still have the same shape.
-	// Triangles could get a value of 120, since you can rotate them over
-	// 120 degrees and again get the same shape.
-	int rotatable = -1;
-	// Indicates if the formation is flippable along the longitudinal axis.
-	bool flippable_y = false;
-	// Indicates if the formation is flippable along the transverse axis.
-	bool flippable_x = false;
-	// The lines that define the formation.
-	std::vector<Line> lines;
 };
-
-
 
 #endif
