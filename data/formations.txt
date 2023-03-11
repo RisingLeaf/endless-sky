@@ -11,8 +11,24 @@
 
 # Triangle forming behind the formation leader with each alternating line getting filled from the other direction.
 formation "Quad"
-	position 100 100
-	position -100 100
-	position 100 -100
-	position -100 -100
+	position 200 200
+	position -200 200
+	position 200 -200
+	position -200 -200
+
+	position 400 200
+	position 200 400
+	position 400 400
+
+	position -400 200
+	position -200 400
+	position -400 400
+
+	position 400 -200
+	position 200 -400
+	position 400 -400
+
+	position -400 -200
+	position -200 -400
+	position -400 -400
 	
