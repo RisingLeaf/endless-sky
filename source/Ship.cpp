@@ -514,9 +514,6 @@ void Ship::Load(const DataNode &node)
 			else
 				child.PrintTrace("Skipping unsupported \"remove\":");
 		}
-		// TODO: formation rings also need to be serialized (in load and store).
-		else if(key == "formation" && child.Size() >= 2)
-			formationPattern = GameData::Formations().Get(child.Token(1));
 		else if(key != "actions")
 			child.PrintTrace("Skipping unrecognized attribute:");
 	}
@@ -1041,8 +1038,6 @@ void Ship::Save(DataWriter &out) const
 			if(it.second)
 				out.Write("final explode", it.first->Name(), it.second);
 		});
-		if(formationPattern)
-			out.Write("formation", formationPattern->Name());
 		if(currentSystem)
 			out.Write("system", currentSystem->Name());
 		else
@@ -4157,17 +4152,9 @@ const FormationPattern *Ship::GetFormationPattern() const
 
 
 
-unsigned int Ship::GetFormationRing() const
+int Ship::GetFormationId() const
 {
-	return formationRing;
-}
-
-
-
-void Ship::SetFormationRing(int newRing)
-{
-	if(newRing >= 0)
-		formationRing = newRing;
+	return formationId;
 }
 
 
@@ -4240,6 +4227,8 @@ void Ship::SetParent(const shared_ptr<Ship> &ship)
 void Ship::SetFormationPattern(const FormationPattern *formationToSet)
 {
 	formationPattern = formationToSet;
+	if(formationPattern)
+		formationId = formationPattern->GetId();
 }
 
 

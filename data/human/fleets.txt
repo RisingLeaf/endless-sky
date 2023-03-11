@@ -18,9 +18,9 @@ fleet "Small Southern Merchants"
 	personality
 		confusion 40
 		timid frugal appeasing staying
-	formation "Delta (centered)"
+	formation "Quad"
 	variant 60
-		"Shuttle" 10
+		"Shuttle" 5
 
 fleet "Large Southern Merchants"
 	government "Merchant"

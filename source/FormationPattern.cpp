@@ -19,11 +19,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "DataNode.h"
 
 #include <cmath>
+#include <map>
 
 using namespace std;
 
 namespace {
 	const Point defaultFormationPoint = Point();
+
+	std::map<const FormationPattern*, int> semi_iterator;
 }
 
 
@@ -75,6 +78,9 @@ void FormationPattern::Load(const DataNode &node)
 			positions.emplace_back(child.Value(1), child.Value(2));
 		else
 			child.PrintTrace("Skipping unrecognized attribute:");
+
+	it = positions.begin();
+	semi_iterator[this] = 0;
 }
 
 
@@ -93,8 +99,27 @@ void FormationPattern::SetName(const std::string &name)
 
 
 
-// Get an iterator to iterate over the formation positions in this pattern.
-FormationPattern::PositionIterator FormationPattern::begin() const
+int FormationPattern::GetId() const
 {
-	return FormationPattern::PositionIterator(*this);
+	if(!positions.empty())
+	{
+		int id = semi_iterator[this];
+		++id;
+		if(id > positions.size() - 1)
+			id = 0;
+		semi_iterator[this] = id;
+		return id;
+	}
+
+	return 0;
+}
+
+
+
+Point FormationPattern::Get(int pid) const
+{
+	if(!positions.empty())
+		return positions[pid];
+
+	return Point(0.0, 0.0);
 }

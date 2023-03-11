@@ -18,7 +18,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "Command.h"
 #include "FireCommand.h"
-#include "FormationPositioner.h"
 #include "Point.h"
 
 #include <cstdint>
@@ -57,7 +56,6 @@ template <class Type>
 
 	// Fleet commands from the player.
 	void IssueFormationChange(const PlayerInfo &player);
-	void IssueFormationRingChange(const PlayerInfo &player, int change);
 	void IssueShipTarget(const PlayerInfo &player, const std::shared_ptr<Ship> &target);
 	void IssueMoveTarget(const PlayerInfo &player, const Point &target, const System *moveToSystem);
 	// Commands issued via the keyboard (mostly, to the flagship).
@@ -240,9 +238,6 @@ private:
 	std::map<const Ship *, double> miningRadius;
 	std::map<const Ship *, int> miningTime;
 	std::map<const Ship *, double> appeasementThreshold;
-
-	// Records for formations flying around leadships and other objects.
-	std::map<const Body *, std::map<const FormationPattern *, FormationPositioner>> formations;
 
 	// Records that affect the combat behavior of various governments.
 	std::map<const Ship *, int64_t> shipStrength;

@@ -27949,7 +27949,7 @@ system Rutilicus
 	trade Medical 590
 	trade Metal 468
 	trade Plastic 415
-	fleet "Small Southern Merchants" 100
+	fleet "Small Southern Merchants" 200
 	object
 		sprite star/g5
 		period 10

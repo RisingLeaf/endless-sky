@@ -67,13 +67,18 @@ public:
 	void SetName(const std::string &name);
 
 	// Get an iterator to iterate over the formation positions in this pattern.
-	PositionIterator begin() const;
+	void begin();
+
+	int GetId() const;
+
+	Point Get(int pid) const;
 
 private:
 	// Name of the formation pattern.
 	std::string name;
 	// The positions that define the formation.
 	std::vector<Point> positions;
+	std::vector<Point>::iterator it;
 };
 
 #endif

@@ -20,7 +20,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "DistanceMap.h"
 #include "Flotsam.h"
 #include "FormationPattern.h"
-#include "FormationPositioner.h"
 #include "GameData.h"
 #include "Government.h"
 #include "Hardpoint.h"
@@ -47,6 +46,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <cmath>
 #include <limits>
 #include <set>
+#include <iostream>
 
 using namespace std;
 
@@ -418,37 +418,6 @@ void AI::IssueFormationChange(const PlayerInfo &player)
 
 
 
-// Change the formation ring in which ships fly. This function acts on
-// the maximum ring in the set of affected ships and then applies the
-// change.
-void AI::IssueFormationRingChange(const PlayerInfo &player, int change)
-{
-	// Figure out what ships we are giving orders to
-	vector<Ship *> targetShips = GetShipsForFormationCommand(player);
-	if(targetShips.empty())
-		return;
-
-	// First check which and how many formations we have in the current set of selected ships.
-	int maxRing = 0;
-	for(Ship *ship : targetShips)
-	{
-		int shipRing = ship->GetFormationRing();
-		if(shipRing > maxRing)
-			maxRing = shipRing;
-	}
-	maxRing += change;
-	if(maxRing < 0)
-		maxRing = 0;
-
-	// Now set the new ring on the selected ships.
-	for(Ship *ship : targetShips)
-		ship->SetFormationRing(maxRing);
-
-	Messages::Add(to_string(targetShips.size()) + " ships are now flying in ring " + to_string(maxRing) + " of their formation.", Messages::Importance::Low);
-}
-
-
-
 void AI::IssueShipTarget(const PlayerInfo &player, const shared_ptr<Ship> &target)
 {
 	Orders newOrders;
@@ -529,10 +498,6 @@ void AI::UpdateKeys(PlayerInfo &player, Command &activeCommands)
 	{
 		if(activeCommands.Has(Command::GATHER))
 			IssueFormationChange(player);
-		else if(activeCommands.Has(Command::FIGHT))
-			IssueFormationRingChange(player, 1);
-		else if(activeCommands.Has(Command::HOLD))
-			IssueFormationRingChange(player, -1);
 	}
 
 	shared_ptr<Ship> target = flagship->GetTargetShip();
@@ -631,8 +596,7 @@ void AI::Clean()
 	miningRadius.clear();
 	miningTime.clear();
 	appeasementThreshold.clear();
-	// Records for formations flying around leadships and other objects.
-	formations.clear();
+
 	// Records that affect the combat behavior of various governments.
 	shipStrength.clear();
 	enemyStrength.clear();
@@ -679,12 +643,6 @@ void AI::Step(const PlayerInfo &player, Command &activeCommands)
 			value = min(FENCE_MAX, value + FENCE_DECAY + 1);
 		}
 	}
-
-	// Allow all formation-positioners to handle their internal administration to
-	// prepare for the next cycle.
-	for(auto &bodyIt : formations)
-		for(auto &positionerIt : bodyIt.second)
-			positionerIt.second.Step();
 
 	const Ship *flagship = player.Flagship();
 	step = (step + 1) & 31;
@@ -1592,21 +1550,17 @@ void AI::MoveInFormation(Ship &ship, Command &command)
 	const Body *formationLead = parent.get();
 	const FormationPattern *pattern = ship.GetFormationPattern();
 
-	// First we retrieve the patterns that are formed around the parent.
-	auto &patterns = formations[formationLead];
-
-	// Find the existing FormationPositioner for the pattern, or add one if none exists yet.
-	auto insert = patterns.emplace(piecewise_construct,
-		forward_as_tuple(pattern),
-		forward_as_tuple(formationLead, pattern));
-
-	// Set an iterator to point to the just found or emplaced value.
-	auto it = insert.first;
-
 	// Aggressively try to match the position and velocity for the formation position.
 	const double PositionDeadband = ship.Radius() * 1.25;
 	constexpr double VELOCITY_DEADBAND = 0.1;
-	bool inPosition = MoveTo(ship, command, it->second.Position(&ship), formationLead->Velocity(), PositionDeadband, VELOCITY_DEADBAND);
+	bool inPosition = MoveTo(
+		ship,
+		command,
+		formationLead->Position() + pattern->Get(ship.GetFormationId()),
+		formationLead->Velocity(),
+		PositionDeadband,
+		VELOCITY_DEADBAND
+	);
 
 	// If we match the position and velocity, then also match the facing angle.
 	if(inPosition)
