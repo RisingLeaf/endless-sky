@@ -90,6 +90,7 @@ void FogShader::Init()
 
 		"void main() {\n"
 		"  finalColor = vec4(0, 0, 0, texture(tex, fragTexCoord).r);\n"
+		"  finalColor = vec4(pow(finalColor.r, (finalColor.g / 2) + 0.5), pow(finalColor.r, (finalColor.b / 2) + 0.5), pow(finalColor.b, (finalColor.r / 2) + 0.5), finalColor.a);\n"
 		"}\n";
 
 	// Compile the shader and store indices to its variables.

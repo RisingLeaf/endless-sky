@@ -58,6 +58,7 @@ void FillShader::Init()
 
 		"void main() {\n"
 		"  finalColor = color;\n"
+		"  finalColor = vec4(pow(finalColor.r, (finalColor.g / 2) + 0.5), pow(finalColor.r, (finalColor.b / 2) + 0.5), pow(finalColor.b, (finalColor.r / 2) + 0.5), finalColor.a);\n"
 		"}\n";
 
 	shader = Shader(vertexCode, fragmentCode);

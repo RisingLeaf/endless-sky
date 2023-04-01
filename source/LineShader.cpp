@@ -69,6 +69,7 @@ void LineShader::Init()
 		"void main() {\n"
 		"  float alpha = min(tscale - abs(tpos.x * (2.f * tscale) - tscale), 1.f - abs(tpos.y));\n"
 		"  finalColor = color * alpha;\n"
+		"  finalColor = vec4(pow(finalColor.r, (finalColor.g / 2) + 0.5), pow(finalColor.r, (finalColor.b / 2) + 0.5), pow(finalColor.b, (finalColor.r / 2) + 0.5), finalColor.a);\n"
 		"}\n";
 
 	shader = Shader(vertexCode, fragmentCode);

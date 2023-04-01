@@ -86,6 +86,7 @@ void RingShader::Init()
 		"  float lenFalloff = width - abs(len - radius);\n"
 		"  float alpha = clamp(min(arcFalloff, lenFalloff), 0.f, 1.f);\n"
 		"  finalColor = color * alpha;\n"
+		"  finalColor = vec4(pow(finalColor.r, (finalColor.g / 2) + 0.5), pow(finalColor.r, (finalColor.b / 2) + 0.5), pow(finalColor.b, (finalColor.r / 2) + 0.5), finalColor.a);\n"
 		"}\n";
 
 	shader = Shader(vertexCode, fragmentCode);

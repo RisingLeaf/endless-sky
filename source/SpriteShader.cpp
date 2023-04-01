@@ -253,6 +253,7 @@ void SpriteShader::Init(bool useShaderSwizzle)
 	}
 	fragmentCodeStream <<
 		"  finalColor = color * alpha;\n"
+		"  finalColor = vec4(pow(finalColor.r, (finalColor.g / 2) + 0.5), pow(finalColor.r, (finalColor.b / 2) + 0.5), pow(finalColor.b, (finalColor.r / 2) + 0.5), finalColor.a);\n"
 		"}\n";
 
 	static const string fragmentCodeString = fragmentCodeStream.str();

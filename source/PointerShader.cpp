@@ -76,6 +76,7 @@ void PointerShader::Init()
 		"  float alpha = clamp(.8 * min(coord.x, coord.y) - taper, 0.f, 1.f);\n"
 		"  alpha *= clamp(1.8 * (1. - height), 0.f, 1.f);\n"
 		"  finalColor = color * alpha;\n"
+		"  finalColor = vec4(pow(finalColor.r, (finalColor.g / 2) + 0.5), pow(finalColor.r, (finalColor.b / 2) + 0.5), pow(finalColor.b, (finalColor.r / 2) + 0.5), finalColor.a);\n"
 		"}\n";
 
 	shader = Shader(vertexCode, fragmentCode);

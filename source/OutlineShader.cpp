@@ -113,6 +113,7 @@ void OutlineShader::Init()
 		"  float fade = frame - first;\n"
 		"  float sum = mix(Sobel(first), Sobel(second), fade);\n"
 		"  finalColor = color * sqrt(sum / 180.f);\n"
+		"  finalColor = vec4(pow(finalColor.r, (finalColor.g / 2) + 0.5), pow(finalColor.r, (finalColor.b / 2) + 0.5), pow(finalColor.b, (finalColor.r / 2) + 0.5), finalColor.a);\n"
 		"}\n";
 
 	shader = Shader(vertexCode, fragmentCode);

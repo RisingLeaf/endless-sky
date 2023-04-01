@@ -72,6 +72,7 @@ void BatchShader::Init()
 		"  finalColor = mix(\n"
 		"    texture(tex, vec3(fragTexCoord.xy, first)),\n"
 		"    texture(tex, vec3(fragTexCoord.xy, second)), fade);\n"
+		"  finalColor = vec4(pow(finalColor.r, (finalColor.g / 2) + 0.5), pow(finalColor.r, (finalColor.b / 2) + 0.5), pow(finalColor.b, (finalColor.r / 2) + 0.5), finalColor.a);\n"
 		"}\n";
 
 	// Compile the shaders.

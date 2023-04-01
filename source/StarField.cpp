@@ -270,6 +270,7 @@ void StarField::SetUpGraphics()
 		"void main() {\n"
 		"  float alpha = fragmentAlpha * (1. - abs(coord.x) - abs(coord.y));\n"
 		"  finalColor = vec4(1, 1, 1, 1) * alpha;\n"
+		"  finalColor = vec4(pow(finalColor.r, (finalColor.g / 2) + 0.5), pow(finalColor.r, (finalColor.b / 2) + 0.5), pow(finalColor.b, (finalColor.r / 2) + 0.5), finalColor.a);\n"
 		"}\n";
 
 	shader = Shader(vertexCode, fragmentCode);
