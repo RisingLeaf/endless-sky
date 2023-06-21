@@ -1247,7 +1247,16 @@ void MapPanel::DrawNames()
 	const Font &font = FontSet::Get(useBigFont ? 18 : 14);
 	Point offset(useBigFont ? 8. : 6., -.5 * font.Height());
 	for(const Node &node : nodes)
-		font.Draw(node.name, zoom * (node.position + center) + offset, node.nameColor);
+	{
+		Point fillPos = zoom * (node.position + center) + offset;
+		Point position = zoom * (node.position + center) + offset;
+		int width = font.Width(node.name);
+		FillShader::Fill(
+			Point(fillPos.X() + width / 2, fillPos.Y() + (font.Height() / 2)), 
+			Point((width), (font.Height())), 
+			Color(0.f, 0.f, 0.f, 0.4f));
+		font.Draw(node.name, position, node.nameColor);
+	}
 }
 
 
