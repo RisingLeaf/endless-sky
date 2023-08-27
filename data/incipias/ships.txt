@@ -11,10 +11,60 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <https://www.gnu.org/licenses/>.
 
+ship "Venta"
+	"plural" "Ventae"
+	"sprite" ship/venta
+	"thumbnail" thumbnail/venta
+	"swizzle" 0
+	attributes
+		"category" "Large Warship"
+		licenses
+			"Hicemus Conflict"
+		"cost" 500000
+		"hull" 3500
+		"shields" 5000
+		"required crew" 40
+		"bunks" 60
+		"mass" 1200
+		"drag" 6.
+		"heat dissipation" .7
+		"cargo space" 20
+		"outfit space" 520
+		"weapon capacity" 230
+		"engine capacity" 130
+		"gaslining" 1
+		"fuel capacity" 200
+	outfits
+		"Solid-Class Shield"
+		"Liquid-Class Shield"
+		"Liquid Hydrogen Cell"
+		"Plasma Discharger" 4
+		"Star Tail" 2
+		"Heavy Machine Gun" 40
+
+		"MH Red-Class Engine"
+		"MH Red-Class Steering"
+
+	engine -90.5 42
+	engine 0 42
+		"over"
+	engine 90 42
+	gun 58.5 -76.5
+	gun 29 -76.5
+	gun 29 -76.5
+	gun -28 -76.5
+	gun -28 -76.5
+	gun -57 -76
+	explode "medium explosion" 50
+	explode "large explosion" 40
+	explode "huge explosion" 10
+	"final explode" "final explosion large"
+	description "When the Hicemus came to power they needed a ship to symbolize their strength. With six guns and one turret, the venta is not only symbolizing strength but also the most powerful ship in Incipias history. Thanks to its sleek and aerodynamic design it is able to hunt down outlaws in space as well as in the clouds of a gas giant."
+
 ship "Nimbus"
 	"plural" "Nimbi"
-	"sprite" ship/nimbus
-	"thumbnail" thumbnail/nimbus
+	"sprite" ship/gero
+	"thumbnail" thumbnail/gero
 	"swizzle" 0
 	attributes
 		"category" "Medium Warship"

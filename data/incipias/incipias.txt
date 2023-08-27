@@ -121,7 +121,7 @@ fleet "Hicemus Standard Surveilance"
 	personality
 		heroic vindictive swarming
 	variant 5
-		"Nimbus"
+		"Venta"
 	variant 1
 		"Nimbus" 2
 

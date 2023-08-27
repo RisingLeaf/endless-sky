@@ -88,6 +88,64 @@ effect "tractor beam impact"
 	"random angle" 2
 	"velocity scale" -.005
 
+outfit "Star Tail"
+	category "Guns"
+	mass 25
+	"outfit space" -20
+	"weapon capacity" -20
+	"gun ports" -1
+	thumbnail "outfit/star tail launcher"
+	weapon
+		sprite "projectile/star tail upload"
+			"frame rate" 7
+		sound "star tail"
+		"hit effect" "blaster impact"
+		"velocity" 1
+		"lifetime" 60
+		"reload" 180
+		"firing energy" 60
+		"firing heat" 30
+		"shield damage" 410
+		"hull damage" 430
+		"range override" 3000
+		"parallel"
+		"submunition" "Star Tail Projectile" 1
+
+outfit "Star Tail Projectile"
+	weapon
+		sprite "projectile/star tail"
+			"frame rate" 12
+		sound "blaster"
+		"hit effect" "star tail hit"
+		"live effect" "star tail live" 120
+		"velocity" 1
+		acceleration 5
+		drag .2
+		"lifetime" 120
+		"reload" 40
+		"firing energy" 60
+		"firing heat" 30
+		"shield damage" 410
+		"hull damage" 430
+		"homing" 1
+		"optical tracking" 1
+		"turn" 3
+
+effect "star tail hit"
+	sprite "effect/star tail hit"
+		"no repeat"
+		"frame rate" 40
+	sound "star tail hit"
+	"lifetime" 30
+	"velocity scale" 0.
+
+effect "star tail live"
+	sprite "effect/star tail live"
+		"no repeat"
+		"frame rate" 14
+	"lifetime" 30
+	"velocity scale" 0.
+
 # Shields/Energy:
 outfit "Gas-Class Shield"
 	category "Systems"
