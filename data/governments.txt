@@ -638,7 +638,7 @@ government "Hicemus"
 	language "Incups"
 	"player reputation" 0
 	"attitude toward"
-		"Incipias" 0.1
+		"Incipias" 1
 		"Incipias Civilian" 1
 
 government "Incipias"
@@ -649,7 +649,7 @@ government "Incipias"
 	language "Incups"
 	"player reputation" 0
 	"attitude toward"
-		"Hicemus" 0.1
+		"Hicemus" 1
 		"Incipias Civilian" 1
 
 government "Incipias Civilian"

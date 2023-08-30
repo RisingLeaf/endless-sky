@@ -20,11 +20,11 @@ ship "Venta"
 		"category" "Large Warship"
 		licenses
 			"Hicemus Conflict"
-		"cost" 500000
-		"hull" 3500
-		"shields" 5000
+		"cost" 25000000
+		"hull" 12000
+		"shields" 16000
 		"required crew" 40
-		"bunks" 60
+		"bunks" 45
 		"mass" 1200
 		"drag" 6.
 		"heat dissipation" .7
@@ -40,6 +40,8 @@ ship "Venta"
 		"Liquid Hydrogen Cell"
 		"Plasma Discharger" 4
 		"Star Tail" 2
+		"Star Tail Cell" 60
+		"Star Tail Storage"
 		"Heavy Machine Gun" 40
 
 		"MH Red-Class Engine"
@@ -71,8 +73,8 @@ ship "Nimbus"
 		licenses
 			"Hicemus Conflict"
 		"cost" 500000
-		"hull" 2500
-		"shields" 3800
+		"hull" 5000
+		"shields" 7500
 		"required crew" 20
 		"bunks" 40
 		"mass" 900
@@ -118,7 +120,7 @@ ship "Nimbo Stratus"
 		"category" "Interceptor"
 		"cost" 50000
 		"hull" 500
-		"shields" 1400
+		"shields" 700
 		"required crew" 5
 		"bunks" 10
 		"mass" 400
@@ -187,12 +189,12 @@ ship "Gero"
 	attributes
 		"category" "Transport"
 		"cost" 100000
-		"hull" 750
-		"shields" 1500
+		"hull" 850
+		"shields" 1700
 		"required crew" 10
 		"bunks" 72
-		"mass" 600
-		"drag" 7
+		"mass" 550
+		"drag" 6.5
 		"heat dissipation" .75
 		"cargo space" 20
 		"outfit space" 100
@@ -202,8 +204,8 @@ ship "Gero"
 		"Gas-Class Shield"
 		"Liquid Hydrogen Cell"
 
-		"MH Green-Class Engine"
-		"MH Green-Class Steering"
+		"MH Blue-Class Engine"
+		"MH Blue-Class Steering"
 
 	engine -41 76.5
 	engine 0 76.5
@@ -211,4 +213,4 @@ ship "Gero"
 	explode "medium explosion" 20
 	explode "large explosion" 30
 	"final explode" "final explosion medium"
-	description "Gero desc"
+	description "With a huge spacestation like Pontes come people travelling between the station and the home planet. The designers from Alto shipyards quickly saw the opportunity and so the first passenger only ship was built."
