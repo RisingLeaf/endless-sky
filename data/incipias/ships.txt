@@ -63,8 +63,8 @@ ship "Venta"
 
 ship "Nimbus"
 	"plural" "Nimbi"
-	"sprite" ship/gero
-	"thumbnail" thumbnail/gero
+	"sprite" ship/nimbus
+	"thumbnail" thumbnail/nimbus
 	"swizzle" 0
 	attributes
 		"category" "Medium Warship"
@@ -179,3 +179,36 @@ ship "Nimbo Cirrus"
 	explode "large explosion" 30
 	"final explode" "final explosion medium"
 	description "When Pontes was built the need for a ship that could carry material and supplies into the orbit arose. While the Nimbus is able to carry some cargo, it is not specialized for that kind of work. The Cirrus on the other hand is a pure cargo ship and the inhabitants of Pontes rely on the regular deliveries."
+
+ship "Gero"
+	"sprite" ship/gero
+	"thumbnail" thumbnail/gero
+	"swizzle" 0
+	attributes
+		"category" "Transport"
+		"cost" 100000
+		"hull" 750
+		"shields" 1500
+		"required crew" 10
+		"bunks" 72
+		"mass" 600
+		"drag" 7
+		"heat dissipation" .75
+		"cargo space" 20
+		"outfit space" 100
+		"gaslining" 1
+		"fuel capacity" 200
+	outfits
+		"Gas-Class Shield"
+		"Liquid Hydrogen Cell"
+
+		"MH Green-Class Engine"
+		"MH Green-Class Steering"
+
+	engine -41 76.5
+	engine 0 76.5
+	engine 41 76.5
+	explode "medium explosion" 20
+	explode "large explosion" 30
+	"final explode" "final explosion medium"
+	description "Gero desc"
