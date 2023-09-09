@@ -1033,14 +1033,16 @@ void Engine::Draw() const
 
 	if(flash)
 	{
-		Point flagshipDirection = player.Flagship()->Velocity().Unit();
+		Point flagshipDirection = player.Flagship()->Facing().Unit();
+		double screenRatio = static_cast<double>(Screen::Height()) / static_cast<double>(Screen::Width());
+		flagshipDirection = Point(-flagshipDirection.Y(), flagshipDirection.X() * (1. / screenRatio));
 		Point screenRes = Point(Screen::Width(), Screen::Height());
 		FillShader::Fill(
 			Point(),
 			screenRes,
 			Color(0.5 * flash, 0.6 * flash, 1. * flash, flash),
-			(-(screenRes / 2.) * flagshipDirection) + screenRes * 0.5,
-			((screenRes / 2.) * flagshipDirection) + screenRes * 0.5,
+			(-(screenRes.Length()) * flagshipDirection) + screenRes,
+			(screenRes.Length() * flagshipDirection) + screenRes,
 			Color(1. * flash, 0.6 * flash, 0.5 * flash, flash));
 	}
 
