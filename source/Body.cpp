@@ -293,6 +293,13 @@ double Body::Alpha() const
 
 
 
+Point Body::Stretch() const
+{
+	return stretch;
+}
+
+
+
 // Set the frame rate of the sprite. This is used for objects that just specify
 // a sprite instead of a full animation data structure.
 void Body::SetFrameRate(float framesPerSecond)

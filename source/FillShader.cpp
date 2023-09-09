@@ -15,8 +15,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "FillShader.h"
 
-#include "Color.h"
-#include "Point.h"
 #include "Screen.h"
 #include "Shader.h"
 
@@ -28,6 +26,12 @@ namespace {
 	GLint centerI;
 	GLint sizeI;
 	GLint colorI;
+
+	GLint useGradientI;
+	GLint colorBI;
+	GLint gradientStartI;
+	GLint gradientEndI;
+
 
 	GLuint vao;
 	GLuint vbo;
@@ -45,7 +49,10 @@ void FillShader::Init()
 
 		"in vec2 vert;\n"
 
+		"out vec2 fragCenter;\n"
+
 		"void main() {\n"
+		"  fragCenter = center;"
 		"  gl_Position = vec4((center + vert * size) * scale, 0, 1);\n"
 		"}\n";
 
@@ -54,10 +61,27 @@ void FillShader::Init()
 		"precision mediump float;\n"
 		"uniform vec4 color;\n"
 
+		"uniform int useGradient;\n"
+		"uniform vec4 colorB;\n"
+		"uniform vec2 gradientStart;\n"
+		"uniform vec2 gradientEnd;\n"
+
+		"in vec2 fragCenter;\n"
+
 		"out vec4 finalColor;\n"
 
 		"void main() {\n"
-		"  finalColor = color;\n"
+		"  if(useGradient > 0)\n"
+		"  {\n"
+		"    float gradientStartDistance = length(gradientStart - gl_FragCoord.xy);\n"
+		"    float gradientEndDistance = length(gradientEnd - gl_FragCoord.xy);\n"
+		"    float mixFactor = gradientStartDistance / (gradientStartDistance + gradientEndDistance);\n"
+		"    float mixFactorB = gradientEndDistance / (gradientStartDistance + gradientEndDistance);\n"
+		"    vec4 interpolatedColor = color * mixFactor + colorB *(1. - mixFactor);\n"
+		"    finalColor = vec4(mixFactor, mixFactorB, 0, 10. * interpolatedColor.a);\n"
+		"  }\n"
+		"  else\n"
+		"    finalColor = color;\n"
 		"}\n";
 
 	shader = Shader(vertexCode, fragmentCode);
@@ -65,6 +89,11 @@ void FillShader::Init()
 	centerI = shader.Uniform("center");
 	sizeI = shader.Uniform("size");
 	colorI = shader.Uniform("color");
+
+	useGradientI = shader.Uniform("useGradient");
+	colorBI = shader.Uniform("colorB");
+	gradientStartI = shader.Uniform("gradientStart");
+	gradientEndI = shader.Uniform("gradientEnd");
 
 	// Generate the vertex data for drawing sprites.
 	glGenVertexArrays(1, &vao);
@@ -91,7 +120,7 @@ void FillShader::Init()
 
 
 
-void FillShader::Fill(const Point &center, const Point &size, const Color &color)
+void FillShader::Fill(const Point &center, const Point &size, const Color &color, Point gradientStart, Point gradientEnd, const Color &colorB)
 {
 	if(!shader.Object())
 		throw std::runtime_error("FillShader: Draw() called before Init().");
@@ -109,6 +138,20 @@ void FillShader::Fill(const Point &center, const Point &size, const Color &color
 	glUniform2fv(sizeI, 1, sizeV);
 
 	glUniform4fv(colorI, 1, color.Get());
+
+	if(gradientStart.X() > 0. || true)
+	{
+		glUniform1i(useGradientI, 42);
+		glUniform4fv(colorBI, 1, colorB.Get());
+
+		GLfloat gradientStartV[2] = {static_cast<float>(gradientStart.X()), static_cast<float>(gradientStart.Y())};
+		glUniform2fv(gradientStartI, 1, gradientStartV);
+
+		GLfloat gradientEndV[2] = {static_cast<float>(gradientEnd.X()), static_cast<float>(gradientEnd.Y())};
+		glUniform2fv(gradientEndI, 1, gradientEndV);
+	}
+	else
+		glUniform1i(useGradientI, 0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 

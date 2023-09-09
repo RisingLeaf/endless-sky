@@ -167,5 +167,8 @@ void DrawList::Push(const Body &body, Point pos, Point blur, double cloak, int s
 	item.swizzle = swizzle;
 	item.clip = 1.;
 
+	item.stretch[0] = static_cast<float>(body.Stretch().X());
+	item.stretch[1] =  static_cast<float>(body.Stretch().Y());
+
 	items.push_back(item);
 }

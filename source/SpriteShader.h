@@ -16,8 +16,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef SPRITE_SHADER_H_
 #define SPRITE_SHADER_H_
 
+#include "Point.h"
+
 class Sprite;
-class Point;
 
 #include <cstdint>
 
@@ -37,6 +38,7 @@ public:
 		uint32_t swizzle = 0;
 		float frame = 0.f;
 		float frameCount = 1.f;
+		float stretch[2] = {1., 1.};
 		float position[2] = {0.f, 0.f};
 		float transform[4] = {0.f, 0.f, 0.f, 0.f};
 		float blur[2] = {0.f, 0.f};

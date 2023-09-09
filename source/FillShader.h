@@ -16,8 +16,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef FILL_SHADER_H_
 #define FILL_SHADER_H_
 
-class Point;
-class Color;
+#include "Color.h"
+#include "Point.h"
 
 
 
@@ -27,7 +27,7 @@ class Color;
 class FillShader {
 public:
 	static void Init();
-	static void Fill(const Point &center, const Point &size, const Color &color);
+	static void Fill(const Point &center, const Point &size, const Color &color, Point gradientStart = Point(0., 0.), Point gradientEnd = Point(0., 0.), const Color &colorB = Color(0., 0.));
 };
 
 

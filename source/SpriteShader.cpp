@@ -15,7 +15,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "SpriteShader.h"
 
-#include "Point.h"
 #include "Screen.h"
 #include "Shader.h"
 #include "Sprite.h"
@@ -34,6 +33,7 @@ using namespace std;
 namespace {
 	Shader shader;
 	GLint scaleI;
+	GLint stretchI;
 	GLint texI;
 	GLint swizzleMaskI;
 	GLint useSwizzleMaskI;
@@ -61,6 +61,7 @@ void SpriteShader::Init()
 		"precision mediump float;\n"
 		"uniform vec2 scale;\n"
 		"uniform vec2 position;\n"
+		"uniform vec2 stretch;\n"
 		"uniform mat2 transform;\n"
 		"uniform vec2 blur;\n"
 		"uniform float clip;\n"
@@ -70,7 +71,8 @@ void SpriteShader::Init()
 
 		"void main() {\n"
 		"  vec2 blurOff = 2.f * vec2(vert.x * abs(blur.x), vert.y * abs(blur.y));\n"
-		"  gl_Position = vec4((transform * (vert + blurOff) + position) * scale, 0, 1);\n"
+		"  vec2 worldPos = (transform * ((vert + blurOff) * stretch) + position) * scale;\n"
+		"  gl_Position = vec4(worldPos.x, worldPos.y, 0, 1);\n"
 		"  vec2 texCoord = vert + vec2(.5, .5);\n"
 		"  fragTexCoord = vec2(texCoord.x, min(clip, texCoord.y)) + blurOff;\n"
 		"}\n";
@@ -256,6 +258,7 @@ void SpriteShader::Init()
 
 	shader = Shader(vertexCode, fragmentCode);
 	scaleI = shader.Uniform("scale");
+	stretchI = shader.Uniform("stretch");
 	texI = shader.Uniform("tex");
 	frameI = shader.Uniform("frame");
 	frameCountI = shader.Uniform("frameCount");
@@ -356,6 +359,7 @@ void SpriteShader::Add(const Item &item, bool withBlur)
 	glUniform1f(frameI, item.frame);
 	glUniform1f(frameCountI, item.frameCount);
 	glUniform2fv(positionI, 1, item.position);
+	glUniform2fv(stretchI, 1, item.stretch);
 	glUniformMatrix2fv(transformI, 1, false, item.transform);
 	// Special case: check if the blur should be applied or not.
 	static const float UNBLURRED[2] = {0.f, 0.f};

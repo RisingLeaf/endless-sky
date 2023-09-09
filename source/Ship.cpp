@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "DataWriter.h"
 #include "Effect.h"
 #include "Flotsam.h"
+#include "Point.h"
 #include "text/Format.h"
 #include "GameData.h"
 #include "Government.h"
@@ -3917,7 +3918,10 @@ void Ship::DoCloakDecision()
 bool Ship::DoHyperspaceLogic(vector<Visual> &visuals)
 {
 	if(!hyperspaceSystem && !hyperspaceCount)
+	{
+		stretch = Point(1., 1.);
 		return false;
+	}
 
 	// Don't apply external acceleration while jumping.
 	acceleration = Point();
@@ -3932,6 +3936,10 @@ bool Ship::DoHyperspaceLogic(vector<Visual> &visuals)
 	static const double HYPER_D = 1000.;
 	if(hyperspaceSystem)
 		fuel -= hyperspaceFuelCost / HYPER_C;
+
+	double hyperspaceCountPerecent = static_cast<double>(hyperspaceCount) / static_cast<double>(HYPER_C);
+	hyperspaceCountPerecent = pow(hyperspaceCountPerecent, 1.5);
+	stretch = (1. - hyperspaceCountPerecent) * Point(1., 1.) + hyperspaceCountPerecent * Point(.5, 2.);
 
 	// Create the particle effects for the jump drive. This may create 100
 	// or more particles per ship per turn at the peak of the jump.

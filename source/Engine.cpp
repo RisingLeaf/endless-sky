@@ -1032,7 +1032,17 @@ void Engine::Draw() const
 	}
 
 	if(flash)
-		FillShader::Fill(Point(), Point(Screen::Width(), Screen::Height()), Color(flash, flash));
+	{
+		Point flagshipDirection = player.Flagship()->Velocity().Unit();
+		Point screenRes = Point(Screen::Width(), Screen::Height());
+		FillShader::Fill(
+			Point(),
+			screenRes,
+			Color(0.5 * flash, 0.6 * flash, 1. * flash, flash),
+			(-(screenRes / 2.) * flagshipDirection) + screenRes * 0.5,
+			((screenRes / 2.) * flagshipDirection) + screenRes * 0.5,
+			Color(1. * flash, 0.6 * flash, 0.5 * flash, flash));
+	}
 
 	// Draw messages. Draw the most recent messages first, as some messages
 	// may be wrapped onto multiple lines.

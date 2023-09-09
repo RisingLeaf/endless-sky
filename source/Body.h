@@ -78,6 +78,7 @@ public:
 	void SetSwizzle(int swizzle);
 
 	double Alpha() const;
+	Point Stretch() const;
 
 protected:
 	// Adjust the frame rate.
@@ -101,6 +102,7 @@ protected:
 	float scale = 1.f;
 
 	double alpha = 1.;
+	Point stretch = Point(1., 1.);
 
 	// Government, for use in collision checks.
 	const Government *government = nullptr;
