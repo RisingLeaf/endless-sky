@@ -1041,8 +1041,8 @@ void Engine::Draw() const
 			Point(),
 			screenRes,
 			Color(0.5 * flash, 0.6 * flash, 1. * flash, flash),
-			(-(screenRes.Length()) * flagshipDirection) + screenRes,
-			(screenRes.Length() * flagshipDirection) + screenRes,
+			-(screenRes.Length() / 2.) * flagshipDirection + screenRes,
+			(screenRes.Length() / 2.) * flagshipDirection + screenRes,
 			Color(1. * flash, 0.6 * flash, 0.5 * flash, flash));
 	}
 
