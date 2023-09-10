@@ -144,20 +144,25 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 		glUseProgram(shader.Object());
 		glBindVertexArray(vao);
 
+		const float length = vel.Length();
+		Point unit = length ? vel.Unit() : Point(1., 0.);
+
+		// Stars this far beyond the border may still overlap the screen.
+		const double borderX = fabs(vel.X()) + 1.;
+		const double borderY = fabs(vel.Y()) + 1.;
+
 		for(int pass = 1; pass <= layers; pass++)
 		{
 			// Modify zoom for the first parallax layer.
 			if(isParallax)
 				zoom = baseZoom * STAR_ZOOM * pow(pass, 0.2);
 
-			float length = vel.Length();
-			Point unit = length ? vel.Unit() : Point(1., 0.);
 			// Don't zoom the stars at the same rate as the field; otherwise, at the
 			// farthest out zoom they are too small to draw well.
 			unit /= pow(zoom, .75);
 
-			float baseZoom = static_cast<float>(2. * zoom);
-			GLfloat scale[2] = {baseZoom / Screen::Width(), -baseZoom / Screen::Height()};
+			float passBaseZoom = static_cast<float>(2. * zoom);
+			GLfloat scale[2] = {passBaseZoom / Screen::Width(), -passBaseZoom / Screen::Height()};
 			glUniform2fv(scaleI, 1, scale);
 
 			GLfloat rotate[4] = {
@@ -168,9 +173,6 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 			glUniform1f(elongationI, length * zoom);
 			glUniform1f(brightnessI, min(1., pow(zoom, .5)));
 
-			// Stars this far beyond the border may still overlap the screen.
-			double borderX = fabs(vel.X()) + 1.;
-			double borderY = fabs(vel.Y()) + 1.;
 			// Find the absolute bounds of the star field we must draw.
 			int minX = pos.X() + (Screen::Left() - borderX) / zoom;
 			int minY = pos.Y() + (Screen::Top() - borderY) / zoom;
@@ -249,13 +251,13 @@ void StarField::SetUpGraphics()
 
 		"in vec2 offset;\n"
 		"in float size;\n"
-		"in float corner;\n"
+		"in vec2 corner;\n"
 		"out float fragmentAlpha;\n"
 		"out vec2 coord;\n"
 
 		"void main() {\n"
 		"  fragmentAlpha = brightness * (4. / (4. + elongation)) * size * .2 + .05;\n"
-		"  coord = vec2(sin(corner), cos(corner));\n"
+		"  coord = corner;\n"
 		"  vec2 elongated = vec2(coord.x * size, coord.y * (size + elongation));\n"
 		"  gl_Position = vec4((rotate * elongated + translate + offset) * scale, 0, 1);\n"
 		"}\n";
@@ -353,7 +355,7 @@ void StarField::MakeStars(int stars, int width)
 	partial_sum(tileIndex.begin(), tileIndex.end(), tileIndex.begin());
 
 	// Each star consists of five vertices, each with four data elements.
-	vector<GLfloat> data(6 * 4 * stars, 0.f);
+	vector<GLfloat> data(6 * 5 * stars, 0.f);
 	for(auto it = temp.begin(); it != temp.end(); )
 	{
 		// Figure out what tile this star is in.
@@ -363,12 +365,13 @@ void StarField::MakeStars(int stars, int width)
 
 		// Randomize its sub-pixel position and its size / brightness.
 		int random = Random::Int(4096);
-		float fx = (x & (TILE_SIZE - 1)) + (random & 15) * 0.0625f;
-		float fy = (y & (TILE_SIZE - 1)) + (random >> 8) * 0.0625f;
-		float size = (((random >> 4) & 15) + 20) * 0.0625f;
+		const static float STAR_SIZE = 0.0625f;
+		float fx = (x & (TILE_SIZE - 1)) + (random & 15) * STAR_SIZE;
+		float fy = (y & (TILE_SIZE - 1)) + (random >> 8) * STAR_SIZE;
+		float size = (((random >> 4) & 15) + 20) * STAR_SIZE;
 
 		// Fill in the data array.
-		auto dataIt = data.begin() + 6 * 4 * tileIndex[index]++;
+		auto dataIt = data.begin() + 6 * 5 * tileIndex[index]++;
 		const float CORNER[6] = {
 			static_cast<float>(0. * PI),
 			static_cast<float>(.5 * PI),
@@ -382,7 +385,8 @@ void StarField::MakeStars(int stars, int width)
 			*dataIt++ = fx;
 			*dataIt++ = fy;
 			*dataIt++ = size;
-			*dataIt++ = corner;
+			*dataIt++ = sin(corner);
+			*dataIt++ = cos(corner);
 		}
 	}
 	// Adjust the tile indices so that tileIndex[i] is the start of tile i.
@@ -391,7 +395,7 @@ void StarField::MakeStars(int stars, int width)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data.front()) * data.size(), data.data(), GL_STATIC_DRAW);
 
 	// Connect the xy to the "vert" attribute of the vertex shader.
-	constexpr auto stride = 4 * sizeof(GLfloat);
+	constexpr auto stride = 5 * sizeof(GLfloat);
 	glEnableVertexAttribArray(offsetI);
 	glVertexAttribPointer(offsetI, 2, GL_FLOAT, GL_FALSE,
 		stride, nullptr);
@@ -401,7 +405,7 @@ void StarField::MakeStars(int stars, int width)
 		stride, reinterpret_cast<const GLvoid *>(2 * sizeof(GLfloat)));
 
 	glEnableVertexAttribArray(cornerI);
-	glVertexAttribPointer(cornerI, 1, GL_FLOAT, GL_FALSE,
+	glVertexAttribPointer(cornerI, 2, GL_FLOAT, GL_FALSE,
 		stride, reinterpret_cast<const GLvoid *>(3 * sizeof(GLfloat)));
 
 	// unbind the VBO and VAO
