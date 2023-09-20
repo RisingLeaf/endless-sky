@@ -95,6 +95,8 @@ target_sources(EndlessSkyLib PRIVATE
 	Effect.h
 	Engine.cpp
 	Engine.h
+	ESG.h
+	ESG.cpp
 	EsUuid.cpp
 	EsUuid.h
 	EscortDisplay.cpp

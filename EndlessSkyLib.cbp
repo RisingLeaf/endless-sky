@@ -143,6 +143,8 @@
 		<Unit filename="source/Engine.h" />
 		<Unit filename="source/EscortDisplay.cpp" />
 		<Unit filename="source/EscortDisplay.h" />
+		<Unit filename="source/ESG.cpp" />
+		<Unit filename="source/ESG.h" />
 		<Unit filename="source/EsUuid.cpp" />
 		<Unit filename="source/EsUuid.h" />
 		<Unit filename="source/ExclusiveItem.h" />

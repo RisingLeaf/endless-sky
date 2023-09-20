@@ -68,7 +68,7 @@ void FillShader::Init()
 
 	// Generate the vertex data for drawing sprites.
 	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	ESG_BindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -86,7 +86,7 @@ void FillShader::Init()
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	ESG_BindVertexArray(0);
 }
 
 
@@ -96,8 +96,8 @@ void FillShader::Fill(const Point &center, const Point &size, const Color &color
 	if(!shader.Object())
 		throw std::runtime_error("FillShader: Draw() called before Init().");
 
-	glUseProgram(shader.Object());
-	glBindVertexArray(vao);
+	ESG_BindShader(shader.Object());
+	ESG_BindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
 	glUniform2fv(scaleI, 1, scale);
@@ -112,6 +112,6 @@ void FillShader::Fill(const Point &center, const Point &size, const Color &color
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	glBindVertexArray(0);
-	glUseProgram(0);
+	ESG_BindVertexArray(0);
+	ESG_BindShader(0);
 }

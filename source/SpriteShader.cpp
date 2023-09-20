@@ -270,7 +270,7 @@ void SpriteShader::Init()
 
 	// Generate the vertex data for drawing sprites.
 	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	ESG_BindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -288,7 +288,7 @@ void SpriteShader::Init()
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	ESG_BindVertexArray(0);
 }
 
 
@@ -332,8 +332,8 @@ SpriteShader::Item SpriteShader::Prepare(const Sprite *sprite, const Point &posi
 
 void SpriteShader::Bind()
 {
-	glUseProgram(shader.Object());
-	glBindVertexArray(vao);
+	ESG_BindShader(shader.Object());
+	ESG_BindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
 	glUniform2fv(scaleI, 1, scale);
@@ -343,12 +343,12 @@ void SpriteShader::Bind()
 
 void SpriteShader::Add(const Item &item, bool withBlur)
 {
-	glUniform1i(texI, 0);
+	ESG_Uniform1i(texI, 0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, item.texture);
 
-	glUniform1i(swizzleMaskI, 1);
+	ESG_Uniform1i(swizzleMaskI, 1);
 	// Don't mask full color swizzles that always apply to the whole ship sprite.
-	glUniform1i(useSwizzleMaskI, item.swizzle == 27 || item.swizzleMask == 28 ? 0 : item.swizzleMask);
+	ESG_Uniform1i(useSwizzleMaskI, item.swizzle == 27 || item.swizzleMask == 28 ? 0 : item.swizzleMask);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, item.swizzleMask);
 	glActiveTexture(GL_TEXTURE0);
@@ -366,7 +366,7 @@ void SpriteShader::Add(const Item &item, bool withBlur)
 	// Bounds check for the swizzle value:
 	int swizzle = (static_cast<size_t>(item.swizzle) >= SWIZZLES ? 0 : item.swizzle);
 	// Set the color swizzle.
-	glUniform1i(swizzlerI, swizzle);
+	ESG_Uniform1i(swizzlerI, swizzle);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
@@ -376,8 +376,8 @@ void SpriteShader::Add(const Item &item, bool withBlur)
 void SpriteShader::Unbind()
 {
 	// Reset the swizzle.
-	glUniform1i(swizzlerI, 0);
+	ESG_Uniform1i(swizzlerI, 0);
 
-	glBindVertexArray(0);
-	glUseProgram(0);
+	ESG_BindVertexArray(0);
+	ESG_BindShader(0);
 }

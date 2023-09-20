@@ -16,6 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef SHADER_H_
 #define SHADER_H_
 
+#include "ESG.h"
 #include "opengl.h"
 
 

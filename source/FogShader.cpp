@@ -97,13 +97,13 @@ void FogShader::Init()
 	cornerI = shader.Uniform("corner");
 	dimensionsI = shader.Uniform("dimensions");
 
-	glUseProgram(shader.Object());
-	glUniform1i(shader.Uniform("tex"), 0);
-	glUseProgram(0);
+	ESG_BindShader(shader.Object());
+	ESG_Uniform1i(shader.Uniform("tex"), 0);
+	ESG_BindShader(0);
 
 	// Generate the vertex data for drawing sprites.
 	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	ESG_BindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -123,7 +123,7 @@ void FogShader::Init()
 
 	// Unbind the VBO and VAO.
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	ESG_BindVertexArray(0);
 }
 
 
@@ -231,8 +231,8 @@ void FogShader::Draw(const Point &center, double zoom, const PlayerInfo &player)
 		glBindTexture(GL_TEXTURE_2D, texture);
 
 	// Set up to draw the image.
-	glUseProgram(shader.Object());
-	glBindVertexArray(vao);
+	ESG_BindShader(shader.Object());
+	ESG_BindVertexArray(vao);
 
 	GLfloat corner[2] = {
 		static_cast<float>(left - .5 * GRID * zoom) / (.5f * Screen::Width()),
@@ -247,7 +247,7 @@ void FogShader::Draw(const Point &center, double zoom, const PlayerInfo &player)
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	// Clean up.
-	glBindVertexArray(0);
-	glUseProgram(0);
+	ESG_BindVertexArray(0);
+	ESG_BindShader(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

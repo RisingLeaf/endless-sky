@@ -136,9 +136,9 @@ void Font::Draw(const string &str, const Point &point, const Color &color) const
 
 void Font::DrawAliased(const string &str, double x, double y, const Color &color) const
 {
-	glUseProgram(shader.Object());
+	ESG_BindShader(shader.Object());
 	glBindTexture(GL_TEXTURE_2D, texture);
-	glBindVertexArray(vao);
+	ESG_BindVertexArray(vao);
 
 	glUniform4fv(colorI, 1, color.Get());
 
@@ -176,7 +176,7 @@ void Font::DrawAliased(const string &str, double x, double y, const Color &color
 			continue;
 		}
 
-		glUniform1i(glyphI, glyph);
+		ESG_Uniform1i(glyphI, glyph);
 		glUniform1f(aspectI, 1.f);
 
 		textPos[0] += advance[previous * GLYPHS + glyph] + KERN;
@@ -186,7 +186,7 @@ void Font::DrawAliased(const string &str, double x, double y, const Color &color
 
 		if(underlineChar)
 		{
-			glUniform1i(glyphI, underscoreGlyph);
+			ESG_Uniform1i(glyphI, underscoreGlyph);
 			glUniform1f(aspectI, static_cast<float>(advance[glyph * GLYPHS] + KERN)
 				/ (advance[underscoreGlyph * GLYPHS] + KERN));
 
@@ -199,8 +199,8 @@ void Font::DrawAliased(const string &str, double x, double y, const Color &color
 		previous = glyph;
 	}
 
-	glBindVertexArray(0);
-	glUseProgram(0);
+	ESG_BindVertexArray(0);
+	ESG_BindShader(0);
 }
 
 
@@ -339,13 +339,13 @@ void Font::SetUpShader(float glyphW, float glyphH)
 	glyphH *= .5f;
 
 	shader = Shader(vertexCode, fragmentCode);
-	glUseProgram(shader.Object());
-	glUniform1i(shader.Uniform("tex"), 0);
-	glUseProgram(0);
+	ESG_BindShader(shader.Object());
+	ESG_Uniform1i(shader.Uniform("tex"), 0);
+	ESG_BindShader(0);
 
 	// Create the VAO and VBO.
 	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	ESG_BindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -368,7 +368,7 @@ void Font::SetUpShader(float glyphW, float glyphH)
 		stride, reinterpret_cast<const GLvoid *>(2 * sizeof(GLfloat)));
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	ESG_BindVertexArray(0);
 
 	// We must update the screen size next time we draw.
 	screenWidth = 0;

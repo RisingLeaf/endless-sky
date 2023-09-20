@@ -20,7 +20,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Logger.h"
 #include "Screen.h"
 
-#include "opengl.h"
+#include "ESG.h"
 #include <SDL2/SDL.h>
 
 #include <cstring>
@@ -204,14 +204,11 @@ bool GameWindow::Init()
 		return false;
 	}
 
-	// OpenGL settings
-	glClearColor(0.f, 0.f, 0.0f, 1.f);
-	glEnable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	// Render settings
+	ESG::RenderSetup();
 
 	// Check for support of various graphical features.
-	supportsAdaptiveVSync = OpenGL::HasAdaptiveVSyncSupport();
+	supportsAdaptiveVSync = ESG::HasAdaptiveVSyncSupport();
 
 	// Enable the user's preferred VSync state, otherwise update to an available
 	// value (e.g. if an external program is forcing a particular VSync state).

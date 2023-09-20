@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "BatchShader.h"
 
+#include "ESG.h"
 #include "Screen.h"
 #include "Shader.h"
 #include "Sprite.h"
@@ -90,13 +91,13 @@ void BatchShader::Init()
 	alphaI = shader.Attrib("alpha");
 
 	// Make sure we're using texture 0.
-	glUseProgram(shader.Object());
-	glUniform1i(shader.Uniform("tex"), 0);
-	glUseProgram(0);
+	ESG_BindShader(shader.Object());
+	ESG_Uniform1i(shader.Uniform("tex"), 0);
+	ESG_BindShader(0);
 
 	// Generate the buffer for uploading the batch vertex data.
 	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	ESG_BindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -117,15 +118,15 @@ void BatchShader::Init()
 	// Unbind the buffer and the VAO, but leave the vertex attrib arrays enabled
 	// in the VAO so they will be used when it is bound.
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	ESG_BindVertexArray(0);
 }
 
 
 
 void BatchShader::Bind()
 {
-	glUseProgram(shader.Object());
-	glBindVertexArray(vao);
+	ESG_BindShader(shader.Object());
+	ESG_BindVertexArray(vao);
 	// Bind the vertex buffer so we can upload data to it.
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
@@ -160,6 +161,6 @@ void BatchShader::Unbind()
 {
 	// Unbind everything in reverse order.
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-	glUseProgram(0);
+	ESG_BindVertexArray(0);
+	ESG_BindShader(0);
 }

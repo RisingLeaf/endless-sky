@@ -140,8 +140,8 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 	// Draw the starfield unless it is disabled in the preferences.
 	if(Preferences::Has("Draw starfield") && density > 0.)
 	{
-		glUseProgram(shader.Object());
-		glBindVertexArray(vao);
+		ESG_BindShader(shader.Object());
+		ESG_BindVertexArray(vao);
 
 		for(int pass = 1; pass <= layers; pass++)
 		{
@@ -198,8 +198,8 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 				}
 			}
 		}
-		glBindVertexArray(0);
-		glUseProgram(0);
+		ESG_BindVertexArray(0);
+		ESG_BindShader(0);
 	}
 
 	// Draw the background haze unless it is disabled in the preferences.
@@ -275,7 +275,7 @@ void StarField::SetUpGraphics()
 
 	// make and bind the VAO
 	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	ESG_BindVertexArray(vao);
 
 	// make and bind the VBO
 	glGenBuffers(1, &vbo);
@@ -405,5 +405,5 @@ void StarField::MakeStars(int stars, int width)
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	ESG_BindVertexArray(0);
 }
