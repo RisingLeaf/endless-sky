@@ -131,7 +131,7 @@ void PointerShader::Bind()
 	ESG_BindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	glUniform2fv(scaleI, 1, scale);
+	ESG_Uniform2fv(scaleI, scale);
 }
 
 
@@ -140,15 +140,15 @@ void PointerShader::Add(const Point &center, const Point &angle,
 	float width, float height, float offset, const Color &color)
 {
 	GLfloat c[2] = {static_cast<float>(center.X()), static_cast<float>(center.Y())};
-	glUniform2fv(centerI, 1, c);
+	ESG_Uniform2fv(centerI, c);
 
 	GLfloat a[2] = {static_cast<float>(angle.X()), static_cast<float>(angle.Y())};
-	glUniform2fv(angleI, 1, a);
+	ESG_Uniform2fv(angleI, a);
 
 	GLfloat size[2] = {width, height};
-	glUniform2fv(sizeI, 1, size);
+	ESG_Uniform2fv(sizeI, size);
 
-	glUniform1f(offsetI, offset);
+	ESG_Uniform1f(offsetI, offset);
 
 	glUniform4fv(colorI, 1, color.Get());
 

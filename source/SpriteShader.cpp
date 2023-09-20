@@ -336,7 +336,7 @@ void SpriteShader::Bind()
 	ESG_BindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	glUniform2fv(scaleI, 1, scale);
+	ESG_Uniform2fv(scaleI, scale);
 }
 
 
@@ -344,24 +344,24 @@ void SpriteShader::Bind()
 void SpriteShader::Add(const Item &item, bool withBlur)
 {
 	ESG_Uniform1i(texI, 0);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, item.texture);
+	ESG_BindTexture(GL_TEXTURE_2D_ARRAY, item.texture);
 
 	ESG_Uniform1i(swizzleMaskI, 1);
 	// Don't mask full color swizzles that always apply to the whole ship sprite.
 	ESG_Uniform1i(useSwizzleMaskI, item.swizzle == 27 || item.swizzleMask == 28 ? 0 : item.swizzleMask);
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, item.swizzleMask);
+	ESG_BindTexture(GL_TEXTURE_2D_ARRAY, item.swizzleMask);
 	glActiveTexture(GL_TEXTURE0);
 
-	glUniform1f(frameI, item.frame);
-	glUniform1f(frameCountI, item.frameCount);
-	glUniform2fv(positionI, 1, item.position);
+	ESG_Uniform1f(frameI, item.frame);
+	ESG_Uniform1f(frameCountI, item.frameCount);
+	ESG_Uniform2fv(positionI, item.position);
 	glUniformMatrix2fv(transformI, 1, false, item.transform);
 	// Special case: check if the blur should be applied or not.
 	static const float UNBLURRED[2] = {0.f, 0.f};
-	glUniform2fv(blurI, 1, withBlur ? item.blur : UNBLURRED);
-	glUniform1f(clipI, item.clip);
-	glUniform1f(alphaI, item.alpha);
+	ESG_Uniform2fv(blurI, withBlur ? item.blur : UNBLURRED);
+	ESG_Uniform1f(clipI, item.clip);
+	ESG_Uniform1f(alphaI, item.alpha);
 
 	// Bounds check for the swizzle value:
 	int swizzle = (static_cast<size_t>(item.swizzle) >= SWIZZLES ? 0 : item.swizzle);

@@ -19,7 +19,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Preferences.h"
 #include "Screen.h"
 
-#include "opengl.h"
+#include "ESG.h"
 #include <SDL2/SDL.h>
 
 #include <algorithm>
@@ -33,23 +33,7 @@ namespace {
 		if(Preferences::Has("Reduce large graphics") && buffer.Width() * buffer.Height() >= 1000000)
 			buffer.ShrinkToHalfSize();
 
-		// Upload the images as a single array texture.
-		glGenTextures(1, target);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, *target);
-
-		// Use linear interpolation and no wrapping.
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		// Upload the image data.
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, // target, mipmap level, internal format,
-			buffer.Width(), buffer.Height(), buffer.Frames(), // width, height, depth,
-			0, GL_RGBA, GL_UNSIGNED_BYTE, buffer.Pixels()); // border, input format, data type, data.
-
-		// Unbind the texture.
-		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+		ESG::AddBuffer(target, buffer.Width(), buffer.Height(), buffer.Frames(), buffer.Pixels());
 
 		// Free the ImageBuffer memory.
 		buffer.Clear();

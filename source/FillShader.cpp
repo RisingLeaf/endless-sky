@@ -100,13 +100,13 @@ void FillShader::Fill(const Point &center, const Point &size, const Color &color
 	ESG_BindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	glUniform2fv(scaleI, 1, scale);
+	ESG_Uniform2fv(scaleI, scale);
 
 	GLfloat centerV[2] = {static_cast<float>(center.X()), static_cast<float>(center.Y())};
-	glUniform2fv(centerI, 1, centerV);
+	ESG_Uniform2fv(centerI, centerV);
 
 	GLfloat sizeV[2] = {static_cast<float>(size.X()), static_cast<float>(size.Y())};
-	glUniform2fv(sizeI, 1, sizeV);
+	ESG_Uniform2fv(sizeI, sizeV);
 
 	glUniform4fv(colorI, 1, color.Get());
 

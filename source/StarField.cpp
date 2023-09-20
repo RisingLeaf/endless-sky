@@ -157,15 +157,15 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 
 			float baseZoom = static_cast<float>(2. * zoom);
 			GLfloat scale[2] = {baseZoom / Screen::Width(), -baseZoom / Screen::Height()};
-			glUniform2fv(scaleI, 1, scale);
+			ESG_Uniform2fv(scaleI, scale);
 
 			GLfloat rotate[4] = {
 				static_cast<float>(unit.Y()), static_cast<float>(-unit.X()),
 				static_cast<float>(unit.X()), static_cast<float>(unit.Y())};
 			glUniformMatrix2fv(rotateI, pass, false, rotate);
 
-			glUniform1f(elongationI, length * zoom);
-			glUniform1f(brightnessI, min(1., pow(zoom, .5)));
+			ESG_Uniform1f(elongationI, length * zoom);
+			ESG_Uniform1f(brightnessI, min(1., pow(zoom, .5)));
 
 			// Stars this far beyond the border may still overlap the screen.
 			double borderX = fabs(vel.X()) + 1.;
@@ -189,7 +189,7 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 						static_cast<float>(off.X()),
 						static_cast<float>(off.Y())
 					};
-					glUniform2fv(translateI, 1, translate);
+					ESG_Uniform2fv(translateI, translate);
 
 					int index = (gx & widthMod) / TILE_SIZE + ((gy & widthMod) / TILE_SIZE) * tileCols;
 					int first = 6 * tileIndex[index];

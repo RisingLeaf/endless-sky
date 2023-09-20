@@ -152,7 +152,7 @@ void RingShader::Bind()
 	ESG_BindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	glUniform2fv(scaleI, 1, scale);
+	ESG_Uniform2fv(scaleI, scale);
 }
 
 
@@ -169,13 +169,13 @@ void RingShader::Add(const Point &pos, float radius, float width, float fraction
 	const Color &color, float dash, float startAngle)
 {
 	GLfloat position[2] = {static_cast<float>(pos.X()), static_cast<float>(pos.Y())};
-	glUniform2fv(positionI, 1, position);
+	ESG_Uniform2fv(positionI, position);
 
-	glUniform1f(radiusI, radius);
-	glUniform1f(widthI, width);
-	glUniform1f(angleI, fraction * 2. * PI);
-	glUniform1f(startAngleI, startAngle * TO_RAD);
-	glUniform1f(dashI, dash ? 2. * PI / dash : 0.);
+	ESG_Uniform1f(radiusI, radius);
+	ESG_Uniform1f(widthI, width);
+	ESG_Uniform1f(angleI, fraction * 2. * PI);
+	ESG_Uniform1f(startAngleI, startAngle * TO_RAD);
+	ESG_Uniform1f(dashI, dash ? 2. * PI / dash : 0.);
 
 	glUniform4fv(colorI, 1, color.Get());
 

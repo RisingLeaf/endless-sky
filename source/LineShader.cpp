@@ -112,18 +112,18 @@ void LineShader::Draw(const Point &from, const Point &to, float width, const Col
 	ESG_BindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	glUniform2fv(scaleI, 1, scale);
+	ESG_Uniform2fv(scaleI, scale);
 
 	GLfloat start[2] = {static_cast<float>(from.X()), static_cast<float>(from.Y())};
-	glUniform2fv(startI, 1, start);
+	ESG_Uniform2fv(startI, start);
 
 	Point v = to - from;
 	Point u = v.Unit() * width;
 	GLfloat length[2] = {static_cast<float>(v.X()), static_cast<float>(v.Y())};
-	glUniform2fv(lengthI, 1, length);
+	ESG_Uniform2fv(lengthI, length);
 
 	GLfloat w[2] = {static_cast<float>(u.Y()), static_cast<float>(-u.X())};
-	glUniform2fv(widthI, 1, w);
+	ESG_Uniform2fv(widthI, w);
 
 	glUniform4fv(colorI, 1, color.Get());
 

@@ -132,7 +132,7 @@ void BatchShader::Bind()
 
 	// Set up the screen scale.
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	glUniform2fv(scaleI, 1, scale);
+	ESG_Uniform2fv(scaleI, scale);
 }
 
 
@@ -144,9 +144,9 @@ void BatchShader::Add(const Sprite *sprite, bool isHighDPI, const vector<float> 
 		return;
 
 	// First, bind the proper texture.
-	glBindTexture(GL_TEXTURE_2D_ARRAY, sprite->Texture(isHighDPI));
+	ESG_BindTexture(GL_TEXTURE_2D_ARRAY, sprite->Texture(isHighDPI));
 	// The shader also needs to know how many frames the texture has.
-	glUniform1f(frameCountI, sprite->Frames());
+	ESG_Uniform1f(frameCountI, sprite->Frames());
 
 	// Upload the vertex data.
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), data.data(), GL_STREAM_DRAW);

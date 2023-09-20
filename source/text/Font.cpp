@@ -137,7 +137,7 @@ void Font::Draw(const string &str, const Point &point, const Color &color) const
 void Font::DrawAliased(const string &str, double x, double y, const Color &color) const
 {
 	ESG_BindShader(shader.Object());
-	glBindTexture(GL_TEXTURE_2D, texture);
+	ESG_BindTexture(GL_TEXTURE_2D, texture);
 	ESG_BindVertexArray(vao);
 
 	glUniform4fv(colorI, 1, color.Get());
@@ -148,7 +148,7 @@ void Font::DrawAliased(const string &str, double x, double y, const Color &color
 		screenWidth = Screen::Width();
 		screenHeight = Screen::Height();
 		GLfloat scale[2] = {2.f / screenWidth, -2.f / screenHeight};
-		glUniform2fv(scaleI, 1, scale);
+		ESG_Uniform2fv(scaleI, scale);
 	}
 
 	GLfloat textPos[2] = {
@@ -177,20 +177,20 @@ void Font::DrawAliased(const string &str, double x, double y, const Color &color
 		}
 
 		ESG_Uniform1i(glyphI, glyph);
-		glUniform1f(aspectI, 1.f);
+		ESG_Uniform1f(aspectI, 1.f);
 
 		textPos[0] += advance[previous * GLYPHS + glyph] + KERN;
-		glUniform2fv(positionI, 1, textPos);
+		ESG_Uniform2fv(positionI, textPos);
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 		if(underlineChar)
 		{
 			ESG_Uniform1i(glyphI, underscoreGlyph);
-			glUniform1f(aspectI, static_cast<float>(advance[glyph * GLYPHS] + KERN)
+			ESG_Uniform1f(aspectI, static_cast<float>(advance[glyph * GLYPHS] + KERN)
 				/ (advance[underscoreGlyph * GLYPHS] + KERN));
 
-			glUniform2fv(positionI, 1, textPos);
+			ESG_Uniform2fv(positionI, textPos);
 
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 			underlineChar = false;
@@ -258,7 +258,7 @@ int Font::Glyph(char c, bool isAfterSpace) noexcept
 void Font::LoadTexture(ImageBuffer &image)
 {
 	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	ESG_BindTexture(GL_TEXTURE_2D, texture);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

@@ -165,15 +165,15 @@ void OutlineShader::Draw(const Sprite *sprite, const Point &pos, const Point &si
 	ESG_BindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	glUniform2fv(scaleI, 1, scale);
+	ESG_Uniform2fv(scaleI, scale);
 
 	GLfloat off[2] = {
 		static_cast<float>(.5 / size.X()),
 		static_cast<float>(.5 / size.Y())};
-	glUniform2fv(offI, 1, off);
+	ESG_Uniform2fv(offI, off);
 
-	glUniform1f(frameI, frame);
-	glUniform1f(frameCountI, sprite->Frames());
+	ESG_Uniform1f(frameI, frame);
+	ESG_Uniform1f(frameCountI, sprite->Frames());
 
 	Point uw = unit * size.X();
 	Point uh = unit * size.Y();
@@ -187,11 +187,11 @@ void OutlineShader::Draw(const Sprite *sprite, const Point &pos, const Point &si
 
 	GLfloat position[2] = {
 		static_cast<float>(pos.X()), static_cast<float>(pos.Y())};
-	glUniform2fv(positionI, 1, position);
+	ESG_Uniform2fv(positionI, position);
 
 	glUniform4fv(colorI, 1, color.Get());
 
-	glBindTexture(GL_TEXTURE_2D_ARRAY, sprite->Texture(unit.Length() * Screen::Zoom() > 50.));
+	ESG_BindTexture(GL_TEXTURE_2D_ARRAY, sprite->Texture(unit.Length() * Screen::Zoom() > 50.));
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 

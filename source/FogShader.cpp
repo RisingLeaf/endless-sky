@@ -212,7 +212,7 @@ void FogShader::Draw(const Point &center, double zoom, const PlayerInfo &player)
 				glDeleteTextures(1, &texture);
 
 			glGenTextures(1, &texture);
-			glBindTexture(GL_TEXTURE_2D, texture);
+			ESG_BindTexture(GL_TEXTURE_2D, texture);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -223,12 +223,12 @@ void FogShader::Draw(const Point &center, double zoom, const PlayerInfo &player)
 		}
 		else
 		{
-			glBindTexture(GL_TEXTURE_2D, texture);
+			ESG_BindTexture(GL_TEXTURE_2D, texture);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, columns, rows, GL_RED, GL_UNSIGNED_BYTE, data);
 		}
 	}
 	else
-		glBindTexture(GL_TEXTURE_2D, texture);
+		ESG_BindTexture(GL_TEXTURE_2D, texture);
 
 	// Set up to draw the image.
 	ESG_BindShader(shader.Object());
@@ -237,11 +237,11 @@ void FogShader::Draw(const Point &center, double zoom, const PlayerInfo &player)
 	GLfloat corner[2] = {
 		static_cast<float>(left - .5 * GRID * zoom) / (.5f * Screen::Width()),
 		static_cast<float>(top - .5 * GRID * zoom) / (-.5f * Screen::Height())};
-	glUniform2fv(cornerI, 1, corner);
+	ESG_Uniform2fv(cornerI, corner);
 	GLfloat dimensions[2] = {
 		GRID * static_cast<float>(zoom) * (columns + 1.f) / (.5f * Screen::Width()),
 		GRID * static_cast<float>(zoom) * (rows + 1.f) / (-.5f * Screen::Height())};
-	glUniform2fv(dimensionsI, 1, dimensions);
+	ESG_Uniform2fv(dimensionsI, dimensions);
 
 	// Call the shader program to draw the image.
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -249,5 +249,5 @@ void FogShader::Draw(const Point &center, double zoom, const PlayerInfo &player)
 	// Clean up.
 	ESG_BindVertexArray(0);
 	ESG_BindShader(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	ESG_BindTexture(GL_TEXTURE_2D, 0);
 }
