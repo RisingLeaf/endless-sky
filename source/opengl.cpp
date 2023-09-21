@@ -34,9 +34,9 @@ namespace {
 		return strstr(extensions, name);
 #else
 		bool value = false;
-		GLint extensionCount = 0;
+		int32_t extensionCount = 0;
 		glGetIntegerv(GL_NUM_EXTENSIONS, &extensionCount);
-		for(GLint i = 0; i < extensionCount && !value; ++i)
+		for(int32_t i = 0; i < extensionCount && !value; ++i)
 		{
 			auto extension = reinterpret_cast<const char *>(glGetStringi(GL_EXTENSIONS, i));
 			value = (extension && strstr(extension, name));

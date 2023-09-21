@@ -16,6 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "FillShader.h"
 
 #include "Color.h"
+#include "Files.h"
 #include "Point.h"
 #include "Screen.h"
 #include "Shader.h"
@@ -24,43 +25,25 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 namespace {
 	Shader shader;
-	GLint scaleI;
-	GLint centerI;
-	GLint sizeI;
-	GLint colorI;
+	int32_t scaleI;
+	int32_t centerI;
+	int32_t sizeI;
+	int32_t colorI;
 
-	GLuint vao;
-	GLuint vbo;
+	uint32_t vao;
+	uint32_t vbo;
 }
+
+using namespace std;
 
 
 
 void FillShader::Init()
 {
-	static const char *vertexCode =
-		"// vertex fill shader\n"
-		"uniform vec2 scale;\n"
-		"uniform vec2 center;\n"
-		"uniform vec2 size;\n"
+	static const string vertexCode = Files::Read(Files::Data() + "shaders/Fill.vert");
+	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Fill.frag");
 
-		"in vec2 vert;\n"
-
-		"void main() {\n"
-		"  gl_Position = vec4((center + vert * size) * scale, 0, 1);\n"
-		"}\n";
-
-	static const char *fragmentCode =
-		"// fragment fill shader\n"
-		"precision mediump float;\n"
-		"uniform vec4 color;\n"
-
-		"out vec4 finalColor;\n"
-
-		"void main() {\n"
-		"  finalColor = color;\n"
-		"}\n";
-
-	shader = Shader(vertexCode, fragmentCode);
+	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 	scaleI = shader.Uniform("scale");
 	centerI = shader.Uniform("center");
 	sizeI = shader.Uniform("size");

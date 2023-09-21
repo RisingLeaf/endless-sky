@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "FogShader.h"
 
+#include "Files.h"
 #include "GameData.h"
 #include "PlayerInfo.h"
 #include "Point.h"
@@ -44,11 +45,11 @@ namespace {
 
 	// OpenGL objects:
 	Shader shader;
-	GLuint cornerI;
-	GLuint dimensionsI;
-	GLuint vao;
-	GLuint vbo;
-	GLuint texture = 0;
+	uint32_t cornerI;
+	uint32_t dimensionsI;
+	uint32_t vao;
+	uint32_t vbo;
+	uint32_t texture = 0;
 
 	// Keep track of the previous frame's view so that if it is unchanged we can
 	// skip regenerating the mask.
@@ -64,36 +65,11 @@ namespace {
 
 void FogShader::Init()
 {
-	static const char *vertexCode =
-		"// vertex fog shader\n"
-		"uniform vec2 corner;\n"
-		"uniform vec2 dimensions;\n"
+	static const string vertexCode = Files::Read(Files::Data() + "shaders/Fog.vert");
+	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Fog.frag");
 
-		"in vec2 vert;\n"
-		"out vec2 fragTexCoord;\n"
+	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 
-		"void main() {\n"
-		"  gl_Position = vec4(corner + vert * dimensions, 0, 1);\n"
-		"  fragTexCoord = vert;\n"
-		"}\n";
-
-	static const char *fragmentCode =
-		"// fragment fog shader\n"
-#ifdef ES_GLES
-		"precision mediump sampler2D;\n"
-#endif
-		"precision mediump float;\n"
-		"uniform sampler2D tex;\n"
-
-		"in vec2 fragTexCoord;\n"
-		"out vec4 finalColor;\n"
-
-		"void main() {\n"
-		"  finalColor = vec4(0, 0, 0, texture(tex, fragTexCoord).r);\n"
-		"}\n";
-
-	// Compile the shader and store indices to its variables.
-	shader = Shader(vertexCode, fragmentCode);
 	cornerI = shader.Uniform("corner");
 	dimensionsI = shader.Uniform("dimensions");
 
@@ -117,7 +93,7 @@ void FogShader::Init()
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
-	GLuint vertI = shader.Attrib("vert");
+	uint32_t vertI = shader.Attrib("vert");
 	glEnableVertexAttribArray(vertI);
 	glVertexAttribPointer(vertI, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
 

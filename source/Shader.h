@@ -17,7 +17,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define SHADER_H_
 
 #include "ESG.h"
-#include "opengl.h"
 
 
 
@@ -25,23 +24,26 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 // in order to draw something. In modern GPL, everything is drawn with shaders.
 // In general, rather than using this class directly, drawing code will use one
 // of the classes representing a particular shader.
+#ifdef ES_VULKAN
+#else
 class Shader {
 public:
 	Shader() noexcept = default;
 	Shader(const char *vertex, const char *fragment);
 
-	GLuint Object() const noexcept;
-	GLint Attrib(const char *name) const;
-	GLint Uniform(const char *name) const;
+	uint32_t Object() const noexcept;
+	int32_t Attrib(const char *name) const;
+	int32_t Uniform(const char *name) const;
 
 
 private:
-	GLuint Compile(const char *str, GLenum type);
+	uint32_t Compile(const char *str, GLenum type);
 
 
 private:
-	GLuint program;
+	uint32_t program;
 };
+#endif
 
 
 

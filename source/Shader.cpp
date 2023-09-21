@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -29,8 +30,8 @@ using namespace std;
 
 Shader::Shader(const char *vertex, const char *fragment)
 {
-	GLuint vertexShader = Compile(vertex, GL_VERTEX_SHADER);
-	GLuint fragmentShader = Compile(fragment, GL_FRAGMENT_SHADER);
+	uint32_t vertexShader = Compile(vertex, GL_VERTEX_SHADER);
+	uint32_t fragmentShader = Compile(fragment, GL_FRAGMENT_SHADER);
 
 	program = glCreateProgram();
 	if(!program)
@@ -44,11 +45,11 @@ Shader::Shader(const char *vertex, const char *fragment)
 	glDetachShader(program, vertexShader);
 	glDetachShader(program, fragmentShader);
 
-	GLint status;
+	int32_t status;
 	glGetProgramiv(program, GL_LINK_STATUS, &status);
 	if(status == GL_FALSE)
 	{
-		GLint maxLength = 0;
+		int32_t maxLength = 0;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
 		vector<GLchar> infoLog(maxLength);
 		glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
@@ -61,16 +62,16 @@ Shader::Shader(const char *vertex, const char *fragment)
 
 
 
-GLuint Shader::Object() const noexcept
+uint32_t Shader::Object() const noexcept
 {
 	return program;
 }
 
 
 
-GLint Shader::Attrib(const char *name) const
+int32_t Shader::Attrib(const char *name) const
 {
-	GLint attrib = glGetAttribLocation(program, name);
+	int32_t attrib = glGetAttribLocation(program, name);
 	if(attrib == -1)
 		throw runtime_error("Attribute \"" + string(name) + "\" not found.");
 
@@ -79,9 +80,9 @@ GLint Shader::Attrib(const char *name) const
 
 
 
-GLint Shader::Uniform(const char *name) const
+int32_t Shader::Uniform(const char *name) const
 {
-	GLint uniform = glGetUniformLocation(program, name);
+	int32_t uniform = glGetUniformLocation(program, name);
 	if(uniform == -1)
 		throw runtime_error("Uniform \"" + string(name) + "\" not found.");
 
@@ -90,9 +91,9 @@ GLint Shader::Uniform(const char *name) const
 
 
 
-GLuint Shader::Compile(const char *str, GLenum type)
+uint32_t Shader::Compile(const char *str, GLenum type)
 {
-	GLuint object = glCreateShader(type);
+	uint32_t object = glCreateShader(type);
 	if(!object)
 		throw runtime_error("Shader creation failed.");
 
@@ -132,7 +133,7 @@ GLuint Shader::Compile(const char *str, GLenum type)
 	glShaderSource(object, 1, &cText, nullptr);
 	glCompileShader(object);
 
-	GLint status;
+	int32_t status;
 	glGetShaderiv(object, GL_COMPILE_STATUS, &status);
 	if(status == GL_FALSE)
 	{

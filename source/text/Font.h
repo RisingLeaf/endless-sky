@@ -75,15 +75,15 @@ private:
 
 private:
 	Shader shader;
-	GLuint texture = 0;
-	GLuint vao = 0;
-	GLuint vbo = 0;
+	uint32_t texture = 0;
+	uint32_t vao = 0;
+	uint32_t vbo = 0;
 
-	GLint colorI = 0;
-	GLint scaleI = 0;
-	GLint glyphI = 0;
-	GLint aspectI = 0;
-	GLint positionI = 0;
+	int32_t colorI = 0;
+	int32_t scaleI = 0;
+	int32_t glyphI = 0;
+	int32_t aspectI = 0;
+	int32_t positionI = 0;
 
 	int height = 0;
 	int space = 0;
