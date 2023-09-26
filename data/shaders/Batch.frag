@@ -1,13 +1,13 @@
 // fragment batch shader
 precision mediump float;
-	
+
 precision mediump sampler2DArray;
 uniform sampler2DArray tex;
 uniform float frameCount;
 
-in vec3 fragTexCoord;
-in float fragAlpha;
-out vec4 finalColor;
+layout(location = 0) in vec3 fragTexCoord;
+layout(location = 1) in float fragAlpha;
+layout(location = 0) out vec4 finalColor;
 
 void main() {
 
