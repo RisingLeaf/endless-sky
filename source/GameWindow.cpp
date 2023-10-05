@@ -22,7 +22,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "ESG.h"
 #include <SDL2/SDL.h>
+#include <GLFW/glfw3.h>
 
+#include <cstdint>
 #include <cstring>
 #include <sstream>
 #include <string>
@@ -32,6 +34,10 @@ using namespace std;
 namespace {
 	SDL_Window *mainWindow = nullptr;
 	SDL_GLContext context = nullptr;
+
+	GLFWwindow *glfwMainWindow;
+	GLFWmonitor *primaryMonitor;
+
 	int width = 0;
 	int height = 0;
 	bool supportsAdaptiveVSync = false;
@@ -49,6 +55,12 @@ namespace {
 
 		return false;
 	}
+
+	void GlfwErrorCallback(int error, const char* description)
+	{
+		Logger::LogError("Error: " + string(description) + "\n");
+	}
+
 }
 
 
@@ -71,6 +83,84 @@ string GameWindow::SDLVersions()
 
 bool GameWindow::Init()
 {
+	{
+		// This needs to be called before any other glfw commands.
+		if(!glfwInit())
+		{
+			Logger::LogError("Failed to init glfw!\n");
+			return false;
+		}
+		glfwSetErrorCallback(GlfwErrorCallback);
+
+		// Get details about the current display.
+		primaryMonitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode *videoMode = glfwGetVideoMode(primaryMonitor);
+		if(!videoMode)
+		{
+			ExitWithError("Unable to query monitor resolution!");
+			return false;
+		}
+		if(videoMode->refreshRate && videoMode->refreshRate < 60)
+			Logger::LogError("Warning: low monitor frame rate detected (" + to_string(videoMode->refreshRate) + ")."
+				" The game will run more slowly.");
+
+		// Make the window just slightly smaller than the monitor resolution.
+		const static int minWidth = 640;
+		const static int minHeight = 480;
+		const int maxWidth = videoMode->width;
+		const int maxHeight = videoMode->height;
+		if(maxWidth < minWidth || maxHeight < minHeight)
+		{
+			ExitWithError("Monitor resolution is too small!");
+			return false;
+		}
+
+		int windowWidth = maxWidth - 100;
+		int windowHeight = maxHeight - 100;
+
+		// Decide how big the window should be.
+		if(Screen::RawWidth() && Screen::RawHeight())
+		{
+			// Load the previously saved window dimensions.
+			windowWidth = min(windowWidth, Screen::RawWidth());
+			windowHeight = min(windowHeight, Screen::RawHeight());
+		}
+
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+		glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+#ifdef _WIN32
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+#endif
+#ifdef ES_GLES
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+#else
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+#endif
+		//SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+		if(Preferences::Has("maximized"))
+			glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+
+		if(Preferences::ScreenModeSetting() == "fullscreen")
+			glfwMainWindow = glfwCreateWindow(windowWidth, windowHeight, "Endless Sky [GLFW]", primaryMonitor, nullptr);
+		else
+			glfwMainWindow = glfwCreateWindow(windowWidth, windowHeight, "Endless Sky [GLFW]", nullptr, nullptr);
+
+		if(!glfwMainWindow)
+		{
+			ExitWithError("Unable to create window!");
+			return false;
+		}
+
+		glfwMakeContextCurrent(glfwMainWindow);
+	}
+
+
+
 #ifdef _WIN32
 	// Tell Windows this process is high dpi aware and doesn't need to get scaled.
 	SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2");
@@ -95,10 +185,10 @@ bool GameWindow::Init()
 			" The game will run more slowly.");
 
 	// Make the window just slightly smaller than the monitor resolution.
-	int minWidth = 640;
-	int minHeight = 480;
-	int maxWidth = mode.w;
-	int maxHeight = mode.h;
+	const static int minWidth = 640;
+	const static int minHeight = 480;
+	const int maxWidth = mode.w;
+	const int maxHeight = mode.h;
 	if(maxWidth < minWidth || maxHeight < minHeight)
 	{
 		ExitWithError("Monitor resolution is too small!");
@@ -233,6 +323,10 @@ bool GameWindow::Init()
 // Clean up the SDL context, window, and shut down SDL.
 void GameWindow::Quit()
 {
+	glfwDestroyWindow(glfwMainWindow);
+	glfwTerminate();
+
+
 	// Make sure the cursor is visible.
 	SDL_ShowCursor(true);
 
@@ -254,6 +348,7 @@ void GameWindow::Quit()
 void GameWindow::Step()
 {
 	SDL_GL_SwapWindow(mainWindow);
+	glfwSwapBuffers(glfwMainWindow);
 }
 
 
@@ -278,6 +373,11 @@ void GameWindow::SetIcon()
 		SDL_SetWindowIcon(mainWindow, surface);
 		SDL_FreeSurface(surface);
 	}
+
+	GLFWimage images[1];
+	images[0].pixels = (unsigned char*)buffer.Pixels();
+	glfwSetWindowIcon(glfwMainWindow, 1, images);
+
 }
 
 
@@ -353,6 +453,9 @@ bool GameWindow::SetVSync(Preferences::VSync state)
 		SDL_GL_SetSwapInterval(originalState);
 		return false;
 	}
+
+	glfwSwapInterval(interval);
+
 	return SDL_GL_GetSwapInterval() == interval;
 }
 
@@ -376,6 +479,7 @@ int GameWindow::Height()
 
 bool GameWindow::IsMaximized()
 {
+	//return glfwGetWindowAttrib(glfwMainWindow, GLFW_MAXIMIZED) == GLFW_TRUE;
 	return (SDL_GetWindowFlags(mainWindow) & SDL_WINDOW_MAXIMIZED);
 }
 
@@ -383,6 +487,7 @@ bool GameWindow::IsMaximized()
 
 bool GameWindow::IsFullscreen()
 {
+	//return glfwGetWindowMonitor(window);
 	return (SDL_GetWindowFlags(mainWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
 
@@ -396,9 +501,15 @@ void GameWindow::ToggleFullscreen()
 	{
 		SDL_SetWindowFullscreen(mainWindow, 0);
 		SDL_SetWindowSize(mainWindow, width, height);
+		glfwSetWindowMonitor(glfwMainWindow, nullptr, 0, 0, width, height, 0);
 	}
 	else
+	{
+		const GLFWvidmode *videoMode = glfwGetVideoMode(primaryMonitor);
+		glfwSetWindowMonitor(glfwMainWindow, primaryMonitor, 0, 0, videoMode->width, videoMode->height, videoMode->refreshRate);
+
 		SDL_SetWindowFullscreen(mainWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	}
 }
 
 

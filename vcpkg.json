@@ -23,7 +23,8 @@
           ],
           "platform": "linux"
         },
-        "sdl2"
+        "sdl2",
+        "glfw3"
       ]
     },
     "flatpak-libs": {
