@@ -35,7 +35,7 @@ bool UI::Handle(const GameWindow::InputEvent &event)
 	bool handled = false;
 
 	vector<shared_ptr<Panel>>::iterator it = stack.end();
-	while(it != stack.begin())// && !handled)
+	while(it != stack.begin() && !handled)
 	{
 		--it;
 		// Panels that are about to be popped cannot handle any other events.
@@ -62,7 +62,7 @@ bool UI::Handle(const GameWindow::InputEvent &event)
 				if(!handled)
 					handled = (*it)->Click(x, y, 1);
 			}
-			else if(event.key == 3)
+			else if(event.key == GLFW_MOUSE_BUTTON_RIGHT)
 				handled = (*it)->RClick(x, y);
 		}
 		else if(event.type == GameWindow::InputEventType::MOUSEBUTTON_UP)
