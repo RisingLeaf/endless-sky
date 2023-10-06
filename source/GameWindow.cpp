@@ -86,11 +86,10 @@ namespace {
 	{
 		GameWindow::InputEvent event;
 		event.type = GameWindow::InputEventType::MOUSE_MOTION;
-		event.x = lastX - xpos;
-		event.y = lastY - ypos;
+		event.x = xpos - lastX;
+		event.y = ypos - lastY;
 		lastX = xpos;
 		lastY = ypos;
-		event.key = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 		events.emplace_back(event);
 	}
 
@@ -236,6 +235,7 @@ bool GameWindow::Init()
 	glfwMakeContextCurrent(glfwMainWindow);
 
 	// Input event handling:
+	glfwSetInputMode(glfwMainWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 	glfwSetKeyCallback(glfwMainWindow, GlfwKeyboardCallback);
 	glfwSetCursorPosCallback(glfwMainWindow, GlfwMouseMoveCallback);
 	glfwSetMouseButtonCallback(glfwMainWindow, GlfwMouseButtonCallback);

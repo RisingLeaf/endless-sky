@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <algorithm>
 #include <GLFW/glfw3.h>
+#include <string>
 
 using namespace std;
 
@@ -34,19 +35,18 @@ bool UI::Handle(const GameWindow::InputEvent &event)
 	bool handled = false;
 
 	vector<shared_ptr<Panel>>::iterator it = stack.end();
-	while(it != stack.begin() && !handled)
+	while(it != stack.begin())// && !handled)
 	{
 		--it;
 		// Panels that are about to be popped cannot handle any other events.
 		if(count(toPop.begin(), toPop.end(), it->get()))
 			continue;
-
 		if(event.type == GameWindow::InputEventType::MOUSE_MOTION)
 		{
-			if(event.key)
+			if(GameWindow::MouseState(nullptr, nullptr))
 				handled = (*it)->Drag(
-					event.x * 100. / Screen::Zoom(),
-					event.y * 100. / Screen::Zoom());
+					event.x,
+					event.y);
 			else
 				handled = (*it)->Hover(
 					Screen::Left() + event.x * 100 / Screen::Zoom(),
