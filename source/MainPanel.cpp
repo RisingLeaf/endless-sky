@@ -16,6 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "MainPanel.h"
 
 #include "BoardingPanel.h"
+#include "GameWindow.h"
 #include "comparators/ByGivenOrder.h"
 #include "CategoryList.h"
 #include "CoreStartData.h"
@@ -47,6 +48,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "opengl.h"
 
 #include <cmath>
+#include <GLFW/glfw3.h>
 #include <sstream>
 #include <string>
 
@@ -229,7 +231,7 @@ bool MainPanel::AllowsFastForward() const noexcept
 
 
 // Only override the ones you need; the default action is to return false.
-bool MainPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool MainPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	if(command.Has(Command::MAP | Command::INFO | Command::HAIL))
 		show = command;
@@ -239,12 +241,12 @@ bool MainPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 		Messages::Add("Your escorts will now expend ammo: " + Preferences::AmmoUsage() + "."
 			, Messages::Importance::High);
 	}
-	else if((key == SDLK_MINUS || key == SDLK_KP_MINUS) && !command)
+	else if((key == GLFW_KEY_MINUS || key == GLFW_KEY_KP_SUBTRACT) && !command)
 		Preferences::ZoomViewOut();
-	else if((key == SDLK_PLUS || key == SDLK_KP_PLUS || key == SDLK_EQUALS) && !command)
+	else if((key == GLFW_KEY_KP_ADD || key == GLFW_KEY_EQUAL) && !command)
 		Preferences::ZoomViewIn();
 	else if(key >= '0' && key <= '9' && !command)
-		engine.SelectGroup(key - '0', mod & KMOD_SHIFT, mod & (KMOD_CTRL | KMOD_GUI));
+		engine.SelectGroup(key - '0', mod & GameWindow::MOD_SHIFT, mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI));
 	else
 		return false;
 
@@ -272,9 +274,8 @@ bool MainPanel::Click(int x, int y, int clicks)
 	dragSource = Point(x, y);
 	dragPoint = dragSource;
 
-	SDL_Keymod mod = SDL_GetModState();
-	hasShift = (mod & KMOD_SHIFT);
-	hasControl = (mod & KMOD_CTRL);
+	hasShift = GameWindow::ModActive(GameWindow::MOD_SHIFT);
+	hasControl = GameWindow::ModActive(GameWindow::MOD_CONTROL);
 
 	engine.Click(dragSource, dragSource, hasShift, hasControl);
 
@@ -448,7 +449,7 @@ bool MainPanel::ShowHailPanel()
 		return false;
 
 	shared_ptr<Ship> target = flagship->GetTargetShip();
-	if((SDL_GetModState() & KMOD_SHIFT) && flagship->GetTargetStellar())
+	if(GameWindow::ModActive(GameWindow::MOD_SHIFT) && flagship->GetTargetStellar())
 		target.reset();
 
 	if(flagship->IsEnteringHyperspace())

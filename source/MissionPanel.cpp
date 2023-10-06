@@ -17,6 +17,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "MissionPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "Command.h"
 #include "CoreStartData.h"
@@ -46,6 +47,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "text/truncate.hpp"
 #include "UI.h"
 
+#include <GLFW/glfw3.h>
 #include <algorithm>
 #include <cmath>
 #include <sstream>
@@ -275,27 +277,27 @@ void MissionPanel::Draw()
 
 
 // Only override the ones you need; the default action is to return false.
-bool MissionPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool MissionPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	if(key == 'a' && CanAccept())
 	{
-		Accept((mod & KMOD_CTRL));
+		Accept((mod & GameWindow::MOD_CONTROL));
 		return true;
 	}
-	else if(key == 'A' || (key == 'a' && (mod & KMOD_SHIFT)))
+	else if(key == 'A' || (key == 'a' && (mod & GameWindow::MOD_SHIFT)))
 	{
 		if(acceptedIt != accepted.end() && acceptedIt->IsVisible())
 			GetUI()->Push(new Dialog(this, &MissionPanel::AbortMission,
 				"Abort mission \"" + acceptedIt->Name() + "\"?"));
 		return true;
 	}
-	else if(key == SDLK_LEFT && availableIt == available.end())
+	else if(key == GLFW_KEY_LEFT && availableIt == available.end())
 	{
 		// Switch to the first mission in the "available missions" list.
 		acceptedIt = accepted.end();
 		availableIt = available.begin();
 	}
-	else if(key == SDLK_RIGHT && acceptedIt == accepted.end() && AcceptedVisible())
+	else if(key == GLFW_KEY_RIGHT && acceptedIt == accepted.end() && AcceptedVisible())
 	{
 		// Switch to the first mission in the "accepted missions" list.
 		availableIt = available.end();
@@ -303,7 +305,7 @@ bool MissionPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, 
 		while(acceptedIt != accepted.end() && !acceptedIt->IsVisible())
 			++acceptedIt;
 	}
-	else if(key == SDLK_UP)
+	else if(key == GLFW_KEY_UP)
 	{
 		SelectAnyMission();
 		// Select the previous mission, which may be at the end of the list.
@@ -324,7 +326,7 @@ bool MissionPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, 
 			} while(!acceptedIt->IsVisible());
 		}
 	}
-	else if(key == SDLK_DOWN)
+	else if(key == GLFW_KEY_DOWN)
 	{
 		if(SelectAnyMission())
 		{

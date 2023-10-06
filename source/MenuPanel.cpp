@@ -43,6 +43,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <algorithm>
 #include <cassert>
+#include <GLFW/glfw3.h>
 #include <stdexcept>
 
 using namespace std;
@@ -156,7 +157,7 @@ void MenuPanel::Draw()
 
 
 
-bool MenuPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool MenuPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	if(player.IsLoaded() && (key == 'e' || command.Has(Command::MENU)))
 	{
@@ -178,9 +179,9 @@ bool MenuPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 		GetUI()->Quit();
 	else if(key == ' ')
 		scrollingPaused = !scrollingPaused;
-	else if(key == SDLK_DOWN)
+	else if(key == GLFW_KEY_DOWN)
 		scrollSpeed += 1;
-	else if(key == SDLK_UP)
+	else if(key == GLFW_KEY_UP)
 		scrollSpeed -= 1;
 	else
 		return false;

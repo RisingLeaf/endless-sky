@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "PreferencesPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "Audio.h"
 #include "Color.h"
@@ -40,9 +41,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "text/WrappedText.h"
 
 #include "opengl.h"
-#include <SDL2/SDL.h>
 
 #include <algorithm>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -146,7 +147,7 @@ void PreferencesPanel::Draw()
 
 
 
-bool PreferencesPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool PreferencesPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	if(static_cast<unsigned>(editing) < zones.size())
 	{
@@ -155,13 +156,13 @@ bool PreferencesPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comma
 		return true;
 	}
 
-	if(key == SDLK_DOWN && static_cast<unsigned>(selected + 1) < zones.size())
+	if(key == GLFW_KEY_DOWN && static_cast<unsigned>(selected + 1) < zones.size())
 		++selected;
-	else if(key == SDLK_UP && selected > 0)
+	else if(key == GLFW_KEY_UP && selected > 0)
 		--selected;
-	else if(key == SDLK_RETURN)
+	else if(key == GLFW_KEY_ENTER)
 		editing = selected;
-	else if(key == 'b' || command.Has(Command::MENU) || (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI))))
+	else if(key == 'b' || command.Has(Command::MENU) || (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
 		Exit();
 	else if(key == 'c' || key == 's' || key == 'p')
 	{
@@ -170,11 +171,11 @@ bool PreferencesPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comma
 	}
 	else if(key == 'o' && page == 'p')
 		Files::OpenUserPluginFolder();
-	else if((key == 'n' || key == SDLK_PAGEUP) && currentSettingsPage < SETTINGS_PAGE_COUNT - 1)
+	else if((key == 'n' || key == GLFW_KEY_PAGE_UP) && currentSettingsPage < SETTINGS_PAGE_COUNT - 1)
 		++currentSettingsPage;
-	else if((key == 'r' || key == SDLK_PAGEDOWN) && currentSettingsPage > 0)
+	else if((key == 'r' || key == GLFW_KEY_PAGE_DOWN) && currentSettingsPage > 0)
 		--currentSettingsPage;
-	else if((key == 'x' || key == SDLK_DELETE) && (page == 'c'))
+	else if((key == 'x' || key == GLFW_KEY_DELETE) && (page == 'c'))
 	{
 		if(zones[latest].Value().KeyName() != Command::MENU.KeyName())
 			Command::SetKey(zones[latest].Value(), 0);
@@ -225,7 +226,7 @@ bool PreferencesPanel::Click(int x, int y, int clicks)
 				// Convert to raw window coordinates, at the new zoom level.
 				point *= Screen::Zoom() / 100.;
 				point += .5 * Point(Screen::RawWidth(), Screen::RawHeight());
-				SDL_WarpMouseInWindow(nullptr, point.X(), point.Y());
+				GameWindow::SetMousePos(point.X(), point.Y());
 			}
 			else if(zone.Value() == BOARDING_PRIORITY)
 				Preferences::ToggleBoarding();
@@ -347,7 +348,7 @@ bool PreferencesPanel::Scroll(double dx, double dy)
 		// Convert to raw window coordinates, at the new zoom level.
 		Point point = hoverPoint * (Screen::Zoom() / 100.);
 		point += .5 * Point(Screen::RawWidth(), Screen::RawHeight());
-		SDL_WarpMouseInWindow(nullptr, point.X(), point.Y());
+		GameWindow::SetMousePos(point.X(), point.Y());
 	}
 	else if(hoverItem == VIEW_ZOOM_FACTOR)
 	{

@@ -22,8 +22,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <list>
 #include <string>
 
-#include <SDL2/SDL.h>
-
 class Command;
 class Point;
 class TestContext;
@@ -60,7 +58,7 @@ public:
 	void ClearZones();
 	// Add a clickable zone to the panel.
 	void AddZone(const Rectangle &rect, const std::function<void()> &fun);
-	void AddZone(const Rectangle &rect, SDL_Keycode key);
+	void AddZone(const Rectangle &rect, int key);
 	// Check if a click at the given coordinates triggers a clickable zone. If
 	// so, apply that zone's action and return true.
 	bool ZoneClick(const Point &point);
@@ -74,7 +72,7 @@ public:
 
 protected:
 	// Only override the ones you need; the default action is to return false.
-	virtual bool KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress);
+	virtual bool KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress);
 	virtual bool Click(int x, int y, int clicks);
 	virtual bool RClick(int x, int y);
 	virtual bool Hover(int x, int y);
@@ -98,7 +96,7 @@ protected:
 	// arguments. In this form, the command is never set, so you can call this
 	// with a key representing a known keyboard shortcut without worrying that a
 	// user-defined command key will override it.
-	bool DoKey(SDL_Keycode key, Uint16 mod = 0);
+	bool DoKey(int key, uint16_t mod = 0);
 
 	// A lot of different UI elements allow a modifier to change the number of
 	// something you are buying, so the shared function is defined here:

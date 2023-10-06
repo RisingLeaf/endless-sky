@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "ConversationPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "BoardingPanel.h"
 #include "Color.h"
@@ -43,6 +44,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Files.h"
 #endif
 
+#include <GLFW/glfw3.h>
 #include <iterator>
 
 using namespace std;
@@ -193,7 +195,7 @@ void ConversationPanel::Draw()
 		font.Draw(ok, off, bright);
 
 		// Handle clicks on this button.
-		AddZone(Rectangle::FromCorner(off, Point(width, height)), SDLK_RETURN);
+		AddZone(Rectangle::FromCorner(off, Point(width, height)), GLFW_KEY_ENTER);
 	}
 	else
 	{
@@ -232,7 +234,7 @@ void ConversationPanel::Draw()
 
 
 // Handle key presses.
-bool ConversationPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool ConversationPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	// Map popup happens when you press the map key, unless the name text entry
 	// fields are currently active. The name text entry fields are active if
@@ -242,7 +244,7 @@ bool ConversationPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comm
 	if(node < 0)
 	{
 		// If the conversation has ended, the only possible action is to exit.
-		if(isNewPress && (key == SDLK_RETURN || key == SDLK_KP_ENTER || key == 'd'))
+		if(isNewPress && (key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER || key == 'd'))
 		{
 			Exit();
 			return true;
@@ -259,9 +261,9 @@ bool ConversationPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comm
 		if(key >= ' ' && key <= '~')
 		{
 			// Apply the shift or caps lock key.
-			char c = ((mod & KMOD_SHIFT) ? SHIFT[key] : key);
+			char c = ((mod & GameWindow::MOD_SHIFT) ? SHIFT[key] : key);
 			// Caps lock should shift letters, but not any other keys.
-			if((mod & KMOD_CAPS) && c >= 'a' && c <= 'z')
+			if((mod & GameWindow::MOD_CAPS) && c >= 'a' && c <= 'z')
 				c += 'A' - 'a';
 			// Don't allow characters that can't be used in a file name.
 			static const string FORBIDDEN = "/\\?*:|\"<>~";
@@ -276,13 +278,13 @@ bool ConversationPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comm
 			else
 				flickerTime = 18;
 		}
-		else if((key == SDLK_DELETE || key == SDLK_BACKSPACE) && !name.empty())
+		else if((key == GLFW_KEY_DELETE || key == GLFW_KEY_BACKSPACE) && !name.empty())
 			name.erase(name.size() - 1);
-		else if(key == '\t' || ((key == SDLK_RETURN || key == SDLK_KP_ENTER) && otherName.empty()))
+		else if(key == '\t' || ((key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER) && otherName.empty()))
 			choice = !choice;
-		else if((key == SDLK_RETURN || key == SDLK_KP_ENTER) && (firstName.empty() || lastName.empty()))
+		else if((key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER) && (firstName.empty() || lastName.empty()))
 			flickerTime = 18;
-		else if((key == SDLK_RETURN || key == SDLK_KP_ENTER) && !firstName.empty() && !lastName.empty())
+		else if((key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER) && !firstName.empty() && !lastName.empty())
 		{
 			// Display the name the player entered.
 			string name = "\t\tName: " + firstName + " " + lastName + ".\n";
@@ -302,16 +304,16 @@ bool ConversationPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comm
 
 	// Let the player select choices by using the arrow keys and then pressing
 	// return, or by pressing a number key.
-	if(key == SDLK_UP && choice > 0)
+	if(key == GLFW_KEY_UP && choice > 0)
 		--choice;
-	else if(key == SDLK_DOWN && choice + 1 < static_cast<int>(choices.size()))
+	else if(key == GLFW_KEY_DOWN && choice + 1 < static_cast<int>(choices.size()))
 		++choice;
-	else if((key == SDLK_RETURN || key == SDLK_KP_ENTER) && isNewPress && choice < static_cast<int>(choices.size()))
+	else if((key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER) && isNewPress && choice < static_cast<int>(choices.size()))
 		Goto(conversation.NextNodeForChoice(node, MapChoice(choice)), choice);
-	else if(key >= '1' && key < static_cast<SDL_Keycode>('1' + choices.size()))
+	else if(key >= '1' && key < static_cast<int>('1' + choices.size()))
 		Goto(conversation.NextNodeForChoice(node, MapChoice(key - '1')), key - '1');
-	else if(key >= SDLK_KP_1 && key < static_cast<SDL_Keycode>(SDLK_KP_1 + choices.size()))
-		Goto(conversation.NextNodeForChoice(node, MapChoice(key - SDLK_KP_1)), key - SDLK_KP_1);
+	else if(key >= GLFW_KEY_KP_1 && key < static_cast<int>(GLFW_KEY_KP_1 + choices.size()))
+		Goto(conversation.NextNodeForChoice(node, MapChoice(key - GLFW_KEY_KP_1)), key - GLFW_KEY_KP_1);
 	else
 		return false;
 

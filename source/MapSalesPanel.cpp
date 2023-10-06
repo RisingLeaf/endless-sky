@@ -18,6 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "CategoryTypes.h"
 #include "Command.h"
 #include "Dialog.h"
+#include "GameWindow.h"
 #include "text/DisplayText.h"
 #include "FillShader.h"
 #include "text/Font.h"
@@ -40,6 +41,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include <algorithm>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -90,20 +92,20 @@ void MapSalesPanel::Draw()
 
 
 
-bool MapSalesPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool MapSalesPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
-	if(key == SDLK_PAGEUP || key == SDLK_PAGEDOWN)
+	if(key == GLFW_KEY_PAGE_UP || key == GLFW_KEY_PAGE_DOWN)
 	{
-		scroll += static_cast<double>((Screen::Height() - 100) * ((key == SDLK_PAGEUP) - (key == SDLK_PAGEDOWN)));
+		scroll += static_cast<double>((Screen::Height() - 100) * ((key == GLFW_KEY_PAGE_UP) - (key == GLFW_KEY_PAGE_DOWN)));
 		scroll = min(0., max(-maxScroll, scroll));
 	}
-	else if(key == SDLK_HOME)
+	else if(key == GLFW_KEY_HOME)
 		scroll = 0;
-	else if(key == SDLK_END)
+	else if(key == GLFW_KEY_END)
 		scroll = -maxScroll;
-	else if((key == SDLK_DOWN || key == SDLK_UP) && !zones.empty())
+	else if((key == GLFW_KEY_DOWN || key == GLFW_KEY_UP) && !zones.empty())
 	{
-		selected += (key == SDLK_DOWN) - (key == SDLK_UP);
+		selected += (key == GLFW_KEY_DOWN) - (key == GLFW_KEY_UP);
 		if(selected < 0)
 			selected = zones.size() - 1;
 		else if(selected > static_cast<int>(zones.size() - 1))
@@ -137,7 +139,7 @@ bool MapSalesPanel::Click(int x, int y, int clicks)
 			Select(selected = -1);
 			Compare(compare = -1);
 		}
-		else if((SDL_GetModState() & KMOD_SHIFT) == 0)
+		else if(GameWindow::ModActive(GameWindow::MOD_SHIFT) == 0)
 		{
 			Select(selected = zone->Value());
 			Compare(compare = -1);
@@ -442,7 +444,7 @@ void MapSalesPanel::ScrollTo(int index)
 void MapSalesPanel::ClickCategory(const string &name)
 {
 	bool isHidden = collapsed.count(name);
-	if(SDL_GetModState() & KMOD_SHIFT)
+	if(GameWindow::ModActive(GameWindow::MOD_SHIFT))
 	{
 		// If the shift key is held down, hide or show all categories.
 		if(isHidden)

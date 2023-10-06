@@ -40,6 +40,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include <algorithm>
+#include <GLFW/glfw3.h>
 #include <limits>
 #include <memory>
 

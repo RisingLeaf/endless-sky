@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "ShipInfoPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "CategoryList.h"
 #include "CategoryTypes.h"
@@ -43,6 +44,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include <algorithm>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -134,27 +136,27 @@ void ShipInfoPanel::Draw()
 
 
 
-bool ShipInfoPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool /* isNewPress */)
+bool ShipInfoPanel::KeyDown(int key, uint16_t mod, const Command &command, bool /* isNewPress */)
 {
-	bool control = (mod & (KMOD_CTRL | KMOD_GUI));
-	bool shift = (mod & KMOD_SHIFT);
-	if(key == 'd' || key == SDLK_ESCAPE || (key == 'w' && control))
+	bool control = (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI));
+	bool shift = (mod & GameWindow::MOD_SHIFT);
+	if(key == 'd' || key == GLFW_KEY_ESCAPE || (key == 'w' && control))
 		GetUI()->Pop(this);
-	else if(!player.Ships().empty() && ((key == 'p' && !shift) || key == SDLK_LEFT || key == SDLK_UP))
+	else if(!player.Ships().empty() && ((key == 'p' && !shift) || key == GLFW_KEY_LEFT || key == GLFW_KEY_UP))
 	{
 		if(shipIt == panelState.Ships().begin())
 			shipIt = panelState.Ships().end();
 		--shipIt;
 		UpdateInfo();
 	}
-	else if(!panelState.Ships().empty() && (key == 'n' || key == SDLK_RIGHT || key == SDLK_DOWN))
+	else if(!panelState.Ships().empty() && (key == 'n' || key == GLFW_KEY_RIGHT || key == GLFW_KEY_DOWN))
 	{
 		++shipIt;
 		if(shipIt == panelState.Ships().end())
 			shipIt = panelState.Ships().begin();
 		UpdateInfo();
 	}
-	else if(key == 'i' || command.Has(Command::INFO) || (control && key == SDLK_TAB))
+	else if(key == 'i' || command.Has(Command::INFO) || (control && key == GLFW_KEY_TAB))
 	{
 		GetUI()->Pop(this);
 		GetUI()->Push(new PlayerInfoPanel(player, std::move(panelState)));

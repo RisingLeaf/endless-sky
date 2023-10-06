@@ -18,12 +18,46 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "Preferences.h"
 
+#include <cstdint>
 #include <string>
+#include <unordered_set>
+#include <vector>
 
 // This class is a collection of global functions for handling SDL_Windows.
 class GameWindow {
 public:
-	static std::string SDLVersions();
+	enum class InputEventType : uint {
+		NONE = 0,
+
+		MOUSE_MOTION,
+		MOUSEBUTTON_DOWN,
+		MOUSEBUTTON_UP,
+		MOUSEWHEEL,
+
+		KEY_DOWN,
+		KEY_UP,
+
+		QUIT,
+	};
+
+	// Keyboard Modifiers
+	static const uint64_t MOD_SHIFT   = 1;
+	static const uint64_t MOD_CONTROL = 1 << 1;
+	static const uint64_t MOD_ALT     = 1 << 2;
+	static const uint64_t MOD_CAPS    = 1 << 3;
+	static const uint64_t MOD_GUI     = 1 << 4;
+
+	struct InputEvent {
+		InputEventType type = InputEventType::NONE;
+
+		int key = 0;
+		uint64_t mods;
+
+		double x;
+		double y;
+	};
+
+public:
 	static bool Init();
 	static void Quit();
 
@@ -46,6 +80,16 @@ public:
 	static bool IsMaximized();
 	static bool IsFullscreen();
 	static void ToggleFullscreen();
+	static void ShowCursor(bool show);
+
+	static bool KeyDown(int key);
+	static bool ModActive(uint64_t mod);
+	static const char *KeyName(int key);
+
+	static bool MouseState(double *x, double *y, int button = 0);
+	static void SetMousePos(double x, double y);
+
+	static std::vector<InputEvent> &FetchEvents();
 
 	// Print the error message in the terminal, error file, and message box.
 	// Checks for video system errors and records those as well.

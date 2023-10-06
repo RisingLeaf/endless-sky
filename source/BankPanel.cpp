@@ -29,6 +29,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "text/truncate.hpp"
 #include "UI.h"
 
+#include <GLFW/glfw3.h>
 #include <string>
 
 using namespace std;
@@ -265,20 +266,20 @@ void BankPanel::Draw()
 
 
 // Handle key presses, or clicks that the interface has mapped to a key press.
-bool BankPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool BankPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
-	if(key == SDLK_UP && selectedRow)
+	if(key == GLFW_KEY_UP && selectedRow)
 		--selectedRow;
-	else if(key == SDLK_DOWN && selectedRow < mortgageRows)
+	else if(key == GLFW_KEY_DOWN && selectedRow < mortgageRows)
 		++selectedRow;
-	else if(key == SDLK_RETURN && selectedRow < mortgageRows)
+	else if(key == GLFW_KEY_ENTER && selectedRow < mortgageRows)
 	{
 		GetUI()->Push(new Dialog(this, &BankPanel::PayExtra,
 			"Paying off part of this debt will reduce your daily payments and the "
 			"interest that it costs you. How many extra credits will you pay?"));
 		DoHelp("bank advanced");
 	}
-	else if(key == SDLK_RETURN && qualify)
+	else if(key == GLFW_KEY_ENTER && qualify)
 	{
 		GetUI()->Push(new Dialog(this, &BankPanel::NewMortgage,
 			"Borrow how many credits?"));
@@ -324,7 +325,7 @@ bool BankPanel::Click(int x, int y, int clicks)
 	{
 		selectedRow = (y - FIRST_Y - 25) / 20;
 		if(x >= MIN_X + EXTRA_X)
-			DoKey(SDLK_RETURN);
+			DoKey(GLFW_KEY_ENTER);
 	}
 	else if(x >= MIN_X + EXTRA_X - 10 && x <= MAX_X && y >= FIRST_Y + 230 && y <= FIRST_Y + 250)
 	{
@@ -332,7 +333,7 @@ bool BankPanel::Click(int x, int y, int clicks)
 		if(qualify)
 		{
 			selectedRow = mortgageRows;
-			DoKey(SDLK_RETURN);
+			DoKey(GLFW_KEY_ENTER);
 		}
 	}
 	else

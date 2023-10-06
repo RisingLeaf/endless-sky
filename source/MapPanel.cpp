@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "MapPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "Angle.h"
 #include "CargoHold.h"
@@ -57,6 +58,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <cctype>
 #include <cmath>
+#include <GLFW/glfw3.h>
 #include <limits>
 
 using namespace std;
@@ -522,11 +524,11 @@ bool MapPanel::AllowsFastForward() const noexcept
 
 
 
-bool MapPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool MapPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	const Interface *mapInterface = GameData::Interfaces().Get("map");
-	if(command.Has(Command::MAP) || key == 'd' || key == SDLK_ESCAPE
-			|| (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI))))
+	if(command.Has(Command::MAP) || key == 'd' || key == GLFW_KEY_ESCAPE
+			|| (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
 		GetUI()->Pop(this);
 	else if(key == 's' && buttonCondition != "is shipyards")
 	{
@@ -554,9 +556,9 @@ bool MapPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool
 			this, &MapPanel::Find, "Search for:", "", Truncate::NONE, true));
 		return true;
 	}
-	else if(key == SDLK_PLUS || key == SDLK_KP_PLUS || key == SDLK_EQUALS)
+	else if(key == GLFW_KEY_KP_ADD || key == GLFW_KEY_EQUAL)
 		player.SetMapZoom(min(static_cast<int>(mapInterface->GetValue("max zoom")), player.MapZoom() + 1));
-	else if(key == SDLK_MINUS || key == SDLK_KP_MINUS)
+	else if(key == GLFW_KEY_MINUS || key == GLFW_KEY_KP_SUBTRACT)
 		player.SetMapZoom(max(static_cast<int>(mapInterface->GetValue("min zoom")), player.MapZoom() - 1));
 	else
 		return false;
@@ -748,11 +750,10 @@ void MapPanel::Select(const System *system)
 	bool isJumping = flagship->IsEnteringHyperspace();
 	const System *source = isJumping ? flagship->GetTargetSystem() : &playerSystem;
 
-	auto mod = SDL_GetModState();
 	// TODO: Whoever called Select should tell us what to do with this system vis-a-vis the travel plan, rather than
 	// possibly manipulating it both here and there. Or, we entirely separate Select from travel plan modifications.
-	bool shift = (mod & KMOD_SHIFT) && !plan.empty();
-	if(mod & KMOD_CTRL)
+	bool shift = GameWindow::ModActive(GameWindow::MOD_SHIFT) && !plan.empty();
+	if(GameWindow::ModActive(GameWindow::MOD_CONTROL))
 		return;
 	else if(system == source && !shift)
 	{

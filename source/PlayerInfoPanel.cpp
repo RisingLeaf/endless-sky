@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "PlayerInfoPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "Command.h"
 #include "text/Font.h"
@@ -40,6 +41,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <algorithm>
 #include <cmath>
+#include <GLFW/glfw3.h>
 #include <utility>
 
 using namespace std;
@@ -274,16 +276,16 @@ bool PlayerInfoPanel::AllowsFastForward() const noexcept
 
 
 
-bool PlayerInfoPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool PlayerInfoPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
-	bool control = (mod & (KMOD_CTRL | KMOD_GUI));
-	bool shift = (mod & KMOD_SHIFT);
-	if(key == 'd' || key == SDLK_ESCAPE || (key == 'w' && control)
+	bool control = (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI));
+	bool shift = (mod & GameWindow::MOD_SHIFT);
+	if(key == 'd' || key == GLFW_KEY_ESCAPE || (key == 'w' && control)
 			|| key == 'i' || command.Has(Command::INFO))
 	{
 		GetUI()->Pop(this);
 	}
-	else if(key == 's' || key == SDLK_RETURN || key == SDLK_KP_ENTER || (control && key == SDLK_TAB))
+	else if(key == 's' || key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER || (control && key == GLFW_KEY_TAB))
 	{
 		if(!panelState.Ships().empty())
 		{
@@ -291,23 +293,23 @@ bool PlayerInfoPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comman
 			GetUI()->Push(new ShipInfoPanel(player, std::move(panelState)));
 		}
 	}
-	else if(key == SDLK_PAGEUP || key == SDLK_PAGEDOWN)
+	else if(key == GLFW_KEY_PAGE_UP || key == GLFW_KEY_PAGE_DOWN)
 	{
-		int direction = (key == SDLK_PAGEDOWN) - (key == SDLK_PAGEUP);
+		int direction = (key == GLFW_KEY_PAGE_DOWN) - (key == GLFW_KEY_PAGE_UP);
 		Scroll((LINES_PER_PAGE - 2) * direction);
 	}
-	else if(key == SDLK_HOME)
+	else if(key == GLFW_KEY_HOME)
 		Scroll(-static_cast<int>(player.Ships().size()));
-	else if(key == SDLK_END)
+	else if(key == GLFW_KEY_END)
 		Scroll(player.Ships().size());
-	else if(key == SDLK_UP || key == SDLK_DOWN)
+	else if(key == GLFW_KEY_UP || key == GLFW_KEY_DOWN)
 	{
 		if(panelState.AllSelected().empty())
 		{
 			// If no ship was selected, moving up or down selects the first or last ship.
 			if(isNewPress)
 			{
-				if(key == SDLK_UP)
+				if(key == GLFW_KEY_UP)
 					panelState.SetSelectedIndex(panelState.Ships().size() - 1);
 				else
 					panelState.SetSelectedIndex(0);
@@ -321,9 +323,9 @@ bool PlayerInfoPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comman
 			// movement is a shift of one, while a downward move shifts 1 and
 			// then 1 for each ship in the contiguous selection.
 			size_t toIndex = *panelState.AllSelected().begin();
-			if(key == SDLK_UP && toIndex > 0)
+			if(key == GLFW_KEY_UP && toIndex > 0)
 				--toIndex;
-			else if(key == SDLK_DOWN)
+			else if(key == GLFW_KEY_DOWN)
 			{
 				int next = ++toIndex;
 				for(const auto sel : panelState.AllSelected())
@@ -347,7 +349,7 @@ bool PlayerInfoPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comman
 		else
 		{
 			// Move the selection up or down one space.
-			int selectedIndex = panelState.SelectedIndex() + (key == SDLK_DOWN) - (key == SDLK_UP);
+			int selectedIndex = panelState.SelectedIndex() + (key == GLFW_KEY_DOWN) - (key == GLFW_KEY_UP);
 			bool isValidIndex = static_cast<unsigned>(selectedIndex) < panelState.Ships().size();
 			if(selectedIndex < 0)
 			{
@@ -385,7 +387,7 @@ bool PlayerInfoPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comman
 				Scroll(1);
 			else if(selected == panelState.Scroll() - 1)
 				Scroll(-1);
-			else if(key == SDLK_UP)
+			else if(key == GLFW_KEY_UP)
 				ScrollAbsolute(selected - LINES_PER_PAGE + 1);
 			else
 				ScrollAbsolute(selected);
@@ -512,8 +514,8 @@ bool PlayerInfoPanel::Click(int x, int y, int clicks)
 	if(hoverIndex < 0)
 		return true;
 
-	bool shift = (SDL_GetModState() & KMOD_SHIFT);
-	bool control = (SDL_GetModState() & (KMOD_CTRL | KMOD_GUI));
+	bool shift = GameWindow::ModActive(GameWindow::MOD_SHIFT);
+	bool control = GameWindow::ModActive(GameWindow::MOD_GUI | GameWindow::MOD_CONTROL);
 	if(panelState.CanEdit() && (shift || control || clicks < 2))
 	{
 		// If the control+click was on an already selected ship, deselect it.

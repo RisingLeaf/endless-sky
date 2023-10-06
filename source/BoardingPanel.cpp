@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "BoardingPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "CargoHold.h"
 #include "Depreciation.h"
@@ -39,6 +40,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include <algorithm>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -222,9 +224,9 @@ void BoardingPanel::Draw()
 
 
 // Handle key presses or button clicks that were mapped to key presses.
-bool BoardingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool BoardingPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
-	if((key == 'd' || key == 'x' || key == SDLK_ESCAPE || (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI)))) && CanExit())
+	if((key == 'd' || key == 'x' || key == GLFW_KEY_ESCAPE || (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))) && CanExit())
 	{
 		// When closing the panel, mark the player dead if their ship was captured.
 		if(playerDied)
@@ -275,8 +277,8 @@ bool BoardingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command,
 			plunder[selected].Take(count);
 	}
 	else if(!isCapturing &&
-			(key == SDLK_UP || key == SDLK_DOWN || key == SDLK_PAGEUP
-			|| key == SDLK_PAGEDOWN || key == SDLK_HOME || key == SDLK_END))
+			(key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_PAGE_UP
+			|| key == GLFW_KEY_PAGE_DOWN || key == GLFW_KEY_HOME || key == GLFW_KEY_END))
 		DoKeyboardNavigation(key);
 	else if(key == 'c' && CanCapture())
 	{
@@ -505,21 +507,21 @@ bool BoardingPanel::CanAttack() const
 
 
 // Handle the keyboard scrolling and selection in the panel list.
-void BoardingPanel::DoKeyboardNavigation(const SDL_Keycode key)
+void BoardingPanel::DoKeyboardNavigation(const int key)
 {
 	// Scrolling the list of plunder.
-	if(key == SDLK_PAGEUP || key == SDLK_PAGEDOWN)
+	if(key == GLFW_KEY_PAGE_UP || key == GLFW_KEY_PAGE_DOWN)
 		// Keep one of the previous items onscreen while paging through.
-		selected += 10 * ((key == SDLK_PAGEDOWN) - (key == SDLK_PAGEUP));
-	else if(key == SDLK_HOME)
+		selected += 10 * ((key == GLFW_KEY_PAGE_DOWN) - (key == GLFW_KEY_PAGE_UP));
+	else if(key == GLFW_KEY_HOME)
 		selected = 0;
-	else if(key == SDLK_END)
+	else if(key == GLFW_KEY_END)
 		selected = static_cast<int>(plunder.size() - 1);
 	else
 	{
-		if(key == SDLK_UP)
+		if(key == GLFW_KEY_UP)
 			--selected;
-		else if(key == SDLK_DOWN)
+		else if(key == GLFW_KEY_DOWN)
 			++selected;
 	}
 	selected = max(0, min(static_cast<int>(plunder.size() - 1), selected));

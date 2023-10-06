@@ -19,6 +19,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Command.h"
 #include "Conversation.h"
 #include "DataNode.h"
+#include "GameWindow.h"
 #include "text/DisplayText.h"
 #include "FillShader.h"
 #include "text/Font.h"
@@ -34,6 +35,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include <cmath>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -42,45 +44,21 @@ namespace {
 
 	// Map any conceivable numeric keypad keys to their ASCII values. Most of
 	// these will presumably only exist on special programming keyboards.
-	const map<SDL_Keycode, char> KEY_MAP = {
-		{SDLK_KP_0, '0'},
-		{SDLK_KP_1, '1'},
-		{SDLK_KP_2, '2'},
-		{SDLK_KP_3, '3'},
-		{SDLK_KP_4, '4'},
-		{SDLK_KP_5, '5'},
-		{SDLK_KP_6, '6'},
-		{SDLK_KP_7, '7'},
-		{SDLK_KP_8, '8'},
-		{SDLK_KP_9, '9'},
-		{SDLK_KP_AMPERSAND, '&'},
-		{SDLK_KP_AT, '@'},
-		{SDLK_KP_A, 'a'},
-		{SDLK_KP_B, 'b'},
-		{SDLK_KP_C, 'c'},
-		{SDLK_KP_D, 'd'},
-		{SDLK_KP_E, 'e'},
-		{SDLK_KP_F, 'f'},
-		{SDLK_KP_COLON, ':'},
-		{SDLK_KP_COMMA, ','},
-		{SDLK_KP_DIVIDE, '/'},
-		{SDLK_KP_EQUALS, '='},
-		{SDLK_KP_EXCLAM, '!'},
-		{SDLK_KP_GREATER, '>'},
-		{SDLK_KP_HASH, '#'},
-		{SDLK_KP_LEFTBRACE, '{'},
-		{SDLK_KP_LEFTPAREN, '('},
-		{SDLK_KP_LESS, '<'},
-		{SDLK_KP_MINUS, '-'},
-		{SDLK_KP_MULTIPLY, '*'},
-		{SDLK_KP_PERCENT, '%'},
-		{SDLK_KP_PERIOD, '.'},
-		{SDLK_KP_PLUS, '+'},
-		{SDLK_KP_POWER, '^'},
-		{SDLK_KP_RIGHTBRACE, '}'},
-		{SDLK_KP_RIGHTPAREN, ')'},
-		{SDLK_KP_SPACE, ' '},
-		{SDLK_KP_VERTICALBAR, '|'}
+	const map<int, char> KEY_MAP = {
+		{GLFW_KEY_KP_0, '0'},
+		{GLFW_KEY_KP_1, '1'},
+		{GLFW_KEY_KP_2, '2'},
+		{GLFW_KEY_KP_3, '3'},
+		{GLFW_KEY_KP_4, '4'},
+		{GLFW_KEY_KP_5, '5'},
+		{GLFW_KEY_KP_6, '6'},
+		{GLFW_KEY_KP_7, '7'},
+		{GLFW_KEY_KP_8, '8'},
+		{GLFW_KEY_KP_9, '9'},
+		{GLFW_KEY_KP_DIVIDE, '/'},
+		{GLFW_KEY_KP_EQUAL, '='},
+		{GLFW_KEY_KP_SUBTRACT, '-'},
+		{GLFW_KEY_KP_MULTIPLY, '*'},
 	};
 }
 
@@ -219,16 +197,16 @@ bool Dialog::AllowsFastForward() const noexcept
 
 
 
-bool Dialog::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool Dialog::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	auto it = KEY_MAP.find(key);
-	bool isCloseRequest = key == SDLK_ESCAPE || (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI)));
+	bool isCloseRequest = key == GLFW_KEY_ESCAPE || (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)));
 	if((it != KEY_MAP.end() || (key >= ' ' && key <= '~')) && !isMission && (intFun || stringFun) && !isCloseRequest)
 	{
 		int ascii = (it != KEY_MAP.end()) ? it->second : key;
-		char c = ((mod & KMOD_SHIFT) ? SHIFT[ascii] : ascii);
+		char c = ((mod & GameWindow::MOD_SHIFT) ? SHIFT[ascii] : ascii);
 		// Caps lock should shift letters, but not any other keys.
-		if((mod & KMOD_CAPS) && c >= 'a' && c <= 'z')
+		if((mod & GameWindow::MOD_CAPS) && c >= 'a' && c <= 'z')
 			c += 'A' - 'a';
 
 		if(stringFun)
@@ -242,19 +220,19 @@ bool Dialog::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool i
 		if(validateFun)
 			isOkDisabled = !validateFun(input);
 	}
-	else if((key == SDLK_DELETE || key == SDLK_BACKSPACE) && !input.empty())
+	else if((key == GLFW_KEY_DELETE || key == GLFW_KEY_BACKSPACE) && !input.empty())
 	{
 		input.erase(input.length() - 1);
 		if(validateFun)
 			isOkDisabled = !validateFun(input);
 	}
-	else if(key == SDLK_TAB && canCancel)
+	else if(key == GLFW_KEY_TAB && canCancel)
 		okIsActive = !okIsActive;
-	else if(key == SDLK_LEFT)
+	else if(key == GLFW_KEY_LEFT)
 		okIsActive = !canCancel;
-	else if(key == SDLK_RIGHT)
+	else if(key == GLFW_KEY_RIGHT)
 		okIsActive = true;
-	else if(key == SDLK_RETURN || key == SDLK_KP_ENTER || isCloseRequest
+	else if(key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER || isCloseRequest
 			|| (isMission && (key == 'a' || key == 'd')))
 	{
 		// Shortcuts for "accept" and "decline."
@@ -298,7 +276,7 @@ bool Dialog::Click(int x, int y, int clicks)
 	if(fabs(ok.X()) < 40. && fabs(ok.Y()) < 20.)
 	{
 		okIsActive = true;
-		return DoKey(SDLK_RETURN);
+		return DoKey(GLFW_KEY_ENTER);
 	}
 
 	if(canCancel)
@@ -307,7 +285,7 @@ bool Dialog::Click(int x, int y, int clicks)
 		if(fabs(cancel.X()) < 40. && fabs(cancel.Y()) < 20.)
 		{
 			okIsActive = false;
-			return DoKey(SDLK_RETURN);
+			return DoKey(GLFW_KEY_ENTER);
 		}
 	}
 

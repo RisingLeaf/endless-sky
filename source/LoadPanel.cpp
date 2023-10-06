@@ -20,6 +20,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "ConversationPanel.h"
 #include "DataFile.h"
 #include "Dialog.h"
+#include "GameWindow.h"
 #include "text/DisplayText.h"
 #include "Files.h"
 #include "FillShader.h"
@@ -42,6 +43,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <algorithm>
 #include <cstdlib>
+#include <GLFW/glfw3.h>
 #include <stdexcept>
 #include <utility>
 
@@ -225,7 +227,7 @@ void LoadPanel::Draw()
 
 
 
-bool LoadPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool LoadPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	if(key == 'n')
 	{
@@ -274,9 +276,9 @@ bool LoadPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 				"Any progress will be lost, unless you have saved other snapshots. "
 				"Are you sure you want to do that?"));
 	}
-	else if(key == 'b' || command.Has(Command::MENU) || (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI))))
+	else if(key == 'b' || command.Has(Command::MENU) || (key == 'w' && GameWindow::ModActive(GameWindow::MOD_GUI | GameWindow::MOD_CONTROL)))
 		GetUI()->Pop(this);
-	else if((key == SDLK_DOWN || key == SDLK_UP) && !files.empty())
+	else if((key == GLFW_KEY_DOWN || key == GLFW_KEY_UP) && !files.empty())
 	{
 		auto pit = files.find(selectedPilot);
 		if(sideHasFocus)
@@ -287,7 +289,7 @@ bool LoadPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 				if(it->first == selectedPilot)
 					break;
 
-			if(key == SDLK_DOWN)
+			if(key == GLFW_KEY_DOWN)
 			{
 				const int lastVisibleIndex = (sideScroll / 20.) + 13.;
 				if(index >= lastVisibleIndex)
@@ -323,7 +325,7 @@ bool LoadPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 				if(it->first == selectedFile)
 					break;
 
-			if(key == SDLK_DOWN)
+			if(key == GLFW_KEY_DOWN)
 			{
 				++it;
 				const int lastVisibleIndex = (centerScroll / 20.) + 13.;
@@ -351,9 +353,9 @@ bool LoadPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 		}
 		loadedInfo.Load(Files::Saves() + selectedFile);
 	}
-	else if(key == SDLK_LEFT)
+	else if(key == GLFW_KEY_LEFT)
 		sideHasFocus = true;
-	else if(key == SDLK_RIGHT)
+	else if(key == GLFW_KEY_RIGHT)
 		sideHasFocus = false;
 	else
 		return false;

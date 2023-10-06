@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "HailPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "Dialog.h"
 #include "DrawList.h"
@@ -38,6 +39,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <algorithm>
 #include <cmath>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -277,11 +279,11 @@ void HailPanel::Draw()
 
 
 
-bool HailPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool HailPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	bool shipIsEnemy = (ship && ship->GetGovernment()->IsEnemy());
 
-	if(key == 'd' || key == SDLK_ESCAPE || key == SDLK_RETURN || (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI))))
+	if(key == 'd' || key == GLFW_KEY_ESCAPE || key == GLFW_KEY_ENTER || (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
 	{
 		if(bribeCallback && bribed)
 			bribeCallback(bribed);

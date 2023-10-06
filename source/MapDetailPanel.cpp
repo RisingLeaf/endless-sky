@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "MapDetailPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "Angle.h"
 #include "Color.h"
@@ -56,6 +57,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <algorithm>
 #include <cmath>
+#include <GLFW/glfw3.h>
 #include <limits>
 #include <set>
 #include <utility>
@@ -188,10 +190,10 @@ bool MapDetailPanel::Scroll(double dx, double dy)
 
 
 // Only override the ones you need; the default action is to return false.
-bool MapDetailPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool MapDetailPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	const double planetCardHeight = MapPlanetCard::Height();
-	if((key == SDLK_TAB || command.Has(Command::JUMP)) && player.Flagship())
+	if((key == GLFW_KEY_TAB || command.Has(Command::JUMP)) && player.Flagship())
 	{
 		// Clear the selected planet, if any.
 		selectedPlanet = nullptr;
@@ -203,7 +205,7 @@ bool MapDetailPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command
 		const System *source = plan.empty() ? player.GetSystem() : plan.front();
 		const System *next = nullptr;
 		Point previousUnit = Point(0., -1.);
-		if(!plan.empty() && !(mod & KMOD_SHIFT))
+		if(!plan.empty() && !(mod & GameWindow::MOD_SHIFT))
 		{
 			previousUnit = plan.front()->Position();
 			plan.erase(plan.begin());
@@ -252,13 +254,13 @@ bool MapDetailPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command
 			Select(next);
 		}
 	}
-	else if((key == SDLK_DELETE || key == SDLK_BACKSPACE) && player.HasTravelPlan())
+	else if((key == GLFW_KEY_DELETE || key == GLFW_KEY_BACKSPACE) && player.HasTravelPlan())
 	{
 		vector<const System *> &plan = player.TravelPlan();
 		plan.erase(plan.begin());
 		Select(plan.empty() ? player.GetSystem() : plan.front());
 	}
-	else if(key == SDLK_DOWN)
+	else if(key == GLFW_KEY_DOWN)
 	{
 		if(!isPlanetViewSelected)
 		{
@@ -297,7 +299,7 @@ bool MapDetailPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command
 		}
 
 	}
-	else if(key == SDLK_UP)
+	else if(key == GLFW_KEY_UP)
 	{
 		if(!isPlanetViewSelected)
 		{

@@ -18,6 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "Command.h"
 #include "ConversationPanel.h"
+#include "GameWindow.h"
 #include "text/DisplayText.h"
 #include "FillShader.h"
 #include "text/Font.h"
@@ -40,6 +41,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include <algorithm>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -132,16 +134,17 @@ void StartConditionsPanel::Draw()
 
 
 
-bool StartConditionsPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool /* isNewPress */)
+bool StartConditionsPanel::KeyDown(int key, uint16_t mod, const Command &command, bool /* isNewPress */)
 {
-	if(key == 'b' || key == SDLK_ESCAPE || command.Has(Command::MENU) || (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI))))
+	if(key == 'b' || key == GLFW_KEY_ESCAPE || command.Has(Command::MENU) || (key == 'w' &&
+		(mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
 		GetUI()->Pop(this);
-	else if(!scenarios.empty() && (key == SDLK_UP || key == SDLK_DOWN || key == SDLK_PAGEUP || key == SDLK_PAGEDOWN))
+	else if(!scenarios.empty() && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_PAGE_UP || key == GLFW_KEY_PAGE_DOWN))
 	{
 		// Move up / down an entry, or a page. If at the bottom / top, wrap around.
-		const ptrdiff_t magnitude = (key == SDLK_UP || key == SDLK_DOWN) ? 1
+		const ptrdiff_t magnitude = (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN) ? 1
 				: entriesContainer.Height() / entryBox.Height() - 1;
-		if(key == SDLK_UP || key == SDLK_PAGEUP)
+		if(key == GLFW_KEY_UP || key == GLFW_KEY_PAGE_UP)
 		{
 			if(startIt == scenarios.begin())
 				startIt = scenarios.end() - 1;
@@ -158,7 +161,7 @@ bool StartConditionsPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &c
 
 		Select(startIt);
 	}
-	else if(startIt != scenarios.end() && (key == 's' || key == 'n' || key == SDLK_KP_ENTER || key == SDLK_RETURN)
+	else if(startIt != scenarios.end() && (key == 's' || key == 'n' || key == GLFW_KEY_KP_ENTER || key == GLFW_KEY_ENTER)
 		&& info.HasCondition("unlocked start"))
 	{
 		player.New(*startIt);

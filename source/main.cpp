@@ -48,6 +48,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <cassert>
 #include <future>
+#include <GLFW/glfw3.h>
 #include <stdexcept>
 #include <string>
 
@@ -273,40 +274,32 @@ void GameLoop(PlayerInfo &player, const Conversation &conversation, const string
 		chrono::steady_clock::time_point start = chrono::steady_clock::now();
 
 		// Handle any events that occurred in this frame.
-		SDL_Event event;
-		while(SDL_PollEvent(&event))
+		for(const auto &event : GameWindow::FetchEvents())
 		{
 			UI &activeUI = (menuPanels.IsEmpty() ? gamePanels : menuPanels);
 
 			// If the mouse moves, reset the cursor movement timeout.
-			if(event.type == SDL_MOUSEMOTION)
+			if(event.type == GameWindow::InputEventType::MOUSE_MOTION)
 				cursorTime = 0;
 
-			if(debugMode && event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKQUOTE)
+			if(debugMode && event.type == GameWindow::InputEventType::KEY_DOWN && event.key == GLFW_KEY_GRAVE_ACCENT)
 			{
 				isPaused = !isPaused;
 			}
-			else if(event.type == SDL_KEYDOWN && menuPanels.IsEmpty()
-					&& Command(event.key.keysym.sym).Has(Command::MENU)
+			else if(event.type == GameWindow::InputEventType::KEY_DOWN && menuPanels.IsEmpty()
+					&& Command(event.key).Has(Command::MENU)
 					&& !gamePanels.IsEmpty() && gamePanels.Top()->IsInterruptible())
 			{
 				// User pressed the Menu key.
-				menuPanels.Push(shared_ptr<Panel>(
-					new MenuPanel(player, gamePanels)));
+				menuPanels.Push(shared_ptr<Panel>(new MenuPanel(player, gamePanels)));
 			}
-			else if(event.type == SDL_QUIT)
+			else if(event.type == GameWindow::InputEventType::QUIT)
 			{
 				menuPanels.Quit();
 			}
-			else if(event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-			{
-				// The window has been resized. Adjust the raw screen size
-				// and the OpenGL viewport to match.
-				GameWindow::AdjustViewport();
-			}
-			else if(event.type == SDL_KEYDOWN && !toggleTimeout
-					&& (Command(event.key.keysym.sym).Has(Command::FULLSCREEN)
-					|| (event.key.keysym.sym == SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT))))
+			else if(event.type == GameWindow::InputEventType::KEY_DOWN && !toggleTimeout
+					&& (Command(event.key).Has(Command::FULLSCREEN)
+					|| (event.key == GLFW_KEY_ENTER && (event.mods & GameWindow::MOD_ALT))))
 			{
 				toggleTimeout = 30;
 				Preferences::ToggleScreenMode();
@@ -315,14 +308,13 @@ void GameLoop(PlayerInfo &player, const Conversation &conversation, const string
 			{
 				// The UI handled the event.
 			}
-			else if(event.type == SDL_KEYDOWN && !event.key.repeat
-					&& (Command(event.key.keysym.sym).Has(Command::FASTFORWARD)))
+			else if(event.type == GameWindow::InputEventType::KEY_DOWN
+					&& (Command(event.key).Has(Command::FASTFORWARD)))
 			{
 				isFastForward = !isFastForward;
 			}
 		}
-		SDL_Keymod mod = SDL_GetModState();
-		Font::ShowUnderlines(mod & KMOD_ALT);
+		Font::ShowUnderlines(GameWindow::ModActive(GameWindow::MOD_ALT));
 
 		// In full-screen mode, hide the cursor if inactive for ten seconds,
 		// but only if the player is flying around in the main view.
@@ -332,7 +324,7 @@ void GameLoop(PlayerInfo &player, const Conversation &conversation, const string
 		if(shouldShowCursor != showCursor)
 		{
 			showCursor = shouldShowCursor;
-			SDL_ShowCursor(showCursor);
+			GameWindow::ShowCursor(showCursor);
 		}
 
 		// Switch off fast-forward if the player is not in flight or flight-related screen
@@ -379,7 +371,7 @@ void GameLoop(PlayerInfo &player, const Conversation &conversation, const string
 		}
 		// Caps lock slows the frame rate in debug mode.
 		// Slowing eases in and out over a couple of frames.
-		else if((mod & KMOD_CAPS) && inFlight && debugMode)
+		else if(GameWindow::ModActive(GameWindow::MOD_CAPS) && inFlight && debugMode)
 		{
 			if(frameRate > 10)
 			{
@@ -460,8 +452,6 @@ void PrintVersion()
 	cerr << "License GPLv3+: GNU GPL version 3 or later: <https://gnu.org/licenses/gpl.html>" << endl;
 	cerr << "This is free software: you are free to change and redistribute it." << endl;
 	cerr << "There is NO WARRANTY, to the extent permitted by law." << endl;
-	cerr << endl;
-	cerr << GameWindow::SDLVersions() << endl;
 	cerr << endl;
 }
 

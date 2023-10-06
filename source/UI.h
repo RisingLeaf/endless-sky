@@ -17,11 +17,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define UI_H_
 
 #include "Point.h"
+#include "GameWindow.h"
 
 #include <memory>
 #include <vector>
-
-#include <SDL2/SDL_events.h>
 
 class Panel;
 
@@ -35,7 +34,7 @@ class UI {
 public:
 	// Handle an event. The event is handed to each panel on the stack until one
 	// of them handles it. If none do, this returns false.
-	bool Handle(const SDL_Event &event);
+	bool Handle(const GameWindow::InputEvent &event);
 
 	// Step all the panels forward (advance animations, move objects, etc.).
 	void StepAll();

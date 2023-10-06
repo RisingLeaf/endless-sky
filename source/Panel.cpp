@@ -19,6 +19,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Command.h"
 #include "Dialog.h"
 #include "FillShader.h"
+#include "GameWindow.h"
 #include "text/Format.h"
 #include "GameData.h"
 #include "Point.h"
@@ -82,7 +83,7 @@ void Panel::AddZone(const Rectangle &rect, const function<void()> &fun)
 
 
 
-void Panel::AddZone(const Rectangle &rect, SDL_Keycode key)
+void Panel::AddZone(const Rectangle &rect, int key)
 {
 	AddZone(rect, [this, key](){ this->KeyDown(key, 0, Command(), true); });
 }
@@ -125,7 +126,7 @@ bool Panel::AllowsFastForward() const noexcept
 
 
 // Only override the ones you need; the default action is to return false.
-bool Panel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool Panel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	return false;
 }
@@ -219,7 +220,7 @@ UI *Panel::GetUI() const noexcept
 // arguments. In this form, the command is never set, so you can call this
 // with a key representing a known keyboard shortcut without worrying that a
 // user-defined command key will override it.
-bool Panel::DoKey(SDL_Keycode key, Uint16 mod)
+bool Panel::DoKey(int key, uint16_t mod)
 {
 	return KeyDown(key, mod, Command(), true);
 }
@@ -230,14 +231,12 @@ bool Panel::DoKey(SDL_Keycode key, Uint16 mod)
 // something you are buying, so the shared function is defined here:
 int Panel::Modifier()
 {
-	SDL_Keymod mod = SDL_GetModState();
-
 	int modifier = 1;
-	if(mod & KMOD_ALT)
+	if(GameWindow::ModActive(GameWindow::MOD_ALT))
 		modifier *= 500;
-	if(mod & (KMOD_CTRL | KMOD_GUI))
+	if(GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))
 		modifier *= 20;
-	if(mod & KMOD_SHIFT)
+	if(GameWindow::ModActive(GameWindow::MOD_SHIFT))
 		modifier *= 5;
 
 	return modifier;

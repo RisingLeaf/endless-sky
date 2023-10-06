@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "LogbookPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "Color.h"
 #include "text/DisplayText.h"
@@ -33,6 +34,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "text/WrappedText.h"
 
 #include <algorithm>
+#include <GLFW/glfw3.h>
 #include <set>
 
 using namespace std;
@@ -173,21 +175,21 @@ void LogbookPanel::Draw()
 
 
 
-bool LogbookPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool LogbookPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
-	if(key == 'd' || key == SDLK_ESCAPE || (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI))))
+	if(key == 'd' || key == GLFW_KEY_ESCAPE || (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
 		GetUI()->Pop(this);
-	else if(key == SDLK_PAGEUP || key == SDLK_PAGEDOWN)
+	else if(key == GLFW_KEY_PAGE_UP || key == GLFW_KEY_PAGE_DOWN)
 	{
-		double direction = (key == SDLK_PAGEUP) - (key == SDLK_PAGEDOWN);
+		double direction = (key == GLFW_KEY_PAGE_UP) - (key == GLFW_KEY_PAGE_DOWN);
 		Drag(0., (Screen::Height() - 100.) * direction);
 	}
-	else if(key == SDLK_HOME || key == SDLK_END)
+	else if(key == GLFW_KEY_HOME || key == GLFW_KEY_END)
 	{
-		double direction = (key == SDLK_HOME) - (key == SDLK_END);
+		double direction = (key == GLFW_KEY_HOME) - (key == GLFW_KEY_END);
 		Drag(0., maxScroll * direction);
 	}
-	else if(key == SDLK_UP || key == SDLK_DOWN)
+	else if(key == GLFW_KEY_UP || key == GLFW_KEY_DOWN)
 	{
 		// Find the index of the currently selected line.
 		size_t i = 0;
@@ -197,7 +199,7 @@ bool LogbookPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, 
 		if(i == contents.size())
 			return true;
 
-		if(key == SDLK_DOWN)
+		if(key == GLFW_KEY_DOWN)
 		{
 			++i;
 			if(i >= contents.size())
@@ -224,7 +226,7 @@ bool LogbookPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, 
 			selectedDate = dates[i];
 			selectedName = contents[i];
 			scroll = 0.;
-			Update(key == SDLK_UP);
+			Update(key == GLFW_KEY_UP);
 
 			// Find our currently selected item again
 			for(i = 0 ; i < contents.size(); ++i)

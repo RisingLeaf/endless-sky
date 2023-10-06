@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "ShopPanel.h"
 
+#include "GameWindow.h"
 #include "text/alignment.hpp"
 #include "CategoryTypes.h"
 #include "Color.h"
@@ -45,9 +46,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "text/WrappedText.h"
 
 #include "opengl.h"
-#include <SDL2/SDL.h>
 
 #include <algorithm>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -290,12 +291,12 @@ void ShopPanel::ToggleCargo()
 
 
 // Only override the ones you need; the default action is to return false.
-bool ShopPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool ShopPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
 	scrollDetailsIntoView = false;
 	bool toStorage = selectedOutfit && (key == 'r' || key == 'u');
-	if(key == 'l' || key == 'd' || key == SDLK_ESCAPE
-			|| (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI))))
+	if(key == 'l' || key == 'd' || key == GLFW_KEY_ESCAPE
+			|| (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
 	{
 		player.UpdateCargoCapacities();
 		GetUI()->Pop(this);
@@ -333,7 +334,7 @@ bool ShopPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 			player.UpdateCargoCapacities();
 		}
 	}
-	else if(key == SDLK_LEFT)
+	else if(key == GLFW_KEY_LEFT)
 	{
 		if(activePane != ShopPane::Sidebar)
 			MainLeft();
@@ -341,7 +342,7 @@ bool ShopPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 			SideSelect(-1);
 		return true;
 	}
-	else if(key == SDLK_RIGHT)
+	else if(key == GLFW_KEY_RIGHT)
 	{
 		if(activePane != ShopPane::Sidebar)
 			MainRight();
@@ -349,7 +350,7 @@ bool ShopPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 			SideSelect(1);
 		return true;
 	}
-	else if(key == SDLK_UP)
+	else if(key == GLFW_KEY_UP)
 	{
 		if(activePane != ShopPane::Sidebar)
 			MainUp();
@@ -357,7 +358,7 @@ bool ShopPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 			SideSelect(-4);
 		return true;
 	}
-	else if(key == SDLK_DOWN)
+	else if(key == GLFW_KEY_DOWN)
 	{
 		if(activePane != ShopPane::Sidebar)
 			MainDown();
@@ -365,20 +366,20 @@ bool ShopPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 			SideSelect(4);
 		return true;
 	}
-	else if(key == SDLK_PAGEUP)
+	else if(key == GLFW_KEY_PAGE_UP)
 		return DoScroll(Screen::Bottom());
-	else if(key == SDLK_PAGEDOWN)
+	else if(key == GLFW_KEY_PAGE_DOWN)
 		return DoScroll(Screen::Top());
-	else if(key == SDLK_HOME)
+	else if(key == GLFW_KEY_HOME)
 		return SetScrollToTop();
-	else if(key == SDLK_END)
+	else if(key == GLFW_KEY_END)
 		return SetScrollToBottom();
 	else if(key >= '0' && key <= '9')
 	{
 		int group = key - '0';
-		if(mod & (KMOD_CTRL | KMOD_GUI))
+		if(mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))
 			player.SetGroup(group, &playerShips);
-		else if(mod & KMOD_SHIFT)
+		else if(mod & GameWindow::MOD_SHIFT)
 		{
 			// If every single ship in this group is already selected, shift
 			// plus the group number means to deselect all those ships.
@@ -413,7 +414,7 @@ bool ShopPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 				playerShip = playerShips.empty() ? nullptr : *playerShips.begin();
 		}
 	}
-	else if(key == SDLK_TAB)
+	else if(key == GLFW_KEY_TAB)
 		activePane = (activePane == ShopPane::Main ? ShopPane::Sidebar : ShopPane::Main);
 	else
 		return false;
@@ -462,7 +463,7 @@ bool ShopPanel::Click(int x, int y, int /* clicks */)
 	for(const ClickZone<string> &zone : categoryZones)
 		if(zone.Contains(clickPoint))
 		{
-			bool toggleAll = (SDL_GetModState() & KMOD_SHIFT);
+			bool toggleAll = GameWindow::ModActive(GameWindow::MOD_SHIFT);
 			auto it = collapsed.find(zone.Value());
 			if(it == collapsed.end())
 			{
@@ -1116,8 +1117,8 @@ void ShopPanel::SideSelect(int count)
 
 void ShopPanel::SideSelect(Ship *ship)
 {
-	bool shift = (SDL_GetModState() & KMOD_SHIFT);
-	bool control = (SDL_GetModState() & (KMOD_CTRL | KMOD_GUI));
+	bool shift = GameWindow::ModActive(GameWindow::MOD_SHIFT);
+	bool control = GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI);
 
 	if(shift)
 	{

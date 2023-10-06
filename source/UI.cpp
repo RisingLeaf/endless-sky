@@ -16,12 +16,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include "Command.h"
+#include "GameWindow.h"
 #include "Panel.h"
 #include "Screen.h"
 
-#include <SDL2/SDL.h>
-
 #include <algorithm>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -29,7 +29,7 @@ using namespace std;
 
 // Handle an event. The event is handed to each panel on the stack until one
 // of them handles it. If none do, this returns false.
-bool UI::Handle(const SDL_Event &event)
+bool UI::Handle(const GameWindow::InputEvent &event)
 {
 	bool handled = false;
 
@@ -41,42 +41,42 @@ bool UI::Handle(const SDL_Event &event)
 		if(count(toPop.begin(), toPop.end(), it->get()))
 			continue;
 
-		if(event.type == SDL_MOUSEMOTION)
+		if(event.type == GameWindow::InputEventType::MOUSE_MOTION)
 		{
-			if(event.motion.state & SDL_BUTTON(1))
+			if(event.key)
 				handled = (*it)->Drag(
-					event.motion.xrel * 100. / Screen::Zoom(),
-					event.motion.yrel * 100. / Screen::Zoom());
+					event.x * 100. / Screen::Zoom(),
+					event.y * 100. / Screen::Zoom());
 			else
 				handled = (*it)->Hover(
-					Screen::Left() + event.motion.x * 100 / Screen::Zoom(),
-					Screen::Top() + event.motion.y * 100 / Screen::Zoom());
+					Screen::Left() + event.x * 100 / Screen::Zoom(),
+					Screen::Top() + event.y * 100 / Screen::Zoom());
 		}
-		else if(event.type == SDL_MOUSEBUTTONDOWN)
+		else if(event.type == GameWindow::InputEventType::MOUSEBUTTON_DOWN)
 		{
-			int x = Screen::Left() + event.button.x * 100 / Screen::Zoom();
-			int y = Screen::Top() + event.button.y * 100 / Screen::Zoom();
-			if(event.button.button == 1)
+			int x = Screen::Left() + event.x * 100 / Screen::Zoom();
+			int y = Screen::Top() + event.y * 100 / Screen::Zoom();
+			if(event.key == GLFW_MOUSE_BUTTON_LEFT)
 			{
 				handled = (*it)->ZoneClick(Point(x, y));
 				if(!handled)
-					handled = (*it)->Click(x, y, event.button.clicks);
+					handled = (*it)->Click(x, y, 1);
 			}
-			else if(event.button.button == 3)
+			else if(event.key == 3)
 				handled = (*it)->RClick(x, y);
 		}
-		else if(event.type == SDL_MOUSEBUTTONUP)
+		else if(event.type == GameWindow::InputEventType::MOUSEBUTTON_UP)
 		{
-			int x = Screen::Left() + event.button.x * 100 / Screen::Zoom();
-			int y = Screen::Top() + event.button.y * 100 / Screen::Zoom();
+			int x = Screen::Left() + event.x * 100 / Screen::Zoom();
+			int y = Screen::Top() + event.y * 100 / Screen::Zoom();
 			handled = (*it)->Release(x, y);
 		}
-		else if(event.type == SDL_MOUSEWHEEL)
-			handled = (*it)->Scroll(event.wheel.x, event.wheel.y);
-		else if(event.type == SDL_KEYDOWN)
+		else if(event.type == GameWindow::InputEventType::MOUSEWHEEL)
+			handled = (*it)->Scroll(event.x, event.y);
+		else if(event.type == GameWindow::InputEventType::KEY_DOWN)
 		{
-			Command command(event.key.keysym.sym);
-			handled = (*it)->KeyDown(event.key.keysym.sym, event.key.keysym.mod, command, !event.key.repeat);
+			Command command(event.key);
+			handled = (*it)->KeyDown(event.key, event.mods, command, true);
 		}
 
 		// If this panel does not want anything below it to receive events, do
@@ -262,9 +262,9 @@ bool UI::IsEmpty() const
 // Get the current mouse position.
 Point UI::GetMouse()
 {
-	int x = 0;
-	int y = 0;
-	SDL_GetMouseState(&x, &y);
+	double x = 0;
+	double y = 0;
+	GameWindow::MouseState(&x, &y);
 	return Screen::TopLeft() + Point(x, y) * (100. / Screen::Zoom());
 }
 

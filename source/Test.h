@@ -19,8 +19,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Command.h"
 #include "ConditionSet.h"
 
-#include <SDL2/SDL.h>
-
 #include <map>
 #include <set>
 #include <string>
@@ -103,7 +101,7 @@ public:
 		// Input variables.
 		Command command;
 		std::set<std::string> inputKeys;
-		Uint16 modKeys = 0;
+		uint16_t modKeys = 0;
 
 		// Mouse/Pointer input variables.
 		int XValue = 0;

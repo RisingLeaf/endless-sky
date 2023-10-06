@@ -18,6 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Color.h"
 #include "Command.h"
 #include "FillShader.h"
+#include "GameWindow.h"
 #include "text/Font.h"
 #include "text/FontSet.h"
 #include "text/Format.h"
@@ -32,6 +33,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include <algorithm>
+#include <GLFW/glfw3.h>
 #include <string>
 
 using namespace std;
@@ -222,19 +224,19 @@ void TradingPanel::Draw()
 
 
 // Only override the ones you need; the default action is to return false.
-bool TradingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool TradingPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
-	if(key == SDLK_UP)
+	if(key == GLFW_KEY_UP)
 		player.SetMapColoring(max(0, player.MapColoring() - 1));
-	else if(key == SDLK_DOWN)
+	else if(key == GLFW_KEY_DOWN)
 		player.SetMapColoring(max(0, min(COMMODITY_COUNT - 1, player.MapColoring() + 1)));
-	else if(key == SDLK_EQUALS || key == SDLK_KP_PLUS || key == SDLK_PLUS || key == SDLK_RETURN || key == SDLK_SPACE)
+	else if(key == GLFW_KEY_EQUAL || key == GLFW_KEY_KP_ADD || key == GLFW_KEY_ENTER || key == GLFW_KEY_SPACE)
 		Buy(1);
-	else if(key == SDLK_MINUS || key == SDLK_KP_MINUS || key == SDLK_BACKSPACE || key == SDLK_DELETE)
+	else if(key == GLFW_KEY_MINUS || key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_BACKSPACE || key == GLFW_KEY_DELETE)
 		Buy(-1);
-	else if(key == 'B' || (key == 'b' && (mod & KMOD_SHIFT)))
+	else if(key == 'B' || (key == 'b' && (mod & GameWindow::MOD_SHIFT)))
 		Buy(1000000000);
-	else if(key == 'S' || (key == 's' && (mod & KMOD_SHIFT)))
+	else if(key == 'S' || (key == 's' && (mod & GameWindow::MOD_SHIFT)))
 	{
 		for(const auto &it : player.Cargo().Commodities())
 		{

@@ -78,7 +78,7 @@ namespace {
 	}
 
 	// Prepare an keyboard input to one of the UIs.
-	bool KeyInputToEvent(const char *keyName, Uint16 modKeys)
+	bool KeyInputToEvent(const char *keyName, uint16_t modKeys)
 	{
 		// Construct the event to send (from keyboard code and modifiers)
 		SDL_Event event;
