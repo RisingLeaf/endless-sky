@@ -26,6 +26,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 class Screen {
 public:
 	static void SetRaw(int width, int height);
+	static void ActivateFrameBufferOverwrite(int width, int height);
+	static void DeactivateFrameBufferOverwrite();
 
 	// Zoom level as specified by the user.
 	static int UserZoom();

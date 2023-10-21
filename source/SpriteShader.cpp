@@ -305,7 +305,7 @@ void SpriteShader::Draw(const Sprite *sprite, const Point &position, float zoom,
 
 
 
-void SpriteShader::DrawBuffer(uint32_t texture, float width, float height)
+void SpriteShader::DrawBuffer(uint32_t texture, float width, float height, Point position)
 {
 	if(texture < 0)
 		return;
@@ -314,8 +314,8 @@ void SpriteShader::DrawBuffer(uint32_t texture, float width, float height)
 	item.texture = texture;
 	item.frame = 0;
 	item.frameCount = 1;
-	item.position[0] = 0.f;
-	item.position[1] = 0.f;
+	item.position[0] = position.X();
+	item.position[1] = position.Y();
 	item.transform[0] = width;
 	item.transform[3] = -height;
 	item.swizzle = 0;

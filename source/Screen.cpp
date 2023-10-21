@@ -27,6 +27,10 @@ namespace {
 	int USER_ZOOM = 100;
 	int EFFECTIVE_ZOOM = 100;
 	bool HIGH_DPI = false;
+
+	bool OVERWRITE = false;
+	int O_HEIGHT = 0;
+	int O_WIDTH = 0;
 }
 
 
@@ -35,6 +39,25 @@ void Screen::SetRaw(int width, int height)
 {
 	RAW_WIDTH = width;
 	RAW_HEIGHT = height;
+	SetZoom(USER_ZOOM);
+}
+
+
+
+
+void Screen::ActivateFrameBufferOverwrite(int width, int height)
+{
+	OVERWRITE = true;
+	O_HEIGHT = height;
+	O_WIDTH = width;
+	SetZoom(USER_ZOOM);
+}
+
+
+
+void Screen::DeactivateFrameBufferOverwrite()
+{
+	OVERWRITE = false;
 	SetZoom(USER_ZOOM);
 }
 
@@ -61,8 +84,10 @@ void Screen::SetZoom(int percent)
 	// Make sure the zoom factor is not set too high for the full UI to fit.
 	static const int MIN_WIDTH = 1000; // Width of main menu
 	static const int MIN_HEIGHT = 500; // Height of preferences panel
-	int minZoomX = 100 * RAW_WIDTH / MIN_WIDTH;
-	int minZoomY = 100 * RAW_HEIGHT / MIN_HEIGHT;
+	const int u_width = OVERWRITE ? O_WIDTH : RAW_WIDTH;
+	const int u_height = OVERWRITE ? O_HEIGHT : RAW_HEIGHT;
+	int minZoomX = 100 * u_width / MIN_WIDTH;
+	int minZoomY = 100 * u_height / MIN_HEIGHT;
 	int minZoom = min(minZoomX, minZoomY);
 	// Never go below 100% zoom, no matter how small the window is
 	minZoom = max(minZoom, 100);
@@ -70,8 +95,8 @@ void Screen::SetZoom(int percent)
 	minZoom -= minZoom % 10;
 	EFFECTIVE_ZOOM = min(minZoom, UserZoom());
 
-	WIDTH = RAW_WIDTH * 100 / EFFECTIVE_ZOOM;
-	HEIGHT = RAW_HEIGHT * 100 / EFFECTIVE_ZOOM;
+	WIDTH = u_width * 100 / EFFECTIVE_ZOOM;
+	HEIGHT = u_height * 100 / EFFECTIVE_ZOOM;
 }
 
 
@@ -115,14 +140,18 @@ int Screen::Height()
 
 int Screen::RawWidth()
 {
-	return RAW_WIDTH;
+	if(!OVERWRITE)
+		return RAW_WIDTH;
+	return O_WIDTH;
 }
 
 
 
 int Screen::RawHeight()
 {
-	return RAW_HEIGHT;
+	if(!OVERWRITE)
+		return RAW_HEIGHT;
+	return O_HEIGHT;
 }
 
 

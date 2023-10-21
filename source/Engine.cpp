@@ -35,6 +35,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Government.h"
 #include "Hazard.h"
 #include "Interface.h"
+#include "LineShader.h"
 #include "Logger.h"
 #include "MapPanel.h"
 #include "Mask.h"
@@ -1170,7 +1171,18 @@ void Engine::Draw() const
 	escorts.Draw(hud->GetBox("escorts"));
 
 	frameBuffers[0].UnbindCurrentFrameBuffer();
-	SpriteShader::DrawBuffer(frameBuffers[0].Texture(), frameBuffers[0].Width(), frameBuffers[0].Height());
+	SpriteShader::DrawBuffer(frameBuffers[0].Texture(),
+		frameBuffers[0].Width(), frameBuffers[0].Height(),
+		Point(frameBuffers[0].Width() / 2, 0.));
+	SpriteShader::DrawBuffer(frameBuffers[0].Texture(),
+		frameBuffers[0].Width(), frameBuffers[0].Height(),
+		Point(-frameBuffers[0].Width() / 2, 0.));
+	LineShader::Draw(
+		Point(0., -Screen::RawHeight()),
+		Point(0.,  Screen::RawHeight()),
+		4,
+		Color(1., 1.)
+	);
 
 	// Upload any preloaded sprites that are now available. This is to avoid
 	// filling the entire backlog of sprites before landing on a planet.
