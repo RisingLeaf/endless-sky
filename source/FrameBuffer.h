@@ -38,6 +38,9 @@ class FrameBuffer
 public:
 	FrameBuffer() {}
 	~FrameBuffer();
+
+	void DestroyFrameBuffer();
+
 	// Creates a framebuffer for color.
 	void CreateFrameBuffer();
 	// Create a texture for a color framebuffer.

@@ -35,6 +35,14 @@ FrameBuffer::~FrameBuffer()
 
 
 
+void FrameBuffer::DestroyFrameBuffer()
+{
+	glDeleteFramebuffers(1, &frameBuffer);
+	glDeleteTextures(1, &texture);
+}
+
+
+
 void FrameBuffer::CreateFrameBuffer()
 {
 	glGenFramebuffers(1, &frameBuffer);

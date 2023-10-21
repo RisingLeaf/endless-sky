@@ -842,12 +842,6 @@ void Engine::Step(bool isActive)
 			object->Radius(),
 			GetPlanetTargetPointerColor(*object->GetPlanet()),
 			5});
-		targets[1].push_back({
-			object->Position() - center[0],
-			object->Facing(),
-			object->Radius(),
-			GetPlanetTargetPointerColor(*object->GetPlanet()),
-			5});
 	}
 	else if(flagship && flagship->GetTargetSystem())
 	{
@@ -1012,9 +1006,9 @@ void Engine::Step(bool isActive)
 	if(doClick && !isRightClick)
 	{
 		if(uiClickBox.Dimensions())
-			doClick = !ammoDisplay[0].Click(uiClickBox);
+			doClick = !ammoDisplay[clickIndex].Click(uiClickBox);
 		else
-			doClick = !ammoDisplay[0].Click(clickPoint, hasControl);
+			doClick = !ammoDisplay[clickIndex].Click(clickPoint, hasControl);
 		doClick = doClick && !player.SelectShips(clickBox, hasShift);
 		if(doClick)
 		{
@@ -1077,13 +1071,6 @@ void Engine::Step(bool isActive)
 					continue;
 
 				targets[0].push_back({
-					offset,
-					minable->Facing(),
-					.8 * minable->Radius(),
-					GetMinablePointerColor(false),
-					3
-				});
-				targets[1].push_back({
 					offset,
 					minable->Facing(),
 					.8 * minable->Radius(),
@@ -1300,11 +1287,11 @@ void Engine::Draw() const
 
 	SpriteShader::DrawBuffer(frameBuffers[0].Texture(),
 		frameBuffers[0].Width(), frameBuffers[0].Height(),
-		Point(frameBuffers[0].Width() / 2., 0.));
+		Point(-frameBuffers[0].Width() / 2., 0.));
 
 	SpriteShader::DrawBuffer(frameBuffers[1].Texture(),
 		frameBuffers[1].Width(), frameBuffers[1].Height(),
-		Point(-frameBuffers[1].Width() / 2., 0.));
+		Point(frameBuffers[1].Width() / 2., 0.));
 
 	LineShader::Draw(
 		Point(0., -Screen::RawHeight()),
@@ -1328,6 +1315,19 @@ void Engine::Draw() const
 
 
 
+void Engine::Resize()
+{
+	frameBuffers[0].DestroyFrameBuffer();
+	frameBuffers[0].CreateFrameBuffer();
+	frameBuffers[0].CreateTextureAttachment(Screen::RawWidth() / 2, Screen::RawHeight());
+
+	frameBuffers[1].DestroyFrameBuffer();
+	frameBuffers[1].CreateFrameBuffer();
+	frameBuffers[1].CreateTextureAttachment(Screen::RawWidth() / 2, Screen::RawHeight());
+}
+
+
+
 // Set the given TestContext in the next step of the Engine.
 void Engine::SetTestContext(TestContext &newTestContext)
 {
@@ -1339,10 +1339,32 @@ void Engine::SetTestContext(TestContext &newTestContext)
 // Select the object the player clicked on.
 void Engine::Click(const Point &_from, const Point &_to, bool hasShift, bool hasControl)
 {
-	Logger::LogError("Hi: " + to_string(_from.X()) + " " + to_string(Screen::RawWidth()));
-	const Point from = Point((_from.X() * 2) + Screen::RawWidth() / 2, _from.Y());
-	const Point to = Point((_to.X() * 2) + Screen::RawWidth() / 2, _to.Y());
-	Logger::LogError("Hi: " + to_string(from.X()) + " " + to_string(Screen::RawWidth()));
+	auto mapRange = [](float value, float fromMin, float fromMax, float toMin, float toMax) -> float
+	{
+		if(value < fromMin)
+			return toMin;
+		if(value > fromMax)
+			return toMax;
+		float fromDif = fromMax - fromMin;
+		float toDif = toMax - toMin;
+		return (((value - fromMin) / fromDif) * toDif) + toMin;
+	};
+	int index = 0;
+	Point from;
+	Point to;
+	if(_from.X() > 0.)
+	{
+		from = Point(mapRange(_from.X(), 0., Screen::RawWidth() / 2, -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _from.Y());
+		index = 1;
+	}
+	else
+		from = Point(mapRange(_from.X(), -Screen::RawWidth() / 2, 0., -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _from.Y());
+
+	if(_to.X() > 0.)
+		to = Point(mapRange(_to.X(), 0., Screen::RawWidth() / 2, -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _to.Y());
+	else
+		to = Point(mapRange(_to.X(), -Screen::RawWidth() / 2, 0., -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _to.Y());
+
 	// First, see if this is a click on an escort icon.
 	doClickNextStep = true;
 	this->hasShift = hasShift;
@@ -1362,16 +1384,39 @@ void Engine::Click(const Point &_from, const Point &_to, bool hasShift, bool has
 	uiClickBox = Rectangle::WithCorners(from, to);
 	if(isRadarClick)
 		clickBox = Rectangle::WithCorners(
-			(from - radarCenter) / RADAR_SCALE + center[0],
-			(to - radarCenter) / RADAR_SCALE + center[0]);
+			(from - radarCenter) / RADAR_SCALE + center[index],
+			(to - radarCenter) / RADAR_SCALE + center[index]);
 	else
-		clickBox = Rectangle::WithCorners(from / zoom + center[0], to / zoom + center[0]);
+		clickBox = Rectangle::WithCorners(from / zoom + center[index], to / zoom + center[index]);
+
+	clickIndex = index;
 }
 
 
 
-void Engine::RClick(const Point &point)
+void Engine::RClick(const Point &_point)
 {
+	auto mapRange = [](float value, float fromMin, float fromMax, float toMin, float toMax) -> float
+	{
+		if(value < fromMin)
+			return toMin;
+		if(value > fromMax)
+			return toMax;
+		float fromDif = fromMax - fromMin;
+		float toDif = toMax - toMin;
+		return (((value - fromMin) / fromDif) * toDif) + toMin;
+	};
+	Point point;
+	if(_point.X() > 0.)
+	{
+		point = Point(mapRange(_point.X(), 0., Screen::RawWidth() / 2, -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _point.Y());
+		clickIndex = 1;
+	}
+	else
+	{
+		point = Point(mapRange(_point.X(), -Screen::RawWidth() / 2, 0., -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _point.Y());
+		clickIndex = 0;
+	}
 	doClickNextStep = true;
 	hasShift = false;
 	isRightClick = true;
@@ -2196,7 +2241,7 @@ void Engine::HandleMouseClicks()
 			{
 				// If the player clicked to land on a planet,
 				// do so unless already landing elsewhere.
-				Point position = object.Position() - center[0];
+				Point position = object.Position() - center[clickIndex];
 				const Planet *planet = object.GetPlanet();
 				if(planet->IsAccessible(flagship) && (clickPoint - position).Length() < object.Radius())
 				{
@@ -2279,7 +2324,7 @@ void Engine::HandleMouseClicks()
 		}
 	}
 	if(isRightClick && !clickTarget && !clickedAsteroid && !isMouseTurningEnabled)
-		ai.IssueMoveTarget(player, clickPoint + center[0], playerSystem);
+		ai.IssueMoveTarget(player, clickPoint + center[clickIndex], playerSystem);
 
 	// Treat an "empty" click as a request to clear targets.
 	if(!clickTarget && !isRightClick && !clickedAsteroid && !clickedPlanet)

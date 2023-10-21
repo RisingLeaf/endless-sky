@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "DataFile.h"
 #include "DataNode.h"
 #include "Files.h"
+#include "MainPanel.h"
 #include "text/Font.h"
 #include "FrameTimer.h"
 #include "GameData.h"
@@ -307,6 +308,11 @@ void GameLoop(PlayerInfo &player, const Conversation &conversation, const string
 				// The window has been resized. Adjust the raw screen size
 				// and the OpenGL viewport to match.
 				GameWindow::AdjustViewport();
+				if(!gamePanels.IsEmpty())
+				{
+					MainPanel *mainPanel = reinterpret_cast<MainPanel*>(gamePanels.Root().get());
+					mainPanel->Resize();
+				}
 			}
 			else if(event.type == SDL_KEYDOWN && !toggleTimeout
 					&& (Command(event.key.keysym.sym).Has(Command::FULLSCREEN)

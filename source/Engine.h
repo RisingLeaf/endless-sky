@@ -88,6 +88,8 @@ public:
 	// Draw a frame.
 	void Draw() const;
 
+	void Resize();
+
 	// Set the given TestContext in the next step of the Engine.
 	void SetTestContext(TestContext &newTestContext);
 
@@ -254,6 +256,7 @@ private:
 	bool isRightClick = false;
 	bool isRadarClick = false;
 	Point clickPoint;
+	int clickIndex = 0;
 	Rectangle uiClickBox;
 	Rectangle clickBox;
 	int groupSelect = -1;

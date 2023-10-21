@@ -50,6 +50,8 @@ public:
 	// The main panel allows fast-forward.
 	bool AllowsFastForward() const noexcept final;
 
+	void Resize();
+
 
 protected:
 	// Only override the ones you need; the default action is to return false.

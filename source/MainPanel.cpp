@@ -187,6 +187,13 @@ bool MainPanel::AllowsFastForward() const noexcept
 
 
 
+void MainPanel::Resize()
+{
+	engine.Resize();
+}
+
+
+
 // Only override the ones you need; the default action is to return false.
 bool MainPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
 {
