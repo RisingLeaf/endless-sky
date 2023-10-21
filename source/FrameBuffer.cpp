@@ -14,6 +14,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "FrameBuffer.h"
+#include "GameWindow.h"
 
 #include <map>
 
@@ -25,21 +26,29 @@ namespace {
 
 
 
-int FrameBuffer::CreateFrameBuffer()
+FrameBuffer::~FrameBuffer()
 {
-	GLuint frameBuffer;
-	glGenFramebuffers(1, &frameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	const GLenum buffers[] { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(1, buffers);
-	return frameBuffer;
+	glDeleteFramebuffers(1, &frameBuffer);
+	glDeleteTextures(1, &texture);
 }
 
 
 
-int FrameBuffer::CreateTextureAttachment(int width, int height)
+void FrameBuffer::CreateFrameBuffer()
 {
-	GLuint texture;
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	const GLenum buffers[] { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, buffers);
+}
+
+
+
+void FrameBuffer::CreateTextureAttachment(int _width, int _height)
+{
+	width = _width;
+	height = _height;
+
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, texture);
 	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, // target, mipmap level, internal format,
@@ -48,15 +57,14 @@ int FrameBuffer::CreateTextureAttachment(int width, int height)
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, 0);
-	return texture;
 }
 
 
 
-void FrameBuffer::BindFrameBuffer(int buffer, int width, int height)
+void FrameBuffer::BindFrameBuffer() const
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, buffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glViewport(0, 0, width, height);
 }
 
@@ -65,14 +73,7 @@ void FrameBuffer::BindFrameBuffer(int buffer, int width, int height)
 void FrameBuffer::UnbindCurrentFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-
-
-void FrameBuffer::DestroyBuffer(GLuint buffer, GLuint texture)
-{
-	glDeleteFramebuffers(1, &buffer);
-	glDeleteTextures(1, &texture);
+	GameWindow::AdjustViewport();
 }
 
 

@@ -36,17 +36,28 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 class FrameBuffer
 {
 public:
+	FrameBuffer() {}
+	~FrameBuffer();
 	// Creates a framebuffer for color.
-	static int CreateFrameBuffer();
+	void CreateFrameBuffer();
 	// Create a texture for a color framebuffer.
-	static int CreateTextureAttachment(int width, int height);
+	void CreateTextureAttachment(int _width, int _height);
 	// Bind a framebuffer (haha unneccessary comment)
-	static void BindFrameBuffer(int buffer, int width, int height);
+	void BindFrameBuffer() const;
 	// Unbinds any active framebuffer, making the screen drawspace again
 	static void UnbindCurrentFrameBuffer();
-	// Clears up memory of the buffer and the texture, only do after using the texture
-	static void DestroyBuffer(GLuint buffer, GLuint texture);
+
+	int Texture() const { return texture; }
+	int Width() const { return width; }
+	int Height() const { return height; }
 
 	static void StoreTexture(std::string id, int texture);
 	static int GetTexture(std::string id);
+
+private:
+	GLuint frameBuffer;
+	GLuint texture;
+
+	int width;
+	int height;
 };

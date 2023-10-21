@@ -24,6 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Command.h"
 #include "DrawList.h"
 #include "EscortDisplay.h"
+#include "FrameBuffer.h"
 #include "Information.h"
 #include "Point.h"
 #include "Preferences.h"
@@ -196,6 +197,8 @@ private:
 	DrawList draw[2];
 	BatchDrawList batchDraw[2];
 	Radar radar[2];
+
+	FrameBuffer frameBuffers[1];
 	// Viewport position and velocity.
 	Point center;
 	Point centerVelocity;

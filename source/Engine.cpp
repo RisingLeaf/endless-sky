@@ -247,6 +247,10 @@ Engine::Engine(PlayerInfo &player)
 	zoomMod = Preferences::Has("Landing zoom") ? 2. : 1.;
 	zoom = baseZoom * zoomMod;
 
+	frameBuffers[0].CreateFrameBuffer();
+	frameBuffers[0].CreateTextureAttachment(Screen::RawWidth() / 2, Screen::RawHeight());
+	frameBuffers[0].UnbindCurrentFrameBuffer();
+
 	// Start the thread for doing calculations.
 	calcThread = thread(&Engine::ThreadEntryPoint, this);
 
@@ -1011,6 +1015,10 @@ list<ShipEvent> &Engine::Events()
 // Draw a frame.
 void Engine::Draw() const
 {
+	frameBuffers[0].BindFrameBuffer();
+
+	glClear(GL_COLOR_BUFFER_BIT);
+
 	GameData::Background().Draw(center, Preferences::Has("Render motion blur") ? centerVelocity : Point(),
 		zoom, (player.Flagship() ? player.Flagship()->GetSystem() : player.GetSystem()));
 	static const Set<Color> &colors = GameData::Colors();
@@ -1160,6 +1168,9 @@ void Engine::Draw() const
 
 	// Draw escort status.
 	escorts.Draw(hud->GetBox("escorts"));
+
+	frameBuffers[0].UnbindCurrentFrameBuffer();
+	SpriteShader::DrawBuffer(frameBuffers[0].Texture(), frameBuffers[0].Width(), frameBuffers[0].Height());
 
 	// Upload any preloaded sprites that are now available. This is to avoid
 	// filling the entire backlog of sprites before landing on a planet.
