@@ -41,6 +41,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "TestContext.h"
 #include "UI.h"
 
+#include <SDL2/SDL_events.h>
 #include <chrono>
 #include <iostream>
 #include <map>
@@ -265,6 +266,9 @@ void GameLoop(PlayerInfo &player, const Conversation &conversation, const string
 	if(!testToRunName.empty())
 		testContext = TestContext(GameData::Tests().Get(testToRunName));
 
+
+	bool inFlight = (menuPanels.IsEmpty() && gamePanels.Root() == gamePanels.Top());
+
 	// IsDone becomes true when the game is quit.
 	while(!menuPanels.IsDone())
 	{
@@ -326,7 +330,6 @@ void GameLoop(PlayerInfo &player, const Conversation &conversation, const string
 
 		// In full-screen mode, hide the cursor if inactive for ten seconds,
 		// but only if the player is flying around in the main view.
-		bool inFlight = (menuPanels.IsEmpty() && gamePanels.Root() == gamePanels.Top());
 		++cursorTime;
 		bool shouldShowCursor = (!GameWindow::IsFullscreen() || cursorTime < 600 || !inFlight);
 		if(shouldShowCursor != showCursor)

@@ -194,26 +194,27 @@ private:
 	bool wasActive = false;
 	bool isMouseHoldEnabled = false;
 	bool isMouseTurningEnabled = false;
-	DrawList draw[2];
-	BatchDrawList batchDraw[2];
-	Radar radar[2];
+	DrawList draw[2][2];
+	BatchDrawList batchDraw[2][2];
+	Radar radar[2][2];
 
-	FrameBuffer frameBuffers[1];
+	FrameBuffer frameBuffers[2];
 	// Viewport position and velocity.
-	Point center;
-	Point centerVelocity;
+	Point center[2];
+	Point centerVelocity[2];
+
 	// Other information to display.
-	Information info;
-	std::vector<Target> targets;
-	Point targetVector;
-	Point targetUnit;
-	int targetSwizzle = -1;
+	Information info[2];
+	std::vector<Target> targets[2];
+	Point targetVector[2];
+	Point targetUnit[2];
+	int targetSwizzle[2] = {-1, -1};
 	EscortDisplay escorts;
-	AmmoDisplay ammoDisplay;
-	std::vector<Status> statuses;
-	std::vector<PlanetLabel> labels;
-	std::vector<AlertLabel> missileLabels;
-	std::vector<std::pair<const Outfit *, int>> ammo;
+	AmmoDisplay ammoDisplay[2];
+	std::vector<Status> statuses[2];
+	std::vector<PlanetLabel> labels[2];
+	std::vector<AlertLabel> missileLabels[2];
+	std::vector<std::pair<const Outfit *, int>> ammo[2];
 	int jumpCount = 0;
 	const System *jumpInProgress[2] = {nullptr, nullptr};
 	const Sprite *highlightSprite = nullptr;
