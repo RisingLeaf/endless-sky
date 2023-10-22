@@ -234,8 +234,8 @@ private:
 	CollisionSet shipCollisions;
 
 	int alarmTime = 0;
-	double flash = 0.;
-	bool doFlash = false;
+	double flash[2] = {0., 0.};
+	bool doFlash[2] = {false, false};
 	bool doEnterLabels = false;
 	bool doEnter = false;
 	bool hadHostiles = false;

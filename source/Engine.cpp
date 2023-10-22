@@ -672,13 +672,16 @@ void Engine::Step(bool isActive)
 			player.TravelPlan().clear();
 		}
 	}
-	if(doFlash)
+	for(int i = 0; i < 2; i++)
 	{
-		flash = .4;
-		doFlash = false;
+		if(doFlash[i])
+		{
+			flash[i] = .4;
+			doFlash[i] = false;
+		}
+		else if(flash[i])
+			flash[i] = max(0., flash[i] * .99 - .002);
 	}
-	else if(flash)
-		flash = max(0., flash * .99 - .002);
 
 	targets[0].clear();
 	targets[1].clear();
@@ -943,7 +946,7 @@ void Engine::Step(bool isActive)
 				// of the width and the height of the sprite.
 				double size = (target[i]->Width() + target[i]->Height()) * .35;
 				targets[i].push_back({
-					target[i]->Position() - center[0],
+					target[i]->Position() - center[i],
 					Angle(45.) + target[i]->Facing(),
 					size,
 					GetShipTargetPointerColor(targetType),
@@ -1190,8 +1193,8 @@ void Engine::Draw() const
 			OutlineShader::Draw(highlightSprite, Point(), size, color, highlightUnit, highlightFrame);
 		}
 
-		if(flash)
-			FillShader::Fill(Point(), Point(Screen::Width(), Screen::Height()), Color(flash, flash));
+		if(flash[i])
+			FillShader::Fill(Point(), Point(Screen::Width(), Screen::Height()), Color(flash[i], flash[i]));
 
 		// Draw messages. Draw the most recent messages first, as some messages
 		// may be wrapped onto multiple lines.
@@ -1699,12 +1702,16 @@ void Engine::CalculateStep()
 		player.SetSystemEntry(wormholeEntry ? SystemEntry::WORMHOLE :
 			flagship->IsUsingJumpDrive() ? SystemEntry::JUMP :
 			SystemEntry::HYPERDRIVE);
-		doFlash = Preferences::Has("Show hyperspace flash");
+		doFlash[0] = Preferences::Has("Show hyperspace flash");
 		playerSystem = flagship->GetSystem();
 		player.SetSystem(*playerSystem);
 		EnterSystem();
 	}
 	Prune(ships);
+
+	auto secondShip = player.Ships().back();
+	if(secondShip && secondShip->GetHyperspacePercentage() >= 90)
+		doFlash[1] = true;
 
 	// Move the asteroids. This must be done before collision detection. Minables
 	// may create visuals or flotsam.
@@ -1785,7 +1792,6 @@ void Engine::CalculateStep()
 		newCenterVelocity[0] = flagship->Velocity();
 		zoomMod = 2. - flagship->Zoom();
 	}
-	const shared_ptr<Ship> &secondShip = player.Ships().back();
 	if(secondShip.get())
 	{
 		newCenter[1] = secondShip->Position();
@@ -1874,6 +1880,11 @@ void Engine::CalculateStep()
 				Audio::Play(it.first);
 		}
 	}
+
+	// Draw cloaked version of second ship if in another system.
+	if(secondShip && secondShip->GetActualSystem() != player.GetSystem())
+		draw[calcTickTock][1].AddSwizzled(*secondShip, 27);
+
 	// Draw the projectiles.
 	for(const Projectile &projectile : projectiles)
 	{
