@@ -82,6 +82,13 @@ const Command Command::AUTOSTEER(ONE << 31, "Auto steer");
 const Command Command::WAIT(ONE << 32, "");
 const Command Command::STOP(ONE << 33, "");
 const Command Command::SHIFT(ONE << 34, "");
+const Command Command::SFORWARD(ONE << 35, "2 Forward thrust");
+const Command Command::SLEFT(ONE << 36, "2 Turn left");
+const Command Command::SRIGHT(ONE << 37, "2 Turn right");
+const Command Command::SBACK(ONE << 38, "2 Reverse");
+const Command Command::SPRIMARY(ONE << 39, "2 Fire primary weapon");
+const Command Command::SSECONDARY(ONE << 40, "2 Fire secondary weapon");
+const Command Command::SSELECT(ONE << 41, "2 Select secondary weapon");
 
 
 

@@ -74,6 +74,7 @@ private:
 	WrappedText hoverText;
 
 	int currentSettingsPage = 0;
+	int currentControlsPage = 0;
 
 	std::string selectedPlugin;
 

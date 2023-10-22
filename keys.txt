@@ -29,3 +29,10 @@
 "Fleet: Toggle ammo usage" 117
 "Fleet: Harvest flotsam" 122
 "Mouse turning (hold)" 1073742050
+"2 Forward thrust" 1073741920
+"2 Turn left" 1073741916
+"2 Turn right" 1073741918
+"2 Reverse" 1073741917
+"2 Fire primary weapon" 1073741913
+"2 Fire secondary weapon" 1073741914
+"2 Select secondary weapon" 1073741915

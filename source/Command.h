@@ -81,6 +81,14 @@ public:
 	// other commands like NEAREST, TARGET, HAIL and BOARD.
 	static const Command SHIFT;
 
+	static const Command SFORWARD;
+	static const Command SLEFT;
+	static const Command SRIGHT;
+	static const Command SBACK;
+	static const Command SPRIMARY;
+	static const Command SSECONDARY;
+	static const Command SSELECT;
+
 
 public:
 	// In the given text, replace any instances of command names (in angle

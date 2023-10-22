@@ -154,6 +154,7 @@ private:
 	static double RendezvousTime(const Point &p, const Point &v, double vp);
 
 	void MovePlayer(Ship &ship, const PlayerInfo &player, Command &activeCommands);
+	void MoveSecondPlayer(Ship &ship, const PlayerInfo &player, Command &activeCommands);
 
 	// True if found asteroid.
 	bool TargetMinable(Ship &ship) const;

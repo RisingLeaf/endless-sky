@@ -24,6 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Government.h"
 #include "Hardpoint.h"
 #include "JumpTypes.h"
+#include "Logger.h"
 #include "Mask.h"
 #include "Messages.h"
 #include "Minable.h"
@@ -584,6 +585,7 @@ void AI::Step(const PlayerInfo &player, Command &activeCommands)
 	}
 
 	const Ship *flagship = player.Flagship();
+	const Ship *secondShip = player.Ships().back().get();
 	step = (step + 1) & 31;
 	int targetTurn = 0;
 	int minerCount = 0;
@@ -1006,7 +1008,7 @@ void AI::Step(const PlayerInfo &player, Command &activeCommands)
 			else
 				command.SetTurn(TurnToward(*it, TargetAim(*it)));
 		}
-		else if(FollowOrders(*it, command))
+		else if(FollowOrders(*it, command) && it.get() != secondShip)
 		{
 			// If this is an escort and it followed orders, its only final task
 			// is to convert completed MOVE_TO orders into HOLD_POSITION orders.
@@ -1025,6 +1027,13 @@ void AI::Step(const PlayerInfo &player, Command &activeCommands)
 				MoveIndependent(*it, command);
 			else
 				MoveEscort(*it, command);
+		}
+		else if(it.get() == secondShip)
+		{
+			// Player cannot do anything if the flagship is landing.
+			if(flagship && !flagship->IsLanding())
+				MoveSecondPlayer(*it, player, activeCommands);
+			continue;
 		}
 		// From here down, we're only dealing with ships that have a "parent"
 		// which is in the same system as them.
@@ -1533,14 +1542,14 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 		SelectRoute(ship, it->second.targetSystem);
 
 		// Travel there even if your parent is not planning to travel.
-		if((ship.GetTargetSystem() && ship.JumpsRemaining()) || ship.GetTargetStellar())
+		if(((ship.GetTargetSystem() && ship.JumpsRemaining()) || ship.GetTargetStellar()))
 			MoveIndependent(ship, command);
 		else
 			return false;
 	}
 	else if((type == Orders::MOVE_TO || type == Orders::HOLD_ACTIVE) && ship.Position().Distance(it->second.point) > 20.)
 		MoveTo(ship, command, it->second.point, Point(), 10., .1);
-	else if(type == Orders::HOLD_POSITION || type == Orders::HOLD_ACTIVE || type == Orders::MOVE_TO)
+	else if((type == Orders::HOLD_POSITION || type == Orders::HOLD_ACTIVE || type == Orders::MOVE_TO))
 	{
 		if(ship.Velocity().Length() > .001 || !ship.GetTargetShip())
 			Stop(ship, command);
@@ -4333,6 +4342,119 @@ void AI::MovePlayer(Ship &ship, const PlayerInfo &player, Command &activeCommand
 		}
 	}
 
+	if(ship.HasBays() && HasDeployments(ship))
+	{
+		command |= Command::DEPLOY;
+		Deploy(ship, !Preferences::Has("Damaged fighters retreat"));
+	}
+	if(isCloaking)
+		command |= Command::CLOAK;
+
+	ship.SetCommands(command);
+	ship.SetCommands(firingCommands);
+}
+
+
+
+void AI::MoveSecondPlayer(Ship &ship, const PlayerInfo &player, Command &activeCommands)
+{
+	firingCommands.SetHardpoints(ship.Weapons().size());
+	Command command;
+
+	const shared_ptr<const Ship> target = ship.GetTargetShip();
+	AimTurrets(ship, firingCommands, !Preferences::Has("Turrets focus fire"));
+	if(Preferences::GetAutoFire() != Preferences::AutoFire::OFF && !ship.IsBoarding()
+			&& !(autoPilot | activeCommands).Has(Command::LAND | Command::JUMP | Command::FLEET_JUMP | Command::BOARD)
+			&& (!target || target->GetGovernment()->IsEnemy()))
+		AutoFire(ship, firingCommands, false, true);
+
+
+
+	if(activeCommands)
+	{
+		if(activeCommands.Has(Command::SFORWARD))
+			command |= Command::FORWARD;
+		if(activeCommands.Has(Command::SRIGHT | Command::SLEFT))
+			command.SetTurn(activeCommands.Has(Command::SRIGHT) - activeCommands.Has(Command::SLEFT));
+		if(activeCommands.Has(Command::SBACK))
+		{
+			if(!activeCommands.Has(Command::SFORWARD) && ship.Attributes().Get("reverse thrust"))
+				command |= Command::BACK;
+			else if(!activeCommands.Has(Command::SRIGHT | Command::SLEFT | Command::AUTOSTEER))
+				command.SetTurn(TurnBackward(ship));
+		}
+
+		if(activeCommands.Has(Command::SPRIMARY))
+		{
+			int index = 0;
+			for(const Hardpoint &hardpoint : ship.Weapons())
+			{
+				if(hardpoint.IsReady() && !hardpoint.GetOutfit()->Icon())
+					firingCommands.SetFire(index);
+				++index;
+			}
+		}
+		if(activeCommands.Has(Command::SSECONDARY))
+		{
+			int index = 0;
+			for(const Hardpoint &hardpoint : ship.Weapons())
+			{
+				if(hardpoint.IsReady())
+					firingCommands.SetFire(index);
+				++index;
+			}
+		}
+		if(activeCommands.Has(Command::AFTERBURNER))
+			command |= Command::AFTERBURNER;
+	}
+
+	if(autoPilot.Has(Command::LAND) || (autoPilot.Has(Command::JUMP | Command::FLEET_JUMP)))
+	{
+		if(ship.GetPlanet())
+			autoPilot.Clear(Command::LAND | Command::JUMP | Command::FLEET_JUMP);
+		else
+		{
+			MoveToPlanet(ship, command);
+			command |= Command::LAND;
+		}
+	}
+	else if(autoPilot.Has(Command::JUMP | Command::FLEET_JUMP) && !ship.IsEnteringHyperspace())
+	{
+		if(!ship.JumpNavigation().HasHyperdrive() && !ship.JumpNavigation().HasJumpDrive())
+		{
+			Messages::Add("You do not have a hyperdrive installed.", Messages::Importance::Highest);
+			autoPilot.Clear();
+			Audio::Play(Audio::Get("fail"));
+		}
+		else if(!ship.JumpNavigation().JumpFuel(ship.GetTargetSystem()))
+		{
+			Messages::Add("You cannot jump to the selected system.", Messages::Importance::Highest);
+			autoPilot.Clear();
+			Audio::Play(Audio::Get("fail"));
+		}
+		else if(!ship.JumpsRemaining() && !ship.IsEnteringHyperspace())
+		{
+			Messages::Add("You do not have enough fuel to make a hyperspace jump.", Messages::Importance::Highest);
+			autoPilot.Clear();
+			Audio::Play(Audio::Get("fail"));
+		}
+		else if(ship.IsLanding())
+		{
+			Messages::Add("You cannot jump while landing.", Messages::Importance::Highest);
+			autoPilot.Clear(Command::JUMP);
+			Audio::Play(Audio::Get("fail"));
+		}
+		else
+		{
+			PrepareForHyperspace(ship, command);
+			command |= Command::JUMP;
+
+			// Don't jump yet if the player is holding jump key or fleet jump is active and
+			// escorts are not ready to jump yet.
+			if(activeCommands.Has(Command::WAIT) || (autoPilot.Has(Command::FLEET_JUMP) && !EscortsReadyToJump(ship)))
+				command |= Command::WAIT;
+		}
+	}
 	if(ship.HasBays() && HasDeployments(ship))
 	{
 		command |= Command::DEPLOY;

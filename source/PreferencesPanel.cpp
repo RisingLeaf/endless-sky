@@ -80,6 +80,7 @@ namespace {
 
 	// How many pages of settings there are.
 	const int SETTINGS_PAGE_COUNT = 2;
+	const int CONTROLS_PAGE_COUNT = 2;
 	// Hovering a preference for this many frames activates the tooltip.
 	const int HOVER_TIME = 60;
 }
@@ -123,6 +124,12 @@ void PreferencesPanel::Draw()
 		info.SetCondition("show previous");
 	if(currentSettingsPage + 1 < SETTINGS_PAGE_COUNT)
 		info.SetCondition("show next");
+	if(CONTROLS_PAGE_COUNT > 1)
+		info.SetCondition("ctrl multiple pages");
+	if(currentControlsPage > 0)
+		info.SetCondition("ctrl show previous");
+	if(currentControlsPage + 1 < CONTROLS_PAGE_COUNT)
+		info.SetCondition("ctrl show next");
 	GameData::Interfaces().Get("menu background")->Draw(info, this);
 	string pageName = (page == 'c' ? "controls" : page == 's' ? "settings" : "plugins");
 	GameData::Interfaces().Get(pageName)->Draw(info, this);
@@ -171,10 +178,14 @@ bool PreferencesPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comma
 	}
 	else if(key == 'o' && page == 'p')
 		Files::OpenUserPluginFolder();
-	else if((key == 'n' || key == SDLK_PAGEUP) && currentSettingsPage < SETTINGS_PAGE_COUNT - 1)
+	else if(page == 's' && (key == 'n' || key == SDLK_PAGEUP) && currentSettingsPage < SETTINGS_PAGE_COUNT - 1)
 		++currentSettingsPage;
-	else if((key == 'r' || key == SDLK_PAGEDOWN) && currentSettingsPage > 0)
+	else if(page == 's' && (key == 'r' || key == SDLK_PAGEDOWN) && currentSettingsPage > 0)
 		--currentSettingsPage;
+	else if(page == 'c' && (key == 'n' || key == SDLK_PAGEUP) && currentControlsPage < CONTROLS_PAGE_COUNT - 1)
+		++currentControlsPage;
+	else if(page == 'c' && (key == 'r' || key == SDLK_PAGEDOWN) && currentControlsPage > 0)
+		--currentControlsPage;
 	else if((key == 'x' || key == SDLK_DELETE) && (page == 'c'))
 	{
 		if(zones[latest].Value().KeyName() != Command::MENU.KeyName())
@@ -413,10 +424,12 @@ void PreferencesPanel::DrawControls()
 		"Targeting",
 		"Weapons",
 		"Interface",
-		"Fleet"
+		"Fleet",
+		"Secondary Ship"
 	};
 	const string *category = CATEGORIES;
-	static const Command COMMANDS[] = {
+	const int CONTROLS_COUNT = 45;
+	static const Command COMMANDS[CONTROLS_COUNT] = {
 		Command::NONE,
 		Command::FORWARD,
 		Command::LEFT,
@@ -453,11 +466,22 @@ void PreferencesPanel::DrawControls()
 		Command::GATHER,
 		Command::HOLD,
 		Command::AMMO,
-		Command::HARVEST
+		Command::HARVEST,
+		Command::NONE,
+		Command::SFORWARD,
+		Command::SLEFT,
+		Command::SRIGHT,
+		Command::SBACK,
+		Command::SPRIMARY,
+		Command::SSECONDARY,
+		Command::SSELECT,
 	};
 	static const Command *BREAK = &COMMANDS[19];
-	for(const Command &command : COMMANDS)
+	const int startIndex = currentControlsPage * 37;
+	const int endIndex = min(currentControlsPage * 37 + 37, CONTROLS_COUNT);
+	for(int i = startIndex; i < endIndex; i++)
 	{
+		const Command &command = COMMANDS[i];
 		// The "BREAK" line is where to go to the next column.
 		if(&command == BREAK)
 			table.DrawAt(Point(130, firstY));
