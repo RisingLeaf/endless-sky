@@ -89,6 +89,7 @@ public:
 	void Draw() const;
 
 	void Resize();
+	void ToggleSplitScreen();
 
 	// Set the given TestContext in the next step of the Engine.
 	void SetTestContext(TestContext &newTestContext);
@@ -200,6 +201,7 @@ private:
 	BatchDrawList batchDraw[2][2];
 	Radar radar[2][2];
 
+	bool splitScreen = false;
 	FrameBuffer frameBuffers[2];
 	// Viewport position and velocity.
 	Point center[2];

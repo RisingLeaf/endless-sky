@@ -251,7 +251,7 @@ Engine::Engine(PlayerInfo &player)
 	zoom = baseZoom * zoomMod;
 
 	frameBuffers[0].CreateFrameBuffer();
-	frameBuffers[0].CreateTextureAttachment(Screen::RawWidth() / 2, Screen::RawHeight());
+	frameBuffers[0].CreateTextureAttachment(splitScreen ? Screen::RawWidth() / 2 : Screen::RawWidth(), Screen::RawHeight());
 	frameBuffers[1].CreateFrameBuffer();
 	frameBuffers[1].CreateTextureAttachment(Screen::RawWidth() / 2, Screen::RawHeight());
 	FrameBuffer::UnbindCurrentFrameBuffer();
@@ -323,6 +323,9 @@ Engine::~Engine()
 	}
 	condition.notify_all();
 	calcThread.join();
+
+	frameBuffers[0].DestroyFrameBuffer();
+	frameBuffers[1].DestroyFrameBuffer();
 }
 
 
@@ -897,7 +900,7 @@ void Engine::Step(bool isActive)
 		targetSwizzle[0] = -1;
 	if(!target[1])
 		targetSwizzle[1] = -1;
-	for(int i = 0; i < 2; i++)
+	for(int i = 0; i <= splitScreen; i++)
 	{
 		const auto ship = i == 1 ? secondShip : flagship;
 		if(!target[i] && !targetAsteroid[i])
@@ -1028,7 +1031,7 @@ void Engine::Step(bool isActive)
 	for(const weak_ptr<Ship> &selected : player.SelectedShips())
 	{
 		shared_ptr<Ship> ship = selected.lock();
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i <= splitScreen; i++)
 			if(ship && ship != target[i] && !ship->IsParked() && ship->GetSystem() == player.GetSystem()
 					&& !ship->IsDestroyed() && ship->Zoom() > 0.)
 			{
@@ -1129,7 +1132,7 @@ void Engine::Draw() const
 	const Font &font = FontSet::Get(14);
 	static const Set<Color> &colors = GameData::Colors();
 
-	for(int i = 0; i < 2; i++)
+	for(int i = 0; i <= splitScreen; i++)
 	{
 		frameBuffers[i].BindFrameBuffer();
 
@@ -1291,18 +1294,21 @@ void Engine::Draw() const
 
 	SpriteShader::DrawBuffer(frameBuffers[0].Texture(),
 		frameBuffers[0].Width(), frameBuffers[0].Height(),
-		Point(-frameBuffers[0].Width() / 2., 0.));
+		Point(splitScreen ? -frameBuffers[0].Width() / 2. : 0., 0.));
 
-	SpriteShader::DrawBuffer(frameBuffers[1].Texture(),
-		frameBuffers[1].Width(), frameBuffers[1].Height(),
-		Point(frameBuffers[1].Width() / 2., 0.));
+	if(splitScreen)
+	{
+		SpriteShader::DrawBuffer(frameBuffers[1].Texture(),
+			frameBuffers[1].Width(), frameBuffers[1].Height(),
+			Point(frameBuffers[1].Width() / 2., 0.));
 
-	LineShader::Draw(
-		Point(0., -Screen::RawHeight()),
-		Point(0.,  Screen::RawHeight()),
-		4,
-		Color(1., 1.)
-	);
+		LineShader::Draw(
+			Point(0., -Screen::RawHeight()),
+			Point(0.,  Screen::RawHeight()),
+			4,
+			Color(1., 1.)
+		);
+	}
 
 	// Upload any preloaded sprites that are now available. This is to avoid
 	// filling the entire backlog of sprites before landing on a planet.
@@ -1321,13 +1327,30 @@ void Engine::Draw() const
 
 void Engine::Resize()
 {
-	frameBuffers[0].DestroyFrameBuffer();
-	frameBuffers[0].CreateFrameBuffer();
-	frameBuffers[0].CreateTextureAttachment(Screen::RawWidth() / 2, Screen::RawHeight());
+	if(splitScreen)
+	{
+		frameBuffers[0].DestroyFrameBuffer();
+		frameBuffers[0].CreateFrameBuffer();
+		frameBuffers[0].CreateTextureAttachment(Screen::RawWidth() / 2, Screen::RawHeight());
 
-	frameBuffers[1].DestroyFrameBuffer();
-	frameBuffers[1].CreateFrameBuffer();
-	frameBuffers[1].CreateTextureAttachment(Screen::RawWidth() / 2, Screen::RawHeight());
+		frameBuffers[1].DestroyFrameBuffer();
+		frameBuffers[1].CreateFrameBuffer();
+		frameBuffers[1].CreateTextureAttachment(Screen::RawWidth() / 2, Screen::RawHeight());
+	}
+	else
+	{
+		frameBuffers[0].DestroyFrameBuffer();
+		frameBuffers[0].CreateFrameBuffer();
+		frameBuffers[0].CreateTextureAttachment(Screen::RawWidth(), Screen::RawHeight());
+	}
+}
+
+
+
+void Engine::ToggleSplitScreen()
+{
+	splitScreen = !splitScreen;
+	Resize();
 }
 
 
