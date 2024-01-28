@@ -93,9 +93,6 @@ public:
 	void Resize();
 	void ToggleSplitScreen();
 
-	// Set the given TestContext in the next step of the Engine.
-	void SetTestContext(TestContext &newTestContext);
-
 	// Select the object the player clicked on.
 	void Click(const Point &from, const Point &to, bool hasShift, bool hasControl);
 	void RClick(const Point &point);

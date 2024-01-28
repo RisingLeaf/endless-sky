@@ -878,8 +878,8 @@ void Engine::Step(bool isActive)
 			targetAsteroid[i] = ship->GetTargetAsteroid();
 			// Record that the player knows this type of asteroid is available here.
 			if(targetAsteroid[i])
-				for(const auto &it : targetAsteroid[0]->Payload())
-					player.Harvest(it.first);
+				for(const auto &it : targetAsteroid[0]->GetPayload())
+					player.Harvest(it.outfit);
 		}
 
 		if(!target[i])
@@ -1138,8 +1138,8 @@ void Engine::Draw() const
 				label.Draw();
 		}
 
-		draw[drawTickTock][i].Draw();
-		batchDraw[drawTickTock][i].Draw();
+		draw[currentDrawBuffer][i].Draw();
+		batchDraw[currentDrawBuffer][i].Draw();
 
 
 		for(const auto &it : statuses[i])
@@ -1164,7 +1164,7 @@ void Engine::Draw() const
 			double radius = it.radius * zoom;
 			if(it.outer > 0.)
 				RingShader::Draw(pos, radius + 3., 1.5f, it.outer, color[it.type], 0.f, it.angle);
-			double dashes = (it.type >= 3) ? 0. : 20. * min(1., zoom);
+			double dashes = (it.type >= 5) ? 0. : 20. * min<double>(1., zoom);
 			if(it.inner > 0.)
 				RingShader::Draw(pos, radius, 1.5f, it.inner, color[5 + it.type], dashes, it.angle);
 			if(it.disabled > 0.)
@@ -1242,7 +1242,7 @@ void Engine::Draw() const
 		hud->Draw(info[i]);
 		if(hud->HasPoint("radar"))
 		{
-			radar[drawTickTock][i].Draw(
+			radar[currentDrawBuffer][i].Draw(
 				hud->GetPoint("radar"),
 				RADAR_SCALE,
 				hud->GetValue("radar radius"),
@@ -1340,14 +1340,6 @@ void Engine::ToggleSplitScreen()
 {
 	splitScreen = !splitScreen && player.Ships().size() > 1;
 	Resize();
-}
-
-
-
-// Set the given TestContext in the next step of the Engine.
-void Engine::SetTestContext(TestContext &newTestContext)
-{
-	testContext = &newTestContext;
 }
 
 
@@ -1832,7 +1824,6 @@ void Engine::CalculateStep()
 	{
 		newCenter[0] = flagship->Center();
 		newCenterVelocity[0] = flagship->Velocity();
-		zoomMod = 2. - flagship->Zoom();
 	}
 	if(secondShip.get())
 	{
@@ -3064,7 +3055,7 @@ void Engine::EmplaceStatusOverlay(const shared_ptr<Ship> &it, Preferences::Overl
 			alpha = 0.f;
 	}
 	statuses[0].emplace_back(it->Position() - center[0], it->Shields(), it->Hull(),
-		min(it->Hull(), it->DisabledHull()), max(20., width * .5), type);
+		min(it->Hull(), it->DisabledHull()), max(20., width * .5), type, alpha);
 	statuses[1].emplace_back(it->Position() - center[1], it->Shields(), it->Hull(),
-		min(it->Hull(), it->DisabledHull()), max(20., width * .5), type);
+		min(it->Hull(), it->DisabledHull()), max(20., width * .5), type, alpha);
 }

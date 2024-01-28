@@ -449,7 +449,7 @@ void PreferencesPanel::DrawControls()
 		"Secondary Ship"
 	};
 	const string *category = CATEGORIES;
-	const int CONTROLS_COUNT = 46;
+	const int CONTROLS_COUNT = 47;
 	static const Command COMMANDS[CONTROLS_COUNT] = {
 		Command::NONE,
 		Command::FORWARD,

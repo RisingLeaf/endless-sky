@@ -994,7 +994,7 @@ void AI::Step(Command &activeCommands, bool splitScreen)
 		{
 			// Player cannot do anything if the flagship is landing.
 			if(flagship && !flagship->IsLanding())
-				MoveSecondPlayer(*it, player, activeCommands);
+				MoveSecondPlayer(*it, activeCommands);
 			continue;
 		}
 		// From here down, we're only dealing with ships that have a "parent"
@@ -4378,7 +4378,7 @@ void AI::MovePlayer(Ship &ship, Command &activeCommands)
 
 
 
-void AI::MoveSecondPlayer(Ship &ship, const PlayerInfo &player, Command &activeCommands)
+void AI::MoveSecondPlayer(Ship &ship, Command &activeCommands)
 {
 	firingCommands.SetHardpoints(ship.Weapons().size());
 	Command command;
