@@ -519,8 +519,9 @@ void Engine::Step(bool isActive)
 
 	// The calculation thread was paused by MainPanel before calling this function, so it is safe to access things.
 	const shared_ptr<Ship> flagship = player.FlagshipPtr();
-	const shared_ptr<Ship> &secondShip = player.Ships().back();
+	const shared_ptr<Ship> &secondShip = splitScreen ? player.Ships().back() : nullptr;
 	const StellarObject *object = player.GetStellarObject();
+	const Preferences::ExtendedJumpEffects jumpEffectState = Preferences::GetExtendedJumpEffects();
 	if(object)
 	{
 		center[0] = object->Position();
@@ -532,14 +533,8 @@ void Engine::Step(bool isActive)
 	{
 		center[0] = flagship->Position();
 		centerVelocity[0] = flagship->Velocity();
-		center[1] = secondShip->Position();
-		centerVelocity[1] = secondShip->Velocity();
-		Preferences::ExtendedJumpEffects jumpEffectState = Preferences::GetExtendedJumpEffects();
 		if(flagship->IsHyperspacing() && jumpEffectState != Preferences::ExtendedJumpEffects::OFF)
 			centerVelocity[0] *= 1. + pow(flagship->GetHyperspacePercentage() /
-				(jumpEffectState == Preferences::ExtendedJumpEffects::MEDIUM ? 40. : 20.), 2);
-		if(secondShip->IsHyperspacing() && jumpEffectState != Preferences::ExtendedJumpEffects::OFF)
-			centerVelocity[1] *= 1. + pow(secondShip->GetHyperspacePercentage() /
 				(jumpEffectState == Preferences::ExtendedJumpEffects::MEDIUM ? 40. : 20.), 2);
 		if(doEnterLabels)
 		{
@@ -574,6 +569,15 @@ void Engine::Step(bool isActive)
 		else if(jumpCount > 0)
 			--jumpCount;
 	}
+	if(secondShip)
+	{
+		center[1] = secondShip->Position();
+		centerVelocity[1] = secondShip->Velocity();
+		if(secondShip->IsHyperspacing() && jumpEffectState != Preferences::ExtendedJumpEffects::OFF)
+			centerVelocity[1] *= 1. + pow(secondShip->GetHyperspacePercentage() /
+				(jumpEffectState == Preferences::ExtendedJumpEffects::MEDIUM ? 40. : 20.), 2);
+	}
+
 	ai.UpdateEvents(events);
 	if(isActive)
 	{
@@ -675,7 +679,7 @@ void Engine::Step(bool isActive)
 			player.TravelPlan().clear();
 		}
 	}
-	for(int i = 0; i < 2; i++)
+	for(int i = 0; i <= splitScreen; i++)
 	{
 		if(doFlash[i])
 		{
@@ -692,7 +696,7 @@ void Engine::Step(bool isActive)
 	// Update the player's ammo amounts.
 	if(flagship)
 		ammoDisplay[0].Update(*flagship.get());
-	if(secondShip.get())
+	if(secondShip)
 		ammoDisplay[1].Update(*secondShip.get());
 
 
@@ -739,14 +743,16 @@ void Engine::Step(bool isActive)
 						&& (pos.Length() < max(Screen::Width(), Screen::Height()) * .5 / zoom))
 				{
 					missileLabels[0].emplace_back(AlertLabel(pos, projectile, flagship, zoom));
-					missileLabels[1].emplace_back(AlertLabel(pos, projectile, secondShip, zoom));
+					if(splitScreen)
+						missileLabels[1].emplace_back(AlertLabel(pos, projectile, secondShip, zoom));
 				}
 			}
 		// Update the planet label positions.
 		for(PlanetLabel &label : labels[0])
 			label.Update(center[0], zoom);
-		for(PlanetLabel &label : labels[1])
-			label.Update(center[1], zoom);
+		if(splitScreen)
+			for(PlanetLabel &label : labels[1])
+				label.Update(center[1], zoom);
 	}
 
 	if(flagship && flagship->IsOverheated())
@@ -778,58 +784,46 @@ void Engine::Step(bool isActive)
 	}
 	info[0].SetString("date", player.GetDate().ToString());
 	info[1].SetString("date", player.GetDate().ToString());
-	if(flagship)
+	for(int i = 0; i <= splitScreen; i++)
 	{
-		// Have an alarm label flash up when enemy ships are in the system
-		if(alarmTime && step / 20 % 2 && Preferences::DisplayVisualAlert())
+		const auto ship = i ? secondShip : flagship;
+		if(ship)
 		{
-			info[0].SetCondition("red alert");
-			info[1].SetCondition("red alert");
+			// Have an alarm label flash up when enemy ships are in the system
+			if(alarmTime && step / 20 % 2 && Preferences::DisplayVisualAlert())
+			{
+				info[i].SetCondition("red alert");
+			}
+			double fuelCap = ship->Attributes().Get("fuel capacity");
+			// If the flagship has a large amount of fuel, display a solid bar.
+			// Otherwise, display a segment for every 100 units of fuel.
+			if(fuelCap <= MAX_FUEL_DISPLAY)
+				info[i].SetBar("fuel", ship->Fuel(), fuelCap * .01);
+			else
+				info[i].SetBar("fuel", ship->Fuel());
+
+			info[i].SetBar("energy", ship->Energy());
+
+			double heat = ship->Heat();
+			info[i].SetBar("heat", min(1., heat));
+			// If heat is above 100%, draw a second overlaid bar to indicate the
+			// total heat level.
+			if(heat > 1.)
+				info[i].SetBar("overheat", min(1., heat - 1.));
+			if(ship->IsOverheated() && (step / 20) % 2)
+				info[i].SetBar("overheat blink", min(1., heat));
+
+			info[i].SetBar("shields", ship->Shields());
+			info[i].SetBar("hull", ship->Hull(), 20.);
+			info[i].SetBar("disabled hull", min(ship->Hull(), ship->DisabledHull()), 20.);
 		}
-		double fuelCap = flagship->Attributes().Get("fuel capacity");
-		double secondFuelCap = secondShip ? secondShip->Attributes().Get("fuel capacity") : 0.;
-		// If the flagship has a large amount of fuel, display a solid bar.
-		// Otherwise, display a segment for every 100 units of fuel.
-		if(fuelCap <= MAX_FUEL_DISPLAY)
-			info[0].SetBar("fuel", flagship->Fuel(), fuelCap * .01);
-		else
-			info[0].SetBar("fuel", flagship->Fuel());
-
-		if(secondFuelCap <= MAX_FUEL_DISPLAY)
-			info[1].SetBar("fuel", secondShip ? secondShip->Fuel() : 0., secondFuelCap * .01);
-		else
-			info[1].SetBar("fuel", secondShip ? secondShip->Fuel() : 0.);
-
-		info[0].SetBar("energy", flagship->Energy());
-		info[1].SetBar("energy", secondShip ? secondShip->Energy() : 0.);
-
-		double heat = flagship->Heat();
-		double secondHeat = secondShip ? secondShip->Heat() : 0.;
-		info[0].SetBar("heat", min(1., heat));
-		info[1].SetBar("heat", min(1., secondHeat));
-		// If heat is above 100%, draw a second overlaid bar to indicate the
-		// total heat level.
-		if(heat > 1.)
-			info[0].SetBar("overheat", min(1., heat - 1.));
-		if(flagship->IsOverheated() && (step / 20) % 2)
-			info[0].SetBar("overheat blink", min(1., heat));
-		if(secondHeat > 1.)
-			info[1].SetBar("overheat", min(1., secondHeat - 1.));
-		if(flagship->IsOverheated() && (step / 20) % 2)
-			info[1].SetBar("overheat blink", min(1., secondHeat));
-
-		info[0].SetBar("shields", flagship->Shields());
-		info[0].SetBar("hull", flagship->Hull(), 20.);
-		info[0].SetBar("disabled hull", min(flagship->Hull(), flagship->DisabledHull()), 20.);
-
-		info[1].SetBar("shields", secondShip ? secondShip->Shields() : 0.);
-		info[1].SetBar("hull", secondShip ? secondShip->Hull() : 0., 20.);
-		info[1].SetBar("disabled hull", min(secondShip ? secondShip->Hull() : 0., secondShip ? secondShip->DisabledHull() : 0.), 20.);
 	}
+
 	info[0].SetString("credits",
 		Format::CreditString(player.Accounts().Credits()));
 	info[1].SetString("credits",
 		Format::CreditString(player.Accounts().Credits()));
+
 	bool isJumping = flagship && (flagship->Commands().Has(Command::JUMP) || flagship->IsEnteringHyperspace());
 	if(flagship && flagship->GetTargetStellar() && !isJumping)
 	{
@@ -876,33 +870,23 @@ void Engine::Step(bool isActive)
 	// yet been toggled, but it will be at the end of this function.)
 	shared_ptr<const Ship> target[2];
 	shared_ptr<const Minable> targetAsteroid[2];
-	targetVector[0] = Point();
-	targetVector[1] = Point();
-	if(flagship)
-	{
-		target[0] = flagship->GetTargetShip();
-		targetAsteroid[0] = flagship->GetTargetAsteroid();
-		// Record that the player knows this type of asteroid is available here.
-		if(targetAsteroid[0])
-			for(const auto &it : targetAsteroid[0]->Payload())
-				player.Harvest(it.first);
-	}
-	if(secondShip)
-	{
-		target[1] = secondShip->GetTargetShip();
-		targetAsteroid[1] = flagship->GetTargetAsteroid();
-		// Record that the player knows this type of asteroid is available here.
-		if(targetAsteroid[1])
-			for(const auto &it : targetAsteroid[1]->Payload())
-				player.Harvest(it.first);
-	}
-	if(!target[0])
-		targetSwizzle[0] = -1;
-	if(!target[1])
-		targetSwizzle[1] = -1;
 	for(int i = 0; i <= splitScreen; i++)
 	{
-		const auto ship = i == 1 ? secondShip : flagship;
+		const auto ship = i ? secondShip : flagship;
+		targetVector[i] = Point();
+		if(ship)
+		{
+			target[i] = ship->GetTargetShip();
+			targetAsteroid[i] = ship->GetTargetAsteroid();
+			// Record that the player knows this type of asteroid is available here.
+			if(targetAsteroid[i])
+				for(const auto &it : targetAsteroid[0]->Payload())
+					player.Harvest(it.first);
+		}
+
+		if(!target[i])
+			targetSwizzle[i] = -1;
+
 		if(!target[i] && !targetAsteroid[i])
 			info[i].SetString("target name", "no target");
 		else if(!target[i])
@@ -958,7 +942,7 @@ void Engine::Step(bool isActive)
 				targetVector[i] = target[i]->Position() - center[i];
 
 				// Check if the target is close enough to show tactical information.
-				double tacticalRange = 100. * sqrt(flagship->Attributes().Get("tactical scan power"));
+				double tacticalRange = 100. * sqrt(ship->Attributes().Get("tactical scan power"));
 				double targetRange = target[i]->Position().Distance(ship->Position());
 				if(tacticalRange)
 				{
@@ -1098,7 +1082,6 @@ void Engine::Step(bool isActive)
 			GetMinablePointerColor(true),
 			3
 		});
-
 }
 
 
@@ -1349,7 +1332,7 @@ void Engine::Resize()
 
 void Engine::ToggleSplitScreen()
 {
-	splitScreen = !splitScreen;
+	splitScreen = !splitScreen && player.Ships().size() > 1;
 	Resize();
 }
 
@@ -1366,31 +1349,36 @@ void Engine::SetTestContext(TestContext &newTestContext)
 // Select the object the player clicked on.
 void Engine::Click(const Point &_from, const Point &_to, bool hasShift, bool hasControl)
 {
-	auto mapRange = [](float value, float fromMin, float fromMax, float toMin, float toMax) -> float
-	{
-		if(value < fromMin)
-			return toMin;
-		if(value > fromMax)
-			return toMax;
-		float fromDif = fromMax - fromMin;
-		float toDif = toMax - toMin;
-		return (((value - fromMin) / fromDif) * toDif) + toMin;
-	};
+	Point from = _from;
+	Point to = _to;
 	int index = 0;
-	Point from;
-	Point to;
-	if(_from.X() > 0.)
+	if(splitScreen)
 	{
-		from = Point(mapRange(_from.X(), 0., Screen::RawWidth() / 2, -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _from.Y());
-		index = 1;
-	}
-	else
-		from = Point(mapRange(_from.X(), -Screen::RawWidth() / 2, 0., -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _from.Y());
+		auto mapRange = [](float value, float fromMin, float fromMax, float toMin, float toMax) -> float
+		{
+			if(value < fromMin)
+				return toMin;
+			if(value > fromMax)
+				return toMax;
+			float fromDif = fromMax - fromMin;
+			float toDif = toMax - toMin;
+			return (((value - fromMin) / fromDif) * toDif) + toMin;
+		};
+		Point from;
+		Point to;
+		if(_from.X() > 0.)
+		{
+			from = Point(mapRange(_from.X(), 0., Screen::RawWidth() / 2, -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _from.Y());
+			index = 1;
+		}
+		else
+			from = Point(mapRange(_from.X(), -Screen::RawWidth() / 2, 0., -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _from.Y());
 
-	if(_to.X() > 0.)
-		to = Point(mapRange(_to.X(), 0., Screen::RawWidth() / 2, -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _to.Y());
-	else
-		to = Point(mapRange(_to.X(), -Screen::RawWidth() / 2, 0., -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _to.Y());
+		if(_to.X() > 0.)
+			to = Point(mapRange(_to.X(), 0., Screen::RawWidth() / 2, -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _to.Y());
+		else
+			to = Point(mapRange(_to.X(), -Screen::RawWidth() / 2, 0., -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _to.Y());
+	}
 
 	// First, see if this is a click on an escort icon.
 	doClickNextStep = true;
@@ -1423,26 +1411,30 @@ void Engine::Click(const Point &_from, const Point &_to, bool hasShift, bool has
 
 void Engine::RClick(const Point &_point)
 {
-	auto mapRange = [](float value, float fromMin, float fromMax, float toMin, float toMax) -> float
+	Point point = _point;
+	if(splitScreen)
 	{
-		if(value < fromMin)
-			return toMin;
-		if(value > fromMax)
-			return toMax;
-		float fromDif = fromMax - fromMin;
-		float toDif = toMax - toMin;
-		return (((value - fromMin) / fromDif) * toDif) + toMin;
-	};
-	Point point;
-	if(_point.X() > 0.)
-	{
-		point = Point(mapRange(_point.X(), 0., Screen::RawWidth() / 2, -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _point.Y());
-		clickIndex = 1;
-	}
-	else
-	{
-		point = Point(mapRange(_point.X(), -Screen::RawWidth() / 2, 0., -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _point.Y());
-		clickIndex = 0;
+		auto mapRange = [](float value, float fromMin, float fromMax, float toMin, float toMax) -> float
+		{
+			if(value < fromMin)
+				return toMin;
+			if(value > fromMax)
+				return toMax;
+			float fromDif = fromMax - fromMin;
+			float toDif = toMax - toMin;
+			return (((value - fromMin) / fromDif) * toDif) + toMin;
+		};
+		Point point;
+		if(_point.X() > 0.)
+		{
+			point = Point(mapRange(_point.X(), 0., Screen::RawWidth() / 2, -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _point.Y());
+			clickIndex = 1;
+		}
+		else
+		{
+			point = Point(mapRange(_point.X(), -Screen::RawWidth() / 2, 0., -Screen::RawWidth() / 4, Screen::RawWidth() / 4), _point.Y());
+			clickIndex = 0;
+		}
 	}
 	doClickNextStep = true;
 	hasShift = false;
@@ -1675,7 +1667,7 @@ void Engine::CalculateStep()
 	// Handle the mouse input of the mouse navigation
 	HandleMouseInput(activeCommands);
 	// Now, all the ships must decide what they are doing next.
-	ai.Step(player, activeCommands);
+	ai.Step(player, activeCommands, splitScreen);
 
 	// Clear the active players commands, they are all processed at this point.
 	activeCommands.Clear();

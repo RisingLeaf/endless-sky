@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "PreferencesPanel.h"
 
+#include "Command.h"
 #include "text/alignment.hpp"
 #include "Audio.h"
 #include "Color.h"
@@ -428,7 +429,7 @@ void PreferencesPanel::DrawControls()
 		"Secondary Ship"
 	};
 	const string *category = CATEGORIES;
-	const int CONTROLS_COUNT = 45;
+	const int CONTROLS_COUNT = 46;
 	static const Command COMMANDS[CONTROLS_COUNT] = {
 		Command::NONE,
 		Command::FORWARD,
@@ -468,6 +469,7 @@ void PreferencesPanel::DrawControls()
 		Command::AMMO,
 		Command::HARVEST,
 		Command::NONE,
+		Command::SPLITSCREEN,
 		Command::SFORWARD,
 		Command::SLEFT,
 		Command::SRIGHT,

@@ -201,7 +201,7 @@ private:
 	BatchDrawList batchDraw[2][2];
 	Radar radar[2][2];
 
-	bool splitScreen = false;
+	bool splitScreen = true;
 	FrameBuffer frameBuffers[2];
 	// Viewport position and velocity.
 	Point center[2];

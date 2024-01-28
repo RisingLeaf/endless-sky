@@ -69,7 +69,7 @@ template <class Type>
 	// but not when they jump from one system to another.
 	void ClearOrders();
 	// Issue AI commands to all ships for one game step.
-	void Step(const PlayerInfo &player, Command &activeCommands);
+	void Step(const PlayerInfo &player, Command &activeCommands, bool splitScreen);
 
 	// Set the mouse position for turning the player's flagship.
 	void SetMousePosition(Point position);

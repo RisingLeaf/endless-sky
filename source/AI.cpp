@@ -555,7 +555,7 @@ void AI::ClearOrders()
 
 
 
-void AI::Step(const PlayerInfo &player, Command &activeCommands)
+void AI::Step(const PlayerInfo &player, Command &activeCommands, bool splitScreen)
 {
 	// First, figure out the comparative strengths of the present governments.
 	const System *playerSystem = player.GetSystem();
@@ -585,7 +585,7 @@ void AI::Step(const PlayerInfo &player, Command &activeCommands)
 	}
 
 	const Ship *flagship = player.Flagship();
-	const Ship *secondShip = player.Ships().back().get();
+	const Ship *secondShip = splitScreen ? player.Ships().back().get() : nullptr;
 	step = (step + 1) & 31;
 	int targetTurn = 0;
 	int minerCount = 0;

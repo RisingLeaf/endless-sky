@@ -60,6 +60,7 @@ public:
 	static const Command INFO;
 	static const Command FULLSCREEN;
 	static const Command FASTFORWARD;
+	static const Command SPLITSCREEN;
 	static const Command HELP;
 	// Escort commands:
 	static const Command FIGHT;

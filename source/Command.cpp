@@ -72,6 +72,7 @@ const Command Command::MAP(ONE << 21, "View star map");
 const Command Command::INFO(ONE << 22, "View player info");
 const Command Command::FULLSCREEN(ONE << 23, "Toggle fullscreen");
 const Command Command::FASTFORWARD(ONE << 24, "Toggle fast-forward");
+const Command Command::SPLITSCREEN(ONE << 42, "Toggle Splitscreen");
 const Command Command::HELP(ONE << 25, "Show help");
 const Command Command::FIGHT(ONE << 26, "Fleet: Fight my target");
 const Command Command::GATHER(ONE << 27, "Fleet: Gather around me");
@@ -287,6 +288,7 @@ void Command::Load(const DataNode &node)
 			{"info", Command::INFO},
 			{"fullscreen", Command::FULLSCREEN},
 			{"fastforward", Command::FASTFORWARD},
+			{"splitscreen", Command::SPLITSCREEN},
 			{"fight", Command::FIGHT},
 			{"gather", Command::GATHER},
 			{"hold", Command::HOLD},
