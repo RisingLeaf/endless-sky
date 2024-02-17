@@ -56,7 +56,7 @@ void PointerShader::Init()
 
 	// Generate the vertex data for drawing sprites.
 	glGenVertexArrays(1, &vao);
-	ESG_BindVertexArray(vao);
+	glBindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -73,7 +73,7 @@ void PointerShader::Init()
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	ESG_BindVertexArray(0);
+	glBindVertexArray(0);
 }
 
 
@@ -95,11 +95,11 @@ void PointerShader::Bind()
 	if(!shader.Object())
 		throw runtime_error("PointerShader: Bind() called before Init().");
 
-	ESG_BindShader(shader.Object());
-	ESG_BindVertexArray(vao);
+	glUseProgram(shader.Object());
+	glBindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	ESG_Uniform2fv(scaleI, scale);
+	glUniform2fv(scaleI, 1, scale);
 }
 
 
@@ -108,15 +108,15 @@ void PointerShader::Add(const Point &center, const Point &angle,
 	float width, float height, float offset, const Color &color)
 {
 	GLfloat c[2] = {static_cast<float>(center.X()), static_cast<float>(center.Y())};
-	ESG_Uniform2fv(centerI, c);
+	glUniform2fv(centerI, 1, c);
 
 	GLfloat a[2] = {static_cast<float>(angle.X()), static_cast<float>(angle.Y())};
-	ESG_Uniform2fv(angleI, a);
+	glUniform2fv(angleI, 1, a);
 
 	GLfloat size[2] = {width, height};
-	ESG_Uniform2fv(sizeI, size);
+	glUniform2fv(sizeI, 1, size);
 
-	ESG_Uniform1f(offsetI, offset);
+	glUniform1f(offsetI, offset);
 
 	glUniform4fv(colorI, 1, color.Get());
 
@@ -127,6 +127,6 @@ void PointerShader::Add(const Point &center, const Point &angle,
 
 void PointerShader::Unbind()
 {
-	ESG_BindVertexArray(0);
-	ESG_BindShader(0);
+	glBindVertexArray(0);
+	glUseProgram(0);
 }

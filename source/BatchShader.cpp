@@ -56,13 +56,13 @@ void BatchShader::Init()
 	alphaI = shader.Attrib("alpha");
 
 	// Make sure we're using texture 0.
-	ESG_BindShader(shader.Object());
-	ESG_Uniform1i(shader.Uniform("tex"), 0);
-	ESG_BindShader(0);
+	glUseProgram(shader.Object());
+	glUniform1i(shader.Uniform("tex"), 0);
+	glUseProgram(0);
 
 	// Generate the buffer for uploading the batch vertex data.
 	glGenVertexArrays(1, &vao);
-	ESG_BindVertexArray(vao);
+	glBindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -83,21 +83,21 @@ void BatchShader::Init()
 	// Unbind the buffer and the VAO, but leave the vertex attrib arrays enabled
 	// in the VAO so they will be used when it is bound.
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	ESG_BindVertexArray(0);
+	glBindVertexArray(0);
 }
 
 
 
 void BatchShader::Bind()
 {
-	ESG_BindShader(shader.Object());
-	ESG_BindVertexArray(vao);
+	glUseProgram(shader.Object());
+	glBindVertexArray(vao);
 	// Bind the vertex buffer so we can upload data to it.
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 	// Set up the screen scale.
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	ESG_Uniform2fv(scaleI, scale);
+	glUniform2fv(scaleI, 1, scale);
 }
 
 
@@ -109,9 +109,9 @@ void BatchShader::Add(const Sprite *sprite, bool isHighDPI, const vector<float> 
 		return;
 
 	// First, bind the proper texture.
-	ESG_BindTexture(GL_TEXTURE_2D_ARRAY, sprite->Texture(isHighDPI));
+	glBindTexture(GL_TEXTURE_2D_ARRAY, sprite->Texture(isHighDPI));
 	// The shader also needs to know how many frames the texture has.
-	ESG_Uniform1f(frameCountI, sprite->Frames());
+	glUniform1f(frameCountI, sprite->Frames());
 
 	// Upload the vertex data.
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), data.data(), GL_STREAM_DRAW);
@@ -126,6 +126,6 @@ void BatchShader::Unbind()
 {
 	// Unbind everything in reverse order.
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	ESG_BindVertexArray(0);
-	ESG_BindShader(0);
+	glBindVertexArray(0);
+	glUseProgram(0);
 }

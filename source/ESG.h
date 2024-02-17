@@ -20,16 +20,11 @@ public:
 #ifdef ES_VULKAN
 #include <vulkan/vulkan.h>
 
+
+
+
 #else
 #include "opengl.h"
-
-#define ESG_BindShader glUseProgram
-#define ESG_Uniform1i glUniform1i
-#define ESG_Uniform1f glUniform1f
-inline void ESG_Uniform2fv(int location, const float *value) { glUniform2fv(location, 1, value); } 
-
-#define ESG_BindVertexArray glBindVertexArray
-#define ESG_BindTexture glBindTexture
 
 #endif
 

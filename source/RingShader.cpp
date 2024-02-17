@@ -61,7 +61,7 @@ void RingShader::Init()
 
 	// Generate the vertex data for drawing sprites.
 	glGenVertexArrays(1, &vao);
-	ESG_BindVertexArray(vao);
+	glBindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -79,7 +79,7 @@ void RingShader::Init()
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	ESG_BindVertexArray(0);
+	glBindVertexArray(0);
 }
 
 
@@ -109,11 +109,11 @@ void RingShader::Bind()
 	if(!shader.Object())
 		throw runtime_error("RingShader: Bind() called before Init().");
 
-	ESG_BindShader(shader.Object());
-	ESG_BindVertexArray(vao);
+	glUseProgram(shader.Object());
+	glBindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	ESG_Uniform2fv(scaleI, scale);
+	glUniform2fv(scaleI, 1, scale);
 }
 
 
@@ -130,13 +130,13 @@ void RingShader::Add(const Point &pos, float radius, float width, float fraction
 	const Color &color, float dash, float startAngle)
 {
 	GLfloat position[2] = {static_cast<float>(pos.X()), static_cast<float>(pos.Y())};
-	ESG_Uniform2fv(positionI, position);
+	glUniform2fv(positionI, 1, position);
 
-	ESG_Uniform1f(radiusI, radius);
-	ESG_Uniform1f(widthI, width);
-	ESG_Uniform1f(angleI, fraction * 2. * PI);
-	ESG_Uniform1f(startAngleI, startAngle * TO_RAD);
-	ESG_Uniform1f(dashI, dash ? 2. * PI / dash : 0.);
+	glUniform1f(radiusI, radius);
+	glUniform1f(widthI, width);
+	glUniform1f(angleI, fraction * 2. * PI);
+	glUniform1f(startAngleI, startAngle * TO_RAD);
+	glUniform1f(dashI, dash ? 2. * PI / dash : 0.);
 
 	glUniform4fv(colorI, 1, color.Get());
 
@@ -147,6 +147,6 @@ void RingShader::Add(const Point &pos, float radius, float width, float fraction
 
 void RingShader::Unbind()
 {
-	ESG_BindVertexArray(0);
-	ESG_BindShader(0);
+	glBindVertexArray(0);
+	glUseProgram(0);
 }

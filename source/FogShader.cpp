@@ -73,13 +73,13 @@ void FogShader::Init()
 	cornerI = shader.Uniform("corner");
 	dimensionsI = shader.Uniform("dimensions");
 
-	ESG_BindShader(shader.Object());
-	ESG_Uniform1i(shader.Uniform("tex"), 0);
-	ESG_BindShader(0);
+	glUseProgram(shader.Object());
+	glUniform1i(shader.Uniform("tex"), 0);
+	glUseProgram(0);
 
 	// Generate the vertex data for drawing sprites.
 	glGenVertexArrays(1, &vao);
-	ESG_BindVertexArray(vao);
+	glBindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -99,7 +99,7 @@ void FogShader::Init()
 
 	// Unbind the VBO and VAO.
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	ESG_BindVertexArray(0);
+	glBindVertexArray(0);
 }
 
 
@@ -188,7 +188,7 @@ void FogShader::Draw(const Point &center, double zoom, const PlayerInfo &player)
 				glDeleteTextures(1, &texture);
 
 			glGenTextures(1, &texture);
-			ESG_BindTexture(GL_TEXTURE_2D, texture);
+			glBindTexture(GL_TEXTURE_2D, texture);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -199,31 +199,31 @@ void FogShader::Draw(const Point &center, double zoom, const PlayerInfo &player)
 		}
 		else
 		{
-			ESG_BindTexture(GL_TEXTURE_2D, texture);
+			glBindTexture(GL_TEXTURE_2D, texture);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, columns, rows, GL_RED, GL_UNSIGNED_BYTE, data);
 		}
 	}
 	else
-		ESG_BindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
 
 	// Set up to draw the image.
-	ESG_BindShader(shader.Object());
-	ESG_BindVertexArray(vao);
+	glUseProgram(shader.Object());
+	glBindVertexArray(vao);
 
 	GLfloat corner[2] = {
 		static_cast<float>(left - .5 * GRID * zoom) / (.5f * Screen::Width()),
 		static_cast<float>(top - .5 * GRID * zoom) / (-.5f * Screen::Height())};
-	ESG_Uniform2fv(cornerI, corner);
+	glUniform2fv(cornerI, 1, corner);
 	GLfloat dimensions[2] = {
 		GRID * static_cast<float>(zoom) * (columns + 1.f) / (.5f * Screen::Width()),
 		GRID * static_cast<float>(zoom) * (rows + 1.f) / (-.5f * Screen::Height())};
-	ESG_Uniform2fv(dimensionsI, dimensions);
+	glUniform2fv(dimensionsI, 1, dimensions);
 
 	// Call the shader program to draw the image.
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	// Clean up.
-	ESG_BindVertexArray(0);
-	ESG_BindShader(0);
-	ESG_BindTexture(GL_TEXTURE_2D, 0);
+	glBindVertexArray(0);
+	glUseProgram(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

@@ -55,13 +55,13 @@ void OutlineShader::Init()
 	frameCountI = shader.Uniform("frameCount");
 	colorI = shader.Uniform("color");
 
-	ESG_BindShader(shader.Object());
-	ESG_Uniform1i(shader.Uniform("tex"), 0);
-	ESG_BindShader(0);
+	glUseProgram(shader.Object());
+	glUniform1i(shader.Uniform("tex"), 0);
+	glUseProgram(0);
 
 	// Generate the vertex data for drawing sprites.
 	glGenVertexArrays(1, &vao);
-	ESG_BindVertexArray(vao);
+	glBindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -84,7 +84,7 @@ void OutlineShader::Init()
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	ESG_BindVertexArray(0);
+	glBindVertexArray(0);
 }
 
 
@@ -92,19 +92,19 @@ void OutlineShader::Init()
 void OutlineShader::Draw(const Sprite *sprite, const Point &pos, const Point &size,
 	const Color &color, const Point &unit, float frame)
 {
-	ESG_BindShader(shader.Object());
-	ESG_BindVertexArray(vao);
+	glUseProgram(shader.Object());
+	glBindVertexArray(vao);
 
 	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
-	ESG_Uniform2fv(scaleI, scale);
+	glUniform2fv(scaleI, 1, scale);
 
 	GLfloat off[2] = {
 		static_cast<float>(.5 / size.X()),
 		static_cast<float>(.5 / size.Y())};
-	ESG_Uniform2fv(offI, off);
+	glUniform2fv(offI, 1, off);
 
-	ESG_Uniform1f(frameI, frame);
-	ESG_Uniform1f(frameCountI, sprite->Frames());
+	glUniform1f(frameI, frame);
+	glUniform1f(frameCountI, sprite->Frames());
 
 	Point uw = unit * size.X();
 	Point uh = unit * size.Y();
@@ -118,14 +118,14 @@ void OutlineShader::Draw(const Sprite *sprite, const Point &pos, const Point &si
 
 	GLfloat position[2] = {
 		static_cast<float>(pos.X()), static_cast<float>(pos.Y())};
-	ESG_Uniform2fv(positionI, position);
+	glUniform2fv(positionI, 1, position);
 
 	glUniform4fv(colorI, 1, color.Get());
 
-	ESG_BindTexture(GL_TEXTURE_2D_ARRAY, sprite->Texture(unit.Length() * Screen::Zoom() > 50.));
+	glBindTexture(GL_TEXTURE_2D_ARRAY, sprite->Texture(unit.Length() * Screen::Zoom() > 50.));
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	ESG_BindVertexArray(0);
-	ESG_BindShader(0);
+	glBindVertexArray(0);
+	glUseProgram(0);
 }

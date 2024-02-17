@@ -95,9 +95,9 @@ void Font::Draw(const string &str, const Point &point, const Color &color) const
 
 void Font::DrawAliased(const string &str, double x, double y, const Color &color) const
 {
-	ESG_BindShader(shader.Object());
-	ESG_BindTexture(GL_TEXTURE_2D, texture);
-	ESG_BindVertexArray(vao);
+	glUseProgram(shader.Object());
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindVertexArray(vao);
 
 	glUniform4fv(colorI, 1, color.Get());
 
@@ -107,7 +107,7 @@ void Font::DrawAliased(const string &str, double x, double y, const Color &color
 		screenWidth = Screen::Width();
 		screenHeight = Screen::Height();
 		GLfloat scale[2] = {2.f / screenWidth, -2.f / screenHeight};
-		ESG_Uniform2fv(scaleI, scale);
+		glUniform2fv(scaleI, 1, scale);
 	}
 
 	GLfloat textPos[2] = {
@@ -135,21 +135,21 @@ void Font::DrawAliased(const string &str, double x, double y, const Color &color
 			continue;
 		}
 
-		ESG_Uniform1i(glyphI, glyph);
-		ESG_Uniform1f(aspectI, 1.f);
+		glUniform1i(glyphI, glyph);
+		glUniform1f(aspectI, 1.f);
 
 		textPos[0] += advance[previous * GLYPHS + glyph] + KERN;
-		ESG_Uniform2fv(positionI, textPos);
+		glUniform2fv(positionI, 1, textPos);
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 		if(underlineChar)
 		{
-			ESG_Uniform1i(glyphI, underscoreGlyph);
-			ESG_Uniform1f(aspectI, static_cast<float>(advance[glyph * GLYPHS] + KERN)
+			glUniform1i(glyphI, underscoreGlyph);
+			glUniform1f(aspectI, static_cast<float>(advance[glyph * GLYPHS] + KERN)
 				/ (advance[underscoreGlyph * GLYPHS] + KERN));
 
-			ESG_Uniform2fv(positionI, textPos);
+			glUniform2fv(positionI, 1, textPos);
 
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 			underlineChar = false;
@@ -158,8 +158,8 @@ void Font::DrawAliased(const string &str, double x, double y, const Color &color
 		previous = glyph;
 	}
 
-	ESG_BindVertexArray(0);
-	ESG_BindShader(0);
+	glBindVertexArray(0);
+	glUseProgram(0);
 }
 
 
@@ -217,7 +217,7 @@ int Font::Glyph(char c, bool isAfterSpace) noexcept
 void Font::LoadTexture(ImageBuffer &image)
 {
 	glGenTextures(1, &texture);
-	ESG_BindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -301,13 +301,13 @@ void Font::SetUpShader(float glyphW, float glyphH)
 	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Font.frag");
 
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
-	ESG_BindShader(shader.Object());
-	ESG_Uniform1i(shader.Uniform("tex"), 0);
-	ESG_BindShader(0);
+	glUseProgram(shader.Object());
+	glUniform1i(shader.Uniform("tex"), 0);
+	glUseProgram(0);
 
 	// Create the VAO and VBO.
 	glGenVertexArrays(1, &vao);
-	ESG_BindVertexArray(vao);
+	glBindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -330,7 +330,7 @@ void Font::SetUpShader(float glyphW, float glyphH)
 		stride, reinterpret_cast<const GLvoid *>(2 * sizeof(GLfloat)));
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	ESG_BindVertexArray(0);
+	glBindVertexArray(0);
 
 	// We must update the screen size next time we draw.
 	screenWidth = 0;

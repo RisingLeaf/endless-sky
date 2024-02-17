@@ -141,8 +141,8 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 	// Draw the starfield unless it is disabled in the preferences.
 	if(Preferences::Has("Draw starfield") && density > 0.)
 	{
-		ESG_BindShader(shader.Object());
-		ESG_BindVertexArray(vao);
+		glUseProgram(shader.Object());
+		glBindVertexArray(vao);
 
 		for(int pass = 1; pass <= layers; pass++)
 		{
@@ -158,15 +158,15 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 
 			float baseZoom = static_cast<float>(2. * zoom);
 			GLfloat scale[2] = {baseZoom / Screen::Width(), -baseZoom / Screen::Height()};
-			ESG_Uniform2fv(scaleI, scale);
+			glUniform2fv(scaleI, 1, scale);
 
 			GLfloat rotate[4] = {
 				static_cast<float>(unit.Y()), static_cast<float>(-unit.X()),
 				static_cast<float>(unit.X()), static_cast<float>(unit.Y())};
 			glUniformMatrix2fv(rotateI, pass, false, rotate);
 
-			ESG_Uniform1f(elongationI, length * zoom);
-			ESG_Uniform1f(brightnessI, min(1., pow(zoom, .5)));
+			glUniform1f(elongationI, length * zoom);
+			glUniform1f(brightnessI, min(1., pow(zoom, .5)));
 
 			// Stars this far beyond the border may still overlap the screen.
 			double borderX = fabs(vel.X()) + 1.;
@@ -190,7 +190,7 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 						static_cast<float>(off.X()),
 						static_cast<float>(off.Y())
 					};
-					ESG_Uniform2fv(translateI, translate);
+					glUniform2fv(translateI, 1, translate);
 
 					int index = (gx & widthMod) / TILE_SIZE + ((gy & widthMod) / TILE_SIZE) * tileCols;
 					int first = 6 * tileIndex[index];
@@ -199,8 +199,8 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 				}
 			}
 		}
-		ESG_BindVertexArray(0);
-		ESG_BindShader(0);
+		glBindVertexArray(0);
+		glUseProgram(0);
 	}
 
 	// Draw the background haze unless it is disabled in the preferences.
@@ -246,7 +246,7 @@ void StarField::SetUpGraphics()
 
 	// make and bind the VAO
 	glGenVertexArrays(1, &vao);
-	ESG_BindVertexArray(vao);
+	glBindVertexArray(vao);
 
 	// make and bind the VBO
 	glGenBuffers(1, &vbo);
@@ -376,5 +376,5 @@ void StarField::MakeStars(int stars, int width)
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	ESG_BindVertexArray(0);
+	glBindVertexArray(0);
 }
