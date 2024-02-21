@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include <vulkan/vulkan_core.h>
 
 // This class is a collection of global functions for handling SDL_Windows.
 class GameWindow {
@@ -81,6 +82,8 @@ public:
 	static bool IsFullscreen();
 	static void ToggleFullscreen();
 	static void ShowCursor(bool show);
+
+	static void CreateWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
 	static bool KeyDown(int key);
 	static bool ModActive(uint64_t mod);

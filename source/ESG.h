@@ -5,14 +5,12 @@
 
 
 
-class ESG
+namespace ESG
 {
-public:
-	static bool HasAdaptiveVSyncSupport();
-
-	static void RenderSetup();
-
-	static void AddBuffer(uint32_t *target, int width, int height, int depth, const void * data);
+	void Init();
+	bool HasAdaptiveVSyncSupport();
+	void RenderSetup();
+	void AddBuffer(uint32_t *target, int width, int height, int depth, const void * data);
 };
 
 

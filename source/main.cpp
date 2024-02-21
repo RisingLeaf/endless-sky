@@ -403,6 +403,7 @@ void GameLoop(PlayerInfo &player, const Conversation &conversation, const string
 		if(isFastForward)
 			SpriteShader::Draw(SpriteSet::Get("ui/fast forward"), Screen::TopLeft() + Point(10., 10.));
 
+		// IMPORTANT ALL DRAWING NEEDS TO BE FINISHED HERE
 		GameWindow::Step();
 
 		// When we perform automated testing, then we run the game by default as quickly as possible.

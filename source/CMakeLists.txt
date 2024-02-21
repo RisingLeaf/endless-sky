@@ -365,4 +365,11 @@ target_sources(EndlessSkyLib PRIVATE
 	text/alignment.hpp
 	text/layout.hpp
 	text/truncate.hpp
+	vulkan/VulkanBuffer.cpp
+	vulkan/VulkanDescriptors.cpp
+	vulkan/VulkanDevice.cpp
+	vulkan/VulkanModel.cpp
+	vulkan/VulkanPipeline.cpp
+	vulkan/VulkanSwapChain.cpp
+	vulkan/VulkanTexture.cpp
 )

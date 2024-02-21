@@ -251,6 +251,8 @@ Engine::Engine(PlayerInfo &player)
 	// Start the thread for doing calculations.
 	calcThread = thread(&Engine::ThreadEntryPoint, this);
 
+	ESG::Init();
+
 	if(!player.IsLoaded() || !player.GetSystem())
 		return;
 

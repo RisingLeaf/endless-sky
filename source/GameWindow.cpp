@@ -33,6 +33,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <unordered_set>
 #include <vector>
 
+#define ES_VULKAN
+
 using namespace std;
 
 namespace {
@@ -202,6 +204,10 @@ bool GameWindow::Init()
 		windowHeight = min(windowHeight, Screen::RawHeight());
 	}
 
+
+#ifdef ES_VULKAN
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+#else
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 #ifdef _WIN32
@@ -216,6 +222,7 @@ bool GameWindow::Init()
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 #endif
 	//SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+#endif
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	if(Preferences::Has("maximized"))
@@ -232,7 +239,9 @@ bool GameWindow::Init()
 		return false;
 	}
 
+#ifndef ES_VULKAN
 	glfwMakeContextCurrent(glfwMainWindow);
+#endif
 
 	// Input event handling:
 	glfwSetInputMode(glfwMainWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
@@ -244,7 +253,7 @@ bool GameWindow::Init()
 	glfwSetWindowSizeCallback(glfwMainWindow, GlfwWindowResizeCallback);
 
 
-
+#ifndef ES_VULKAN
 	// Initialize GLEW.
 #if !defined(__APPLE__) && !defined(ES_GLES)
 	glewExperimental = GL_TRUE;
@@ -286,7 +295,7 @@ bool GameWindow::Init()
 		ExitWithError(out.str());
 		return false;
 	}
-
+#endif
 	// Render settings
 	ESG::RenderSetup();
 
@@ -393,6 +402,7 @@ void GameWindow::AdjustViewport()
 // if the operation could not be completed successfully.
 bool GameWindow::SetVSync(Preferences::VSync state)
 {
+#ifndef ES_VULKAN
 	int interval = 1;
 	switch(state)
 	{
@@ -414,7 +424,7 @@ bool GameWindow::SetVSync(Preferences::VSync state)
 		return false;
 
 	glfwSwapInterval(interval);
-
+#endif
 	return true;
 }
 
@@ -471,6 +481,14 @@ void GameWindow::ShowCursor(bool show)
 		glfwSetInputMode(glfwMainWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	else
 		glfwSetInputMode(glfwMainWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
+
+
+void GameWindow::CreateWindowSurface(VkInstance instance, VkSurfaceKHR *surface)
+{
+	if(glfwCreateWindowSurface(instance, glfwMainWindow, nullptr, surface) != VK_SUCCESS)
+		throw std::runtime_error("failed to create window surface");
 }
 
 

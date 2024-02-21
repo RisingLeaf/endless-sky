@@ -66,6 +66,7 @@ project("Endless Sky" VERSION 0.10.4
 # Find the needed library dependencies.
 find_package(SDL2 CONFIG REQUIRED)
 find_package(glfw3 3.3 CONFIG REQUIRED)
+find_package(Vulkan REQUIRED)
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
 if(NOT APPLE)
@@ -119,7 +120,7 @@ if(MINGW)
 endif()
 
 # Link with the general libraries.
-target_link_libraries(ExternalLibraries INTERFACE SDL2::SDL2 PNG::PNG JPEG::JPEG OpenAL::OpenAL glfw
+target_link_libraries(ExternalLibraries INTERFACE SDL2::SDL2 PNG::PNG JPEG::JPEG OpenAL::OpenAL glfw Vulkan::Vulkan
 	"$<IF:$<CONFIG:Debug>,${LIBMAD_LIB_DEBUG},${LIBMAD_LIB_RELEASE}>")
 
 # Link the needed OS-specific dependencies, if any.
