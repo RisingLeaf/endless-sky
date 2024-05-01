@@ -19,7 +19,9 @@ using namespace std;
 
 
 
-// Initialize a Collision.
+/**
+ * Initialize a Collision.
+*/
 Collision::Collision(Body *hit, CollisionType collisionType, double range)
 	: hit(hit), collisionType(collisionType), range(range)
 {
@@ -28,8 +30,10 @@ Collision::Collision(Body *hit, CollisionType collisionType, double range)
 
 
 
-// The Body that was hit for this collision. May be a nullptr if nothing
-// was directly hit.
+/**
+ * The Body that was hit for this collision. May be a nullptr if nothing
+ * was directly hit.
+*/
 Body *Collision::HitBody()
 {
 	return hit;
@@ -37,7 +41,9 @@ Body *Collision::HitBody()
 
 
 
-// The type of Body that was hit.
+/**
+ * The type of Body that was hit.
+*/
 CollisionType Collision::GetCollisionType() const
 {
 	return collisionType;
@@ -45,7 +51,9 @@ CollisionType Collision::GetCollisionType() const
 
 
 
-// The intersection range at which the collision occurred with the Body.
+/**
+ * The intersection range at which the collision occurred with the Body.
+*/
 double Collision::IntersectionRange() const
 {
 	return range;
@@ -53,7 +61,9 @@ double Collision::IntersectionRange() const
 
 
 
-// Compare two Collisions by their intersection range.
+/**
+ * Compare two Collisions by their intersection range.
+*/
 bool Collision::operator<(const Collision &rhs) const
 {
 	return range < rhs.range;

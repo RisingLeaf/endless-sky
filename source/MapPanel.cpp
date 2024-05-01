@@ -220,7 +220,9 @@ namespace {
 const float MapPanel::OUTER = 6.f;
 const float MapPanel::INNER = 3.5f;
 const float MapPanel::LINK_WIDTH = 1.2f;
-// Draw links only outside the system ring, which has radius MapPanel::OUTER.
+/**
+ * Draw links only outside the system ring, which has radius MapPanel::OUTER.
+*/
 const float MapPanel::LINK_OFFSET = 7.f;
 
 
@@ -600,7 +602,9 @@ bool MapPanel::Click(int x, int y, int clicks)
 
 
 
-// If the mouse has moved near a known system that contains escorts, track the dwell time.
+/**
+ * If the mouse has moved near a known system that contains escorts, track the dwell time.
+*/
 bool MapPanel::Hover(int x, int y)
 {
 	if(escortSystems.empty())
@@ -875,8 +879,10 @@ double MapPanel::Zoom() const
 
 
 
-// Check whether the NPC and waypoint conditions of the given mission have
-// been satisfied.
+/**
+ * Check whether the NPC and waypoint conditions of the given mission have
+ * been satisfied.
+*/
 bool MapPanel::IsSatisfied(const Mission &mission) const
 {
 	return IsSatisfied(player, mission);
@@ -934,8 +940,10 @@ void MapPanel::CenterOnSystem(const System *system, bool immediate)
 
 
 
-// Cache the map layout, so it doesn't have to be re-calculated every frame.
-// The node cache must be updated when the coloring mode changes.
+/**
+ * Cache the map layout, so it doesn't have to be re-calculated every frame.
+ * The node cache must be updated when the coloring mode changes.
+*/
 void MapPanel::UpdateCache()
 {
 	// Remember which commodity the cached systems are colored by.
@@ -1210,7 +1218,9 @@ void MapPanel::DrawTravelPlan()
 
 
 
-// Fill in the top-middle header bar that names the selected system, and indicates its distance.
+/**
+ * Fill in the top-middle header bar that names the selected system, and indicates its distance.
+*/
 void MapPanel::DrawSelectedSystem()
 {
 	const Sprite *sprite = SpriteSet::Get("ui/selected system");
@@ -1247,7 +1257,9 @@ void MapPanel::DrawSelectedSystem()
 
 
 
-// Communicate the location of non-destroyed, player-owned ships.
+/**
+ * Communicate the location of non-destroyed, player-owned ships.
+*/
 void MapPanel::DrawEscorts()
 {
 	if(escortSystems.empty())

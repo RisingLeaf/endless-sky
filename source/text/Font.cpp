@@ -412,7 +412,9 @@ int Font::WidthRawString(const char *str, char after) const noexcept
 
 
 
-// Param width will be set to the width of the return value, unless the layout width is negative.
+/**
+ * Param width will be set to the width of the return value, unless the layout width is negative.
+*/
 string Font::TruncateText(const DisplayText &text, int &width) const
 {
 	width = -1;

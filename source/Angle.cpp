@@ -56,7 +56,9 @@ namespace {
 
 
 
-// Get a random angle.
+/**
+ * Get a random angle.
+*/
 Angle Angle::Random()
 {
 	return Angle(static_cast<int32_t>(Random::Int(STEPS)));
@@ -64,7 +66,9 @@ Angle Angle::Random()
 
 
 
-// Get a random angle between 0 and the given number of degrees.
+/**
+ * Get a random angle between 0 and the given number of degrees.
+*/
 Angle Angle::Random(const double range)
 {
 	// The given range would have to be about 22.6 million degrees to overflow
@@ -75,7 +79,9 @@ Angle Angle::Random(const double range)
 
 
 
-// Construct an Angle from the given angle in degrees.
+/**
+ * Construct an Angle from the given angle in degrees.
+*/
 Angle::Angle(const double degrees) noexcept
 	: angle(llround(degrees * DEG_TO_STEP) & MASK)
 {
@@ -87,7 +93,9 @@ Angle::Angle(const double degrees) noexcept
 
 
 
-// Construct an angle pointing in the direction of the given vector.
+/**
+ * Construct an angle pointing in the direction of the given vector.
+*/
 Angle::Angle(const Point &point) noexcept
 	: Angle(TO_DEG * atan2(point.X(), -point.Y()))
 {
@@ -152,7 +160,9 @@ bool Angle::operator!=(const Angle &other) const
 
 
 
-// Get a unit vector in the direction of this angle.
+/**
+ * Get a unit vector in the direction of this angle.
+*/
 Point Angle::Unit() const
 {
 	return unitCache[angle];
@@ -160,7 +170,9 @@ Point Angle::Unit() const
 
 
 
-// Convert an angle back to a value in degrees.
+/**
+ * Convert an angle back to a value in degrees.
+*/
 double Angle::Degrees() const
 {
 	// Most often when this function is used, it's in settings where it makes
@@ -171,7 +183,9 @@ double Angle::Degrees() const
 
 
 
-// Return a point rotated by this angle around (0, 0).
+/**
+ * Return a point rotated by this angle around (0, 0).
+*/
 Point Angle::Rotate(const Point &point) const
 {
 	// If using the normal mathematical coordinate system, this would be easier.
@@ -183,7 +197,9 @@ Point Angle::Rotate(const Point &point) const
 
 
 
-// Constructor using Angle's internal representation.
+/**
+ * Constructor using Angle's internal representation.
+*/
 Angle::Angle(const int32_t angle)
 	: angle(angle)
 {

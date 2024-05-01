@@ -25,55 +25,77 @@ class DataNode;
 
 
 
-// Class that handles the loading and position calculations for a pattern that
-// can be used for ships flying in formation.
-// This class only deals with calculating the positions that exist in a formation
-// pattern, the actual assignment of ships to positions is handled outside this class.
+/**
+ * Class that handles the loading and position calculations for a pattern that
+ * can be used for ships flying in formation.
+ * This class only deals with calculating the positions that exist in a formation
+ * pattern, the actual assignment of ships to positions is handled outside this class.
+*/
 class FormationPattern {
 public:
-	// Iterator that provides sequential access to all formation positions.
+	/**
+	 * Iterator that provides sequential access to all formation positions.
+	*/
 	class PositionIterator {
 	public:
 		explicit PositionIterator(const FormationPattern &pattern);
 		PositionIterator() = delete;
 
-		// Iterator traits
+		/**
+		 * Iterator traits
+		*/
 		using iterator_category = std::input_iterator_tag;
 		using value_type = Point;
 		using difference_type = void;
 		using pointer = const Point *;
 		using reference = Point &;
 
-		// A subset of the default input_iterator operations. Limiting to
-		// only a subset, since not all operations are used in-game.
+		/**
+		 * A subset of the default input_iterator operations. Limiting to
+		 * only a subset, since not all operations are used in-game.
+		*/
 		const Point &operator*();
 		PositionIterator &operator++();
 
 
 	private:
-		// The pattern for which we are calculating positions.
+		/**
+		 * The pattern for which we are calculating positions.
+		*/
 		const FormationPattern &pattern;
-		// The iterator currently used below the position iterator.
+		/**
+		 * The iterator currently used below the position iterator.
+		*/
 		std::vector<Point>::const_iterator positionIt;
 	};
 
 
 public:
-	// Load formation from a datafile.
+	/**
+	 * Load formation from a datafile.
+	*/
 	void Load(const DataNode &node);
 
-	// Returns the name of this pattern.
+	/**
+	 * Returns the name of this pattern.
+	*/
 	const std::string &Name() const;
 	void SetName(const std::string &name);
 
-	// Get an iterator to iterate over the formation positions in this pattern.
+	/**
+	 * Get an iterator to iterate over the formation positions in this pattern.
+	*/
 	PositionIterator begin() const;
 
 
 private:
-	// Name of the formation pattern.
+	/**
+	 * Name of the formation pattern.
+	*/
 	std::string name;
-	// The positions that define the formation.
+	/**
+	 * The positions that define the formation.
+	*/
 	std::vector<Point> positions;
 };
 

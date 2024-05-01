@@ -23,16 +23,22 @@ class DataNode;
 
 
 
-// Class representing a dataset for automated testing
+/**
+ * Class representing a dataset for automated testing
+*/
 class TestData {
 public:
 	const std::string &Name() const;
 	void Load(const DataNode &node, const std::string &sourceDataFilePath);
-	// Function to inject the test-data into the game or into the game's
-	// environment.
+	/**
+	 * Function to inject the test-data into the game or into the game's
+	 * environment.
+	*/
 	bool Inject() const;
 
-	// Types of datafiles that can be stored.
+	/**
+	 * Types of datafiles that can be stored.
+	*/
 	enum class Type {UNSPECIFIED, SAVEGAME, MISSION};
 
 
@@ -40,19 +46,29 @@ public:
 private:
 	const DataNode *GetContentsNode(const DataFile &sourceData) const;
 
-	// Writes out testdata as savegame file.
+	/**
+	 * Writes out testdata as savegame file.
+	*/
 	bool InjectSavegame() const;
 
-	// Loads a mission stored in testdata into a Mission through GameData.
+	/**
+	 * Loads a mission stored in testdata into a Mission through GameData.
+	*/
 	bool InjectMission() const;
 
 
 private:
-	// Name of the dataset
+	/**
+	 * Name of the dataset
+	*/
 	std::string dataSetName;
-	// Type of the dataset
+	/**
+	 * Type of the dataset
+	*/
 	Type dataSetType = Type::UNSPECIFIED;
-	// File containing the test-data
+	/**
+	 * File containing the test-data
+	*/
 	std::string sourceDataFile;
 };
 

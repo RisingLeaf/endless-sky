@@ -25,7 +25,9 @@ using namespace std;
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 NPCAction::NPCAction(const DataNode &node)
 {
 	Load(node);
@@ -51,8 +53,10 @@ void NPCAction::Load(const DataNode &node)
 
 
 
-// Note: the Save() function can assume this is an instantiated action, not
-// a template, so it only has to save a subset of the data.
+/**
+ * Note: the Save() function can assume this is an instantiated action, not
+ * a template, so it only has to save a subset of the data.
+*/
 void NPCAction::Save(DataWriter &out) const
 {
 	out.Write("on", trigger);
@@ -68,8 +72,10 @@ void NPCAction::Save(DataWriter &out) const
 
 
 
-// Check this template or instantiated NPCAction to see if any used content
-// is not fully defined (e.g. plugin removal, typos in names, etc.).
+/**
+ * Check this template or instantiated NPCAction to see if any used content
+ * is not fully defined (e.g. plugin removal, typos in names, etc.).
+*/
 string NPCAction::Validate() const
 {
 	return action.Validate();
@@ -89,7 +95,9 @@ void NPCAction::Do(PlayerInfo &player, UI *ui, const Mission *caller)
 
 
 
-// Convert this validated template into a populated action.
+/**
+ * Convert this validated template into a populated action.
+*/
 NPCAction NPCAction::Instantiate(map<string, string> &subs, const System *origin,
 	int jumps, int64_t payload) const
 {

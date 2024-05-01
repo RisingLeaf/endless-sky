@@ -33,7 +33,9 @@ namespace {
 
 
 
-// Sets the specified amount of hardpoints desired.
+/**
+ * Sets the specified amount of hardpoints desired.
+*/
 void FireCommand::SetHardpoints(size_t count)
 {
 	Clear();
@@ -46,8 +48,10 @@ void FireCommand::SetHardpoints(size_t count)
 
 
 
-// Assigns the subset of other to this class that is no larger than
-// this command's hardpoint size.
+/**
+ * Assigns the subset of other to this class that is no larger than
+ * this command's hardpoint size.
+*/
 void FireCommand::UpdateWith(const FireCommand &other) noexcept
 {
 	weapon.UpdateWith(other.weapon);
@@ -56,7 +60,9 @@ void FireCommand::UpdateWith(const FireCommand &other) noexcept
 
 
 
-// Reset this to an empty command.
+/**
+ * Reset this to an empty command.
+*/
 void FireCommand::Clear()
 {
 	weapon.Reset();
@@ -66,7 +72,9 @@ void FireCommand::Clear()
 
 
 
-// Check if this command includes a command to fire the given weapon.
+/**
+ * Check if this command includes a command to fire the given weapon.
+*/
 bool FireCommand::HasFire(int index) const noexcept
 {
 	if(!IsIndexValid(index))
@@ -76,7 +84,9 @@ bool FireCommand::HasFire(int index) const noexcept
 
 
 
-// Add to this set of commands a command to fire the given weapon.
+/**
+ * Add to this set of commands a command to fire the given weapon.
+*/
 void FireCommand::SetFire(int index) noexcept
 {
 	if(!IsIndexValid(index))
@@ -86,7 +96,9 @@ void FireCommand::SetFire(int index) noexcept
 
 
 
-// Check if any weapons are firing.
+/**
+ * Check if any weapons are firing.
+*/
 bool FireCommand::IsFiring() const noexcept
 {
 	return weapon.Any();
@@ -94,7 +106,9 @@ bool FireCommand::IsFiring() const noexcept
 
 
 
-// Gets the current turn rate of the turret at the given weapon index.
+/**
+ * Gets the current turn rate of the turret at the given weapon index.
+*/
 double FireCommand::Aim(int index) const noexcept
 {
 	if(!IsIndexValid(index))
@@ -103,8 +117,10 @@ double FireCommand::Aim(int index) const noexcept
 }
 
 
-// Set the turn rate of the turret with the given weapon index. A value of
-// -1 or 1 means to turn at the full speed the turret is capable of.
+/**
+ * Set the turn rate of the turret with the given weapon index. A value of
+ * -1 or 1 means to turn at the full speed the turret is capable of.
+*/
 void FireCommand::SetAim(int index, double amount) noexcept
 {
 	if(!IsIndexValid(index))

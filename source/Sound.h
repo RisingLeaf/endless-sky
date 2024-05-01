@@ -20,8 +20,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-// This is a sound that can be played. The sound's file name will determine
-// whether it is looping (ends in '~') or not.
+/**
+ * This is a sound that can be played. The sound's file name will determine
+ * whether it is looping (ends in '~') or not.
+*/
 class Sound {
 public:
 	bool Load(const std::string &path, const std::string &name);

@@ -123,14 +123,18 @@ PreferencesPanel::PreferencesPanel()
 
 
 
-// Stub, for unique_ptr destruction to be defined in the right compilation unit.
+/**
+ * Stub, for unique_ptr destruction to be defined in the right compilation unit.
+*/
 PreferencesPanel::~PreferencesPanel()
 {
 }
 
 
 
-// Draw this panel.
+/**
+ * Draw this panel.
+*/
 void PreferencesPanel::Draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -319,7 +323,9 @@ bool PreferencesPanel::Hover(int x, int y)
 
 
 
-// Change the value being hovered over in the direction of the scroll.
+/**
+ * Change the value being hovered over in the direction of the scroll.
+*/
 bool PreferencesPanel::Scroll(double dx, double dy)
 {
 	if(!dy)
@@ -1035,7 +1041,9 @@ void PreferencesPanel::DrawPlugins()
 
 
 
-// Render the named plugin description into the pluginDescriptionBuffer.
+/**
+ * Render the named plugin description into the pluginDescriptionBuffer.
+*/
 void PreferencesPanel::RenderPluginDescription(const std::string &pluginName)
 {
 	const Plugin *plugin = Plugins::Get().Find(pluginName);
@@ -1047,7 +1055,9 @@ void PreferencesPanel::RenderPluginDescription(const std::string &pluginName)
 
 
 
-// Render the plugin description into the pluginDescriptionBuffer.
+/**
+ * Render the plugin description into the pluginDescriptionBuffer.
+*/
 void PreferencesPanel::RenderPluginDescription(const Plugin &plugin)
 {
 	const Color &medium = *GameData::Colors().Get("medium");

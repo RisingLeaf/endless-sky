@@ -199,8 +199,10 @@ Rectangle PlanetLabel::GetBoundingBox(const double zoom) const
 
 
 
-// Check if the label for the given stellar object overlaps
-// with any existing label or any other stellar object in the system.
+/**
+ * Check if the label for the given stellar object overlaps
+ * with any existing label or any other stellar object in the system.
+*/
 bool PlanetLabel::HasOverlaps(const vector<PlanetLabel> &labels, const System &system,
 		const StellarObject &object, const double zoom) const
 {

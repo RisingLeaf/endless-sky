@@ -36,7 +36,9 @@ namespace {
 
 
 
-// Initialize the shaders.
+/**
+ * Initialize the shaders.
+*/
 void RenderBuffer::Init()
 {
 	static const char *vertexCode =
@@ -147,7 +149,9 @@ RenderBuffer::RenderTargetGuard::RenderTargetGuard(RenderBuffer &b, int screenWi
 
 
 
-// Create a texture of the given size that can be used as a render target.
+/**
+ * Create a texture of the given size that can be used as a render target.
+*/
 RenderBuffer::RenderBuffer(const Point &dimensions)
 	: size(dimensions)
 {
@@ -187,7 +191,9 @@ RenderBuffer::RenderBuffer(const Point &dimensions)
 
 
 
-// Destructor. Frees the texture and renderbuffers.
+/**
+ * Destructor. Frees the texture and renderbuffers.
+*/
 RenderBuffer::~RenderBuffer()
 {
 	glDeleteTextures(1, &texid);
@@ -196,8 +202,10 @@ RenderBuffer::~RenderBuffer()
 
 
 
-// Turn this buffer on as a render target. The render target is restored if
-// the Activation object goes out of scope.
+/**
+ * Turn this buffer on as a render target. The render target is restored if
+ * the Activation object goes out of scope.
+*/
 RenderBuffer::RenderTargetGuard RenderBuffer::SetTarget()
 {
 	// NOTE: These glGets can cause an unwanted state synchronization that can
@@ -220,7 +228,9 @@ RenderBuffer::RenderTargetGuard RenderBuffer::SetTarget()
 
 
 
-// Reset the render target and viewport to the original settings.
+/**
+ * Reset the render target and viewport to the original settings.
+*/
 void RenderBuffer::Deactivate()
 {
 	// Restore the old settings.
@@ -237,7 +247,9 @@ void RenderBuffer::Draw(const Point &position)
 
 
 
-// Draw the contents of this buffer at the specified position.
+/**
+ * Draw the contents of this buffer at the specified position.
+*/
 void RenderBuffer::Draw(const Point &position, const Point &clipsize, const Point &srcposition)
 {
 	glUseProgram(shader.Object());

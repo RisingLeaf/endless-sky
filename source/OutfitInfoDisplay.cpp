@@ -241,7 +241,9 @@ OutfitInfoDisplay::OutfitInfoDisplay(const Outfit &outfit, const PlayerInfo &pla
 
 
 
-// Call this every time the ship changes.
+/**
+ * Call this every time the ship changes.
+*/
 void OutfitInfoDisplay::Update(const Outfit &outfit, const PlayerInfo &player, bool canSell, bool descriptionCollapsed)
 {
 	UpdateDescription(outfit.Description(), outfit.Licenses(), false);
@@ -354,10 +356,12 @@ void OutfitInfoDisplay::UpdateRequirements(const Outfit &outfit, const PlayerInf
 
 
 
-// Any attribute with a negative value is considered a requirement.
-// Any exceptions to that rule would require in-game code to handle
-// their unique properties, so when code is added to handle a new
-// attribute, this code also should also be updated.
+/**
+ * Any attribute with a negative value is considered a requirement.
+ * Any exceptions to that rule would require in-game code to handle
+ * their unique properties, so when code is added to handle a new
+ * attribute, this code also should also be updated.
+*/
 void OutfitInfoDisplay::AddRequirementAttribute(string label, double value)
 {
 	// These attributes have negative values but are not requirements

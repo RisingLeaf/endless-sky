@@ -150,7 +150,9 @@ namespace {
 
 
 
-// Check if the given path is to an image of a valid file type.
+/**
+ * Check if the given path is to an image of a valid file type.
+*/
 bool ImageSet::IsImage(const string &path)
 {
 	if(path.length() < 4)
@@ -162,8 +164,10 @@ bool ImageSet::IsImage(const string &path)
 
 
 
-// Get the base name for the given path. The path should be relative to one
-// of the source image directories, not a full filesystem path.
+/**
+ * Get the base name for the given path. The path should be relative to one
+ * of the source image directories, not a full filesystem path.
+*/
 string ImageSet::Name(const string &path)
 {
 	return path.substr(0, NameEnd(path));
@@ -171,8 +175,10 @@ string ImageSet::Name(const string &path)
 
 
 
-// Determine whether the given path or name is for a sprite whose loading
-// should be deferred until needed.
+/**
+ * Determine whether the given path or name is for a sprite whose loading
+ * should be deferred until needed.
+*/
 bool ImageSet::IsDeferred(const string &path)
 {
 	if(path.length() >= 5 && !path.compare(0, 5, "land/"))
@@ -190,7 +196,9 @@ ImageSet::ImageSet(string name)
 
 
 
-// Get the name of the sprite for this image set.
+/**
+ * Get the name of the sprite for this image set.
+*/
 const string &ImageSet::Name() const
 {
 	return name;
@@ -198,7 +206,9 @@ const string &ImageSet::Name() const
 
 
 
-// Whether this image set is empty, i.e. has no images.
+/**
+ * Whether this image set is empty, i.e. has no images.
+*/
 bool ImageSet::IsEmpty() const
 {
 	return framePaths[0].empty() && framePaths[1].empty();
@@ -206,8 +216,10 @@ bool ImageSet::IsEmpty() const
 
 
 
-// Add a single image to this set. Assume the name of the image has already
-// been checked to make sure it belongs in this set.
+/**
+ * Add a single image to this set. Assume the name of the image has already
+ * been checked to make sure it belongs in this set.
+*/
 void ImageSet::Add(string path)
 {
 	// Determine which frame of the sprite this image will be.
@@ -219,7 +231,9 @@ void ImageSet::Add(string path)
 
 
 
-// Reduce all given paths to frame images into a sequence of consecutive frames.
+/**
+ * Reduce all given paths to frame images into a sequence of consecutive frames.
+*/
 void ImageSet::ValidateFrames() noexcept(false)
 {
 	string prefix = "Sprite \"" + name + "\": ";
@@ -249,8 +263,10 @@ void ImageSet::ValidateFrames() noexcept(false)
 
 
 
-// Load all the frames. This should be called in one of the image-loading
-// worker threads. This also generates collision masks if needed.
+/**
+ * Load all the frames. This should be called in one of the image-loading
+ * worker threads. This also generates collision masks if needed.
+*/
 void ImageSet::Load() noexcept(false)
 {
 	assert(framePaths[0].empty() && "should call ValidateFrames before calling Load");
@@ -322,9 +338,11 @@ void ImageSet::Load() noexcept(false)
 
 
 
-// Create the sprite and optionally upload the image data to the GPU. After this is
-// called, the internal image buffers and mask vector will be cleared, but
-// the paths are saved in case the sprite needs to be loaded again.
+/**
+ * Create the sprite and optionally upload the image data to the GPU. After this is
+ * called, the internal image buffers and mask vector will be cleared, but
+ * the paths are saved in case the sprite needs to be loaded again.
+*/
 void ImageSet::Upload(Sprite *sprite, bool enableUpload)
 {
 	// Clear all the buffers if we are not uploading the image data.

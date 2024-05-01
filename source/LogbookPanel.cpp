@@ -69,7 +69,9 @@ LogbookPanel::LogbookPanel(PlayerInfo &player)
 
 
 
-// Draw this panel.
+/**
+ * Draw this panel.
+*/
 void LogbookPanel::Draw()
 {
 	// Dim out everything outside this panel.

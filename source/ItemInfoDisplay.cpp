@@ -49,7 +49,9 @@ ItemInfoDisplay::ItemInfoDisplay()
 
 
 
-// Get the panel width.
+/**
+ * Get the panel width.
+*/
 int ItemInfoDisplay::PanelWidth()
 {
 	return WIDTH;
@@ -57,7 +59,9 @@ int ItemInfoDisplay::PanelWidth()
 
 
 
-// Get the height of each of the three panels.
+/**
+ * Get the height of each of the three panels.
+*/
 int ItemInfoDisplay::MaximumHeight() const
 {
 	return maximumHeight;
@@ -79,7 +83,9 @@ int ItemInfoDisplay::AttributesHeight() const
 
 
 
-// Draw each of the panels.
+/**
+ * Draw each of the panels.
+*/
 void ItemInfoDisplay::DrawDescription(const Point &topLeft) const
 {
 	Rectangle hoverTarget = Rectangle::FromCorner(topLeft, Point(PanelWidth(), DescriptionHeight()));
@@ -116,7 +122,9 @@ void ItemInfoDisplay::DrawTooltips() const
 
 
 
-// Update the location where the mouse is hovering.
+/**
+ * Update the location where the mouse is hovering.
+*/
 void ItemInfoDisplay::Hover(const Point &point)
 {
 	hoverPoint = point;

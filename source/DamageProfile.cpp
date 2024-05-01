@@ -45,7 +45,9 @@ DamageProfile::DamageProfile(Weather::ImpactInfo info)
 
 
 
-// Calculate the damage dealt to the given ship.
+/**
+ * Calculate the damage dealt to the given ship.
+*/
 DamageDealt DamageProfile::CalculateDamage(const Ship &ship, bool ignoreBlast) const
 {
 	bool blast = (isBlast && !ignoreBlast);
@@ -57,9 +59,11 @@ DamageDealt DamageProfile::CalculateDamage(const Ship &ship, bool ignoreBlast) c
 
 
 
-// Calculate the value of certain variables necessary for determining
-// the impact of an explosion that are shared across all ships that
-// this hazard could impact.
+/**
+ * Calculate the value of certain variables necessary for determining
+ * the impact of an explosion that are shared across all ships that
+ * this hazard could impact.
+*/
 void DamageProfile::CalculateBlast()
 {
 	if(isBlast && weapon.IsDamageScaled())
@@ -77,7 +81,9 @@ void DamageProfile::CalculateBlast()
 
 
 
-// Determine the damage scale for the given ship.
+/**
+ * Determine the damage scale for the given ship.
+*/
 double DamageProfile::Scale(double scale, const Ship &ship, bool blast) const
 {
 	// Now that we have a specific ship, we can finish the blast damage
@@ -103,7 +109,9 @@ double DamageProfile::Scale(double scale, const Ship &ship, bool blast) const
 
 
 
-// Populate the given DamageDealt object with values.
+/**
+ * Populate the given DamageDealt object with values.
+*/
 void DamageProfile::PopulateDamage(DamageDealt &damage, const Ship &ship) const
 {
 	const Outfit &attributes = ship.Attributes();

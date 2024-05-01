@@ -340,7 +340,9 @@ const string &Preferences::DateFormatSetting()
 
 
 
-// Scroll speed preference.
+/**
+ * Scroll speed preference.
+*/
 int Preferences::ScrollSpeed()
 {
 	return scrollSpeed;
@@ -355,7 +357,9 @@ void Preferences::SetScrollSpeed(int speed)
 
 
 
-// View zoom.
+/**
+ * View zoom.
+*/
 double Preferences::ViewZoom()
 {
 	const auto &zooms = GameData::Interfaces().Get("main view")->GetList("zooms");
@@ -420,7 +424,9 @@ const vector<double> &Preferences::Zooms()
 
 
 
-// Starfield parallax.
+/**
+ * Starfield parallax.
+*/
 void Preferences::ToggleParallax()
 {
 	int targetIndex = parallaxIndex + 1;
@@ -509,7 +515,9 @@ bool Preferences::ToggleVSync()
 
 
 
-// Return the current VSync setting
+/**
+ * Return the current VSync setting
+*/
 Preferences::VSync Preferences::VSyncState()
 {
 	return static_cast<VSync>(vsyncIndex);

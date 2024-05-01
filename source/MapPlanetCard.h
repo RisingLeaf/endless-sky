@@ -27,7 +27,9 @@ class StellarObject;
 
 
 
-// Used to manage the display of a single planet in the MapDetailPanel.
+/**
+ * Used to manage the display of a single planet in the MapDetailPanel.
+*/
 class MapPlanetCard {
 public:
 	enum class ClickAction : int {
@@ -44,17 +46,29 @@ public:
 
 
 public:
-	// For the orbit selection to work properly this has to be a planet.
+	/**
+	 * For the orbit selection to work properly this has to be a planet.
+	*/
 	explicit MapPlanetCard(const StellarObject &object, unsigned number, bool hasVisited);
-	// Return if this one was clicked, whether or not we did something about it.
+	/**
+	 * Return if this one was clicked, whether or not we did something about it.
+	*/
 	ClickAction Click(int x, int y, int clicks);
-	// Draw this at the corresponding scroll; if it is not outside bounds, and return if we drew it.
+	/**
+	 * Draw this at the corresponding scroll; if it is not outside bounds, and return if we drew it.
+	*/
 	bool DrawIfFits(const Point &uiPoint);
-	// If this object is currently being shown.
+	/**
+	 * If this object is currently being shown.
+	*/
 	bool IsShown() const;
-	// Whether or not this object by selected, by clicking on it or otherwise.
+	/**
+	 * Whether or not this object by selected, by clicking on it or otherwise.
+	*/
 	bool IsSelected() const;
-	// Return the space available for this planet card on its current position.
+	/**
+	 * Return the space available for this planet card on its current position.
+	*/
 	double AvailableSpace() const;
 
 	const Planet *GetPlanet() const;
@@ -67,7 +81,9 @@ public:
 
 
 protected:
-	// Highlight this card; this is to be called when it is selected.
+	/**
+	 * Highlight this card; this is to be called when it is selected.
+	*/
 	void Highlight(double availableSpace) const;
 	double AvailableBottomSpace() const;
 	double AvailableTopSpace() const;
@@ -84,7 +100,9 @@ private:
 	bool hasOutfitter;
 	bool hasShipyard;
 
-	// The current starting y position.
+	/**
+	 * The current starting y position.
+	*/
 	double yCoordinate = 0.;
 	bool isShown = false;
 
@@ -94,7 +112,9 @@ private:
 	std::string governmentName;
 	std::string reputationLabel;
 	const std::string &planetName;
-	// The currently select category (outfitter, shipyard, ...)
+	/**
+	 * The currently select category (outfitter, shipyard, ...)
+	*/
 	unsigned selectedCategory = 0;
 };
 

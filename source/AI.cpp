@@ -310,7 +310,9 @@ AI::AI(const PlayerInfo &player, const List<Ship> &ships,
 
 
 
-// Fleet commands from the player.
+/**
+ * Fleet commands from the player.
+*/
 void AI::IssueShipTarget(const shared_ptr<Ship> &target)
 {
 	Orders newOrders;
@@ -348,7 +350,9 @@ void AI::IssueMoveTarget(const Point &target, const System *moveToSystem)
 
 
 
-// Commands issued via the keyboard (mostly, to the flagship).
+/**
+ * Commands issued via the keyboard (mostly, to the flagship).
+*/
 void AI::UpdateKeys(PlayerInfo &player, Command &activeCommands)
 {
 	escortsUseAmmo = Preferences::Has("Escorts expend ammo");
@@ -486,8 +490,10 @@ void AI::UpdateEvents(const list<ShipEvent> &events)
 
 
 
-// Remove records of what happened in the previous system, now that
-// the player has entered a new one.
+/**
+ * Remove records of what happened in the previous system, now that
+ * the player has entered a new one.
+*/
 void AI::Clean()
 {
 	actions.clear();
@@ -511,8 +517,10 @@ void AI::Clean()
 
 
 
-// Clear ship orders and assistance requests. These should be done
-// when the player lands, but not when they change systems.
+/**
+ * Clear ship orders and assistance requests. These should be done
+ * when the player lands, but not when they change systems.
+*/
 void AI::ClearOrders()
 {
 	helperList.clear();
@@ -1074,7 +1082,9 @@ void AI::SetMousePosition(Point position)
 
 
 
-// Get the in-system strength of each government's allies and enemies.
+/**
+ * Get the in-system strength of each government's allies and enemies.
+*/
 int64_t AI::AllyStrength(const Government *government)
 {
 	auto it = allyStrength.find(government);
@@ -1091,7 +1101,9 @@ int64_t AI::EnemyStrength(const Government *government)
 
 
 
-// Find nearest landing location.
+/**
+ * Find nearest landing location.
+*/
 const StellarObject *AI::FindLandingLocation(const Ship &ship, const bool refuel)
 {
 	const StellarObject *target = nullptr;
@@ -1121,7 +1133,9 @@ const StellarObject *AI::FindLandingLocation(const Ship &ship, const bool refuel
 
 
 
-// Check if the given target can be pursued by this ship.
+/**
+ * Check if the given target can be pursued by this ship.
+*/
 bool AI::CanPursue(const Ship &ship, const Ship &target) const
 {
 	// If this ship does not care about the "invisible fence", it can always pursue.
@@ -1142,7 +1156,9 @@ bool AI::CanPursue(const Ship &ship, const Ship &target) const
 
 
 
-// Check if the ship is being helped, and if not, ask for help.
+/**
+ * Check if the ship is being helped, and if not, ask for help.
+*/
 void AI::AskForHelp(Ship &ship, bool &isStranded, const Ship *flagship)
 {
 	if(HasHelper(ship, isStranded))
@@ -1218,7 +1234,9 @@ void AI::AskForHelp(Ship &ship, bool &isStranded, const Ship *flagship)
 
 
 
-// Determine if the selected ship is physically able to render assistance.
+/**
+ * Determine if the selected ship is physically able to render assistance.
+*/
 bool AI::CanHelp(const Ship &ship, const Ship &helper, const bool needsFuel) const
 {
 	// A ship being assisted cannot assist.
@@ -1262,7 +1280,9 @@ bool AI::HasHelper(const Ship &ship, const bool needsFuel)
 
 
 
-// Pick a new target for the given ship.
+/**
+ * Pick a new target for the given ship.
+*/
 shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 {
 	// If this ship has no government, it has no enemies.
@@ -1487,9 +1507,11 @@ shared_ptr<Ship> AI::FindNonHostileTarget(const Ship &ship) const
 
 
 
-// Return a list of all targetable ships in the same system as the player that
-// match the desired hostility (i.e. enemy or non-enemy). Does not consider the
-// ship's current target, as its inclusion may or may not be desired.
+/**
+ * Return a list of all targetable ships in the same system as the player that
+ * match the desired hostility (i.e. enemy or non-enemy). Does not consider the
+ * ship's current target, as its inclusion may or may not be desired.
+*/
 vector<Ship *> AI::GetShipsList(const Ship &ship, bool targetEnemies, double maxRange) const
 {
 	if(maxRange < 0.)
@@ -1969,8 +1991,10 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 
 
 
-// Prefer your parent's target planet for refueling, but if it and your current
-// target planet can't fuel you, try to find one that can.
+/**
+ * Prefer your parent's target planet for refueling, but if it and your current
+ * target planet can't fuel you, try to find one that can.
+*/
 void AI::Refuel(Ship &ship, Command &command)
 {
 	const StellarObject *parentTarget = (ship.GetParent() ? ship.GetParent()->GetTargetStellar() : nullptr);
@@ -2007,9 +2031,11 @@ bool AI::CanRefuel(const Ship &ship, const StellarObject *target)
 }
 
 
-// Set the ship's target system or planet in order to reach the
-// next desired system. Will target a landable planet to refuel.
-// If the ship is an escort it will only use routes known to the player.
+/**
+ * Set the ship's target system or planet in order to reach the
+ * next desired system. Will target a landable planet to refuel.
+ * If the ship is an escort it will only use routes known to the player.
+*/
 void AI::SelectRoute(Ship &ship, const System *targetSystem) const
 {
 		const System *from = ship.GetSystem();
@@ -2050,7 +2076,9 @@ void AI::SelectRoute(Ship &ship, const System *targetSystem) const
 
 
 
-// Determine if a carried ship meets any of the criteria for returning to its parent.
+/**
+ * Determine if a carried ship meets any of the criteria for returning to its parent.
+*/
 bool AI::ShouldDock(const Ship &ship, const Ship &parent, const System *playerSystem) const
 {
 	// If your parent is disabled, you should not attempt to board it.
@@ -2134,9 +2162,11 @@ double AI::TurnBackward(const Ship &ship)
 
 
 
-// Determine the value to use in Command::SetTurn() to turn the ship towards the desired facing.
-// "precision" is an optional argument corresponding to a value of the dot product of the current and target facing
-// vectors above which no turning should be attempting, to reduce constant, minute corrections.
+/**
+ * Determine the value to use in Command::SetTurn() to turn the ship towards the desired facing.
+ * "precision" is an optional argument corresponding to a value of the dot product of the current and target facing
+ * vectors above which no turning should be attempting, to reduce constant, minute corrections.
+*/
 double AI::TurnToward(const Ship &ship, const Point &vector, const double precision)
 {
 	Point facing = ship.Facing().Unit();
@@ -2181,7 +2211,9 @@ bool AI::MoveToPlanet(Ship &ship, Command &command)
 
 
 
-// Instead of moving to a point with a fixed location, move to a moving point (Ship = position + velocity)
+/**
+ * Instead of moving to a point with a fixed location, move to a moving point (Ship = position + velocity)
+*/
 bool AI::MoveTo(Ship &ship, Command &command, const Point &targetPosition,
 	const Point &targetVelocity, double radius, double slow)
 {
@@ -2622,8 +2654,10 @@ void AI::PickUp(Ship &ship, Command &command, const Body &target)
 
 
 
-// Determine if using an afterburner does not use up reserve fuel, cause undue
-// energy strain, or undue thermal loads if almost overheated.
+/**
+ * Determine if using an afterburner does not use up reserve fuel, cause undue
+ * energy strain, or undue thermal loads if almost overheated.
+*/
 bool AI::ShouldUseAfterburner(Ship &ship)
 {
 	if(!ship.Attributes().Get("afterburner thrust"))
@@ -2648,7 +2682,9 @@ bool AI::ShouldUseAfterburner(Ship &ship)
 
 
 
-// "Appeasing" ships will dump cargo after being injured, if they are being targeted.
+/**
+ * "Appeasing" ships will dump cargo after being injured, if they are being targeted.
+*/
 void AI::DoAppeasing(const shared_ptr<Ship> &ship, double *threshold) const
 {
 	double health = .5 * ship->Shields() + ship->Hull();
@@ -2677,7 +2713,9 @@ void AI::DoAppeasing(const shared_ptr<Ship> &ship, double *threshold) const
 
 
 
-// Find a target ship to flock around at high speed.
+/**
+ * Find a target ship to flock around at high speed.
+*/
 void AI::DoSwarming(Ship &ship, Command &command, shared_ptr<Ship> &target)
 {
 	// Find a new ship to target on average every 10 seconds, or if the current target
@@ -2986,7 +3024,9 @@ bool AI::DoHarvesting(Ship &ship, Command &command) const
 
 
 
-// Check if this ship should cloak. Returns true if this ship decided to run away while cloaking.
+/**
+ * Check if this ship should cloak. Returns true if this ship decided to run away while cloaking.
+*/
 bool AI::DoCloak(Ship &ship, Command &command)
 {
 	if(ship.GetPersonality().IsDecloaked())
@@ -3208,7 +3248,9 @@ bool AI::DoSecretive(Ship &ship, Command &command)
 
 
 
-// Instead of coming to a full stop, adjust to a target velocity vector
+/**
+ * Instead of coming to a full stop, adjust to a target velocity vector
+*/
 Point AI::StoppingPoint(const Ship &ship, const Point &targetVelocity, bool &shouldReverse)
 {
 	Point position = ship.Position();
@@ -3261,10 +3303,12 @@ Point AI::StoppingPoint(const Ship &ship, const Point &targetVelocity, bool &sho
 
 
 
-// Get a vector giving the direction this ship should aim in in order to do
-// maximum damaged to a target at the given position with its non-turret,
-// non-homing weapons. If the ship has no non-homing weapons, this just
-// returns the direction to the target.
+/**
+ * Get a vector giving the direction this ship should aim in in order to do
+ * maximum damaged to a target at the given position with its non-turret,
+ * non-homing weapons. If the ship has no non-homing weapons, this just
+ * returns the direction to the target.
+*/
 Point AI::TargetAim(const Ship &ship)
 {
 	shared_ptr<const Ship> target = ship.GetTargetShip();
@@ -3308,7 +3352,9 @@ Point AI::TargetAim(const Ship &ship, const Body &target)
 
 
 
-// Aim the given ship's turrets.
+/**
+ * Aim the given ship's turrets.
+*/
 void AI::AimTurrets(const Ship &ship, FireCommand &command, bool opportunistic) const
 {
 	// First, get the set of potential hostile ships.
@@ -3458,7 +3504,9 @@ void AI::AimTurrets(const Ship &ship, FireCommand &command, bool opportunistic) 
 
 
 
-// Fire whichever of the given ship's weapons can hit a hostile target.
+/**
+ * Fire whichever of the given ship's weapons can hit a hostile target.
+*/
 void AI::AutoFire(const Ship &ship, FireCommand &command, bool secondary, bool isFlagship) const
 {
 	const Personality &person = ship.GetPersonality();
@@ -3702,10 +3750,12 @@ void AI::AutoFire(const Ship &ship, FireCommand &command, const Body &target) co
 
 
 
-// Get the amount of time it would take the given weapon to reach the given
-// target, assuming it can be fired in any direction (i.e. turreted). For
-// non-turreted weapons this can be used to calculate the ideal direction to
-// point the ship in.
+/**
+ * Get the amount of time it would take the given weapon to reach the given
+ * target, assuming it can be fired in any direction (i.e. turreted). For
+ * non-turreted weapons this can be used to calculate the ideal direction to
+ * point the ship in.
+*/
 double AI::RendezvousTime(const Point &p, const Point &v, double vp)
 {
 	// How many steps will it take this projectile
@@ -3739,9 +3789,11 @@ double AI::RendezvousTime(const Point &p, const Point &v, double vp)
 }
 
 
-// Searches every asteroid within the ship scan limit and returns either the
-// asteroid closest to the ship or the asteroid of highest value in range, depending
-// on the player's preferences.
+/**
+ * Searches every asteroid within the ship scan limit and returns either the
+ * asteroid closest to the ship or the asteroid of highest value in range, depending
+ * on the player's preferences.
+*/
 bool AI::TargetMinable(Ship &ship) const
 {
 	double scanRangeMetric = 10000. * ship.Attributes().Get("asteroid scan power");
@@ -4471,8 +4523,10 @@ bool AI::Has(const Government *government, const weak_ptr<const Ship> &other, in
 
 
 
-// True if the ship has committed the action against that government. For
-// example, if the player boarded any ship belonging to that government.
+/**
+ * True if the ship has committed the action against that government. For
+ * example, if the player boarded any ship belonging to that government.
+*/
 bool AI::Has(const Ship &ship, const Government *government, int type) const
 {
 	auto sit = notoriety.find(ship.shared_from_this());
@@ -4549,7 +4603,9 @@ void AI::UpdateStrengths(map<const Government *, int64_t> &strength, const Syste
 
 
 
-// Cache various lists of all targetable ships in the player's system for this Step.
+/**
+ * Cache various lists of all targetable ships in the player's system for this Step.
+*/
 void AI::CacheShipLists()
 {
 	allyLists.clear();
@@ -4700,7 +4756,9 @@ void AI::IssueOrders(const Orders &newOrders, const string &description)
 
 
 
-// Change the ship's order based on its current fulfillment of the order.
+/**
+ * Change the ship's order based on its current fulfillment of the order.
+*/
 void AI::UpdateOrders(const Ship &ship)
 {
 	// This should only be called for ships with orders that can be carried out.

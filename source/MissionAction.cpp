@@ -57,7 +57,9 @@ namespace {
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 MissionAction::MissionAction(const DataNode &node)
 {
 	Load(node);
@@ -134,8 +136,10 @@ void MissionAction::LoadSingle(const DataNode &child)
 
 
 
-// Note: the Save() function can assume this is an instantiated mission, not
-// a template, so it only has to save a subset of the data.
+/**
+ * Note: the Save() function can assume this is an instantiated mission, not
+ * a template, so it only has to save a subset of the data.
+*/
 void MissionAction::Save(DataWriter &out) const
 {
 	if(system.empty())
@@ -180,8 +184,10 @@ void MissionAction::SaveBody(DataWriter &out) const
 
 
 
-// Check this template or instantiated MissionAction to see if any used content
-// is not fully defined (e.g. plugin removal, typos in names, etc.).
+/**
+ * Check this template or instantiated MissionAction to see if any used content
+ * is not fully defined (e.g. plugin removal, typos in names, etc.).
+*/
 string MissionAction::Validate() const
 {
 	// Any filter used to control where this action triggers must be valid.
@@ -218,8 +224,10 @@ const string &MissionAction::DialogText() const
 
 
 
-// Check if this action can be completed right now. It cannot be completed
-// if it takes away money or outfits that the player does not have.
+/**
+ * Check if this action can be completed right now. It cannot be completed
+ * if it takes away money or outfits that the player does not have.
+*/
 bool MissionAction::CanBeDone(const PlayerInfo &player, const shared_ptr<Ship> &boardingShip) const
 {
 	if(player.Accounts().Credits() < -Payment())
@@ -352,7 +360,9 @@ void MissionAction::Do(PlayerInfo &player, UI *ui, const Mission *caller, const 
 
 
 
-// Convert this validated template into a populated action.
+/**
+ * Convert this validated template into a populated action.
+*/
 MissionAction MissionAction::Instantiate(map<string, string> &subs, const System *origin,
 	int jumps, int64_t payload) const
 {

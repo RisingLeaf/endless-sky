@@ -32,7 +32,9 @@ namespace {
 
 
 
-// Move the given masks at 1x scale into the manager's storage.
+/**
+ * Move the given masks at 1x scale into the manager's storage.
+*/
 void MaskManager::SetMasks(const Sprite *sprite, vector<Mask> &&masks)
 {
 	lock_guard<mutex> lock(spriteMutex);
@@ -46,7 +48,9 @@ void MaskManager::SetMasks(const Sprite *sprite, vector<Mask> &&masks)
 
 
 
-// Add a scale that the given sprite needs to have a mask for.
+/**
+ * Add a scale that the given sprite needs to have a mask for.
+*/
 void MaskManager::RegisterScale(const Sprite *sprite, double scale)
 {
 	lock_guard<mutex> lock(spriteMutex);
@@ -61,7 +65,9 @@ void MaskManager::RegisterScale(const Sprite *sprite, double scale)
 
 
 
-// Create the scaled versions of all masks from the 1x versions.
+/**
+ * Create the scaled versions of all masks from the 1x versions.
+*/
 void MaskManager::ScaleMasks()
 {
 	for(auto &spriteScales : spriteMasks)
@@ -89,8 +95,10 @@ void MaskManager::ScaleMasks()
 
 
 
-// Get the masks for the given sprite at the given scale. If a
-// sprite has no masks, an empty mask is returned.
+/**
+ * Get the masks for the given sprite at the given scale. If a
+ * sprite has no masks, an empty mask is returned.
+*/
 const std::vector<Mask> &MaskManager::GetMasks(const Sprite *sprite, double scale) const
 {
 	static const vector<Mask> EMPTY;

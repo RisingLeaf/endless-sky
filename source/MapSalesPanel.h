@@ -32,7 +32,9 @@ class Sprite;
 
 
 
-// Base class for the maps of shipyards and outfitters.
+/**
+ * Base class for the maps of shipyards and outfitters.
+*/
 class MapSalesPanel : public MapPanel {
 public:
 	MapSalesPanel(PlayerInfo &player, bool isOutfitters);

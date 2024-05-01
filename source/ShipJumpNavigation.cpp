@@ -30,7 +30,9 @@ const double ShipJumpNavigation::DEFAULT_JUMP_DRIVE_COST = 200.;
 
 
 
-// Calibrate this ship's jump navigation information, caching its jump costs, range, and capabilities.
+/**
+ * Calibrate this ship's jump navigation information, caching its jump costs, range, and capabilities.
+*/
 void ShipJumpNavigation::Calibrate(const Ship &ship)
 {
 	currentSystem = ship.GetSystem();
@@ -55,7 +57,9 @@ void ShipJumpNavigation::Calibrate(const Ship &ship)
 
 
 
-// Recalibrate jump costs for this ship, but only if necessary.
+/**
+ * Recalibrate jump costs for this ship, but only if necessary.
+*/
 void ShipJumpNavigation::Recalibrate(const Ship &ship)
 {
 	// Recalibration is only necessary if this ship's mass has changed and it has drives
@@ -66,7 +70,9 @@ void ShipJumpNavigation::Recalibrate(const Ship &ship)
 
 
 
-// Pass the current system that the ship is in to the navigation.
+/**
+ * Pass the current system that the ship is in to the navigation.
+*/
 void ShipJumpNavigation::SetSystem(const System *system)
 {
 	currentSystem = system;
@@ -74,8 +80,10 @@ void ShipJumpNavigation::SetSystem(const System *system)
 
 
 
-// Get the amount of fuel that would be expended to jump to the destination. If the destination is
-// nullptr then return the maximum amount of fuel that this ship could expend in one jump.
+/**
+ * Get the amount of fuel that would be expended to jump to the destination. If the destination is
+ * nullptr then return the maximum amount of fuel that this ship could expend in one jump.
+*/
 double ShipJumpNavigation::JumpFuel(const System *destination) const
 {
 	// A currently-carried ship requires no fuel to jump, because it cannot jump.
@@ -91,7 +99,9 @@ double ShipJumpNavigation::JumpFuel(const System *destination) const
 
 
 
-// Get the maximum distance that this ship can jump.
+/**
+ * Get the maximum distance that this ship can jump.
+*/
 double ShipJumpNavigation::JumpRange() const
 {
 	return maxJumpRange;
@@ -99,7 +109,9 @@ double ShipJumpNavigation::JumpRange() const
 
 
 
-// Get the cost of making a jump of the given type (if possible). Returns 0 if the jump can't be made.
+/**
+ * Get the cost of making a jump of the given type (if possible). Returns 0 if the jump can't be made.
+*/
 double ShipJumpNavigation::HyperdriveFuel() const
 {
 	// If this ship doesn't have a hyperdrive then hyperdriveCost will already be 0.
@@ -120,8 +132,10 @@ double ShipJumpNavigation::JumpDriveFuel(double distance) const
 
 
 
-// Get the cheapest jump method and its cost for a jump to the destination system.
-// If no jump method is possible, returns JumpType::None with a jump cost of 0.
+/**
+ * Get the cheapest jump method and its cost for a jump to the destination system.
+ * If no jump method is possible, returns JumpType::None with a jump cost of 0.
+*/
 pair<JumpType, double> ShipJumpNavigation::GetCheapestJumpType(const System *destination) const
 {
 	if(!currentSystem || !destination)
@@ -131,7 +145,9 @@ pair<JumpType, double> ShipJumpNavigation::GetCheapestJumpType(const System *des
 
 
 
-// Get the cheapest jump method between the two given systems.
+/**
+ * Get the cheapest jump method between the two given systems.
+*/
 pair<JumpType, double> ShipJumpNavigation::GetCheapestJumpType(const System *from, const System *to) const
 {
 	if(!from || !to)
@@ -154,7 +170,9 @@ pair<JumpType, double> ShipJumpNavigation::GetCheapestJumpType(const System *fro
 
 
 
-// Get if this ship can make a hyperspace or jump drive jump directly from one system to the other.
+/**
+ * Get if this ship can make a hyperspace or jump drive jump directly from one system to the other.
+*/
 bool ShipJumpNavigation::CanJump(const System *from, const System *to) const
 {
 	if(!from || !to)
@@ -176,7 +194,9 @@ bool ShipJumpNavigation::CanJump(const System *from, const System *to) const
 
 
 
-// Check what jump methods this ship has.
+/**
+ * Check what jump methods this ship has.
+*/
 bool ShipJumpNavigation::HasHyperdrive() const
 {
 	return hasHyperdrive;
@@ -198,8 +218,10 @@ bool ShipJumpNavigation::HasJumpDrive() const
 
 
 
-// Parse the given outfit to determine if it has the capability to jump, and update any
-// jump information accordingly.
+/**
+ * Parse the given outfit to determine if it has the capability to jump, and update any
+ * jump information accordingly.
+*/
 void ShipJumpNavigation::ParseOutfit(const Outfit &outfit)
 {
 	auto CalculateFuelCost = [this, &outfit](double defaultFuel) -> double
@@ -236,8 +258,10 @@ void ShipJumpNavigation::ParseOutfit(const Outfit &outfit)
 
 
 
-// Add the given distance, cost pair to the jump drive costs and update the fuel cost
-// of each jump distance if necessary.
+/**
+ * Add the given distance, cost pair to the jump drive costs and update the fuel cost
+ * of each jump distance if necessary.
+*/
 void ShipJumpNavigation::UpdateJumpDriveCosts(double distance, double cost)
 {
 	if(!maxJumpRange || maxJumpRange < distance)

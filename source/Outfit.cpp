@@ -368,7 +368,9 @@ void Outfit::Load(const DataNode &node)
 
 
 
-// Check if this outfit has been defined via Outfit::Load (vs. only being referred to).
+/**
+ * Check if this outfit has been defined via Outfit::Load (vs. only being referred to).
+*/
 bool Outfit::IsDefined() const
 {
 	return isDefined;
@@ -376,8 +378,10 @@ bool Outfit::IsDefined() const
 
 
 
-// When writing to the player's save, the reference name is used even if this
-// outfit was not fully defined (i.e. belongs to an inactive plugin).
+/**
+ * When writing to the player's save, the reference name is used even if this
+ * outfit was not fully defined (i.e. belongs to an inactive plugin).
+*/
 const string &Outfit::TrueName() const
 {
 	return trueName;
@@ -434,7 +438,9 @@ const string &Outfit::Description() const
 
 
 
-// Get the licenses needed to purchase this outfit.
+/**
+ * Get the licenses needed to purchase this outfit.
+*/
 const vector<string> &Outfit::Licenses() const
 {
 	return licenses;
@@ -442,7 +448,9 @@ const vector<string> &Outfit::Licenses() const
 
 
 
-// Get the image to display in the outfitter when buying this item.
+/**
+ * Get the image to display in the outfitter when buying this item.
+*/
 const Sprite *Outfit::Thumbnail() const
 {
 	return thumbnail;
@@ -471,9 +479,11 @@ const Dictionary &Outfit::Attributes() const
 
 
 
-// Determine whether the given number of instances of the given outfit can
-// be added to a ship with the attributes represented by this instance. If
-// not, return the maximum number that can be added.
+/**
+ * Determine whether the given number of instances of the given outfit can
+ * be added to a ship with the attributes represented by this instance. If
+ * not, return the maximum number that can be added.
+*/
 int Outfit::CanAdd(const Outfit &other, int count) const
 {
 	for(const auto &at : other.attributes)
@@ -506,8 +516,10 @@ int Outfit::CanAdd(const Outfit &other, int count) const
 
 
 
-// For tracking a combination of outfits in a ship: add the given number of
-// instances of the given outfit to this outfit.
+/**
+ * For tracking a combination of outfits in a ship: add the given number of
+ * instances of the given outfit to this outfit.
+*/
 void Outfit::Add(const Outfit &other, int count)
 {
 	cost += other.cost * count;
@@ -548,7 +560,9 @@ void Outfit::AddLicenses(const Outfit &other)
 
 
 
-// Modify this outfit's attributes.
+/**
+ * Modify this outfit's attributes.
+*/
 void Outfit::Set(const char *attribute, double value)
 {
 	attributes[attribute] = value;
@@ -556,7 +570,9 @@ void Outfit::Set(const char *attribute, double value)
 
 
 
-// Get this outfit's engine flare sprite, if any.
+/**
+ * Get this outfit's engine flare sprite, if any.
+*/
 const vector<pair<Body, int>> &Outfit::FlareSprites() const
 {
 	return flareSprites;
@@ -599,7 +615,9 @@ const map<const Sound *, int> &Outfit::SteeringFlareSounds() const
 
 
 
-// Get the afterburner effect, if any.
+/**
+ * Get the afterburner effect, if any.
+*/
 const map<const Effect *, int> &Outfit::AfterburnerEffects() const
 {
 	return afterburnerEffects;
@@ -607,7 +625,9 @@ const map<const Effect *, int> &Outfit::AfterburnerEffects() const
 
 
 
-// Get this outfit's jump effects and sounds, if any.
+/**
+ * Get this outfit's jump effects and sounds, if any.
+*/
 const map<const Effect *, int> &Outfit::JumpEffects() const
 {
 	return jumpEffects;
@@ -657,7 +677,9 @@ const map<const Sound *, int> &Outfit::JumpOutSounds() const
 
 
 
-// Get the sprite this outfit uses when dumped into space.
+/**
+ * Get the sprite this outfit uses when dumped into space.
+*/
 const Sprite *Outfit::FlotsamSprite() const
 {
 	return flotsamSprite;
@@ -665,7 +687,9 @@ const Sprite *Outfit::FlotsamSprite() const
 
 
 
-// Add the license with the given name to the licenses required by this outfit, if it is not already present.
+/**
+ * Add the license with the given name to the licenses required by this outfit, if it is not already present.
+*/
 void Outfit::AddLicense(const string &name)
 {
 	const auto it = find(licenses.begin(), licenses.end(), name);

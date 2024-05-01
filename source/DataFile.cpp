@@ -22,7 +22,9 @@ using namespace std;
 
 
 
-// Constructor, taking a file path (in UTF-8).
+/**
+ * Constructor, taking a file path (in UTF-8).
+*/
 DataFile::DataFile(const string &path)
 {
 	Load(path);
@@ -30,7 +32,9 @@ DataFile::DataFile(const string &path)
 
 
 
-// Constructor, taking an istream. This can be cin or a file.
+/**
+ * Constructor, taking an istream. This can be cin or a file.
+*/
 DataFile::DataFile(istream &in)
 {
 	Load(in);
@@ -38,7 +42,9 @@ DataFile::DataFile(istream &in)
 
 
 
-// Load from a file path (in UTF-8).
+/**
+ * Load from a file path (in UTF-8).
+*/
 void DataFile::Load(const string &path)
 {
 	string data = Files::Read(path);
@@ -58,7 +64,9 @@ void DataFile::Load(const string &path)
 
 
 
-// Constructor, taking an istream. This can be cin or a file.
+/**
+ * Constructor, taking an istream. This can be cin or a file.
+*/
 void DataFile::Load(istream &in)
 {
 	string data;
@@ -80,7 +88,9 @@ void DataFile::Load(istream &in)
 
 
 
-// Get an iterator to the start of the list of nodes in this file.
+/**
+ * Get an iterator to the start of the list of nodes in this file.
+*/
 list<DataNode>::const_iterator DataFile::begin() const
 {
 	return root.begin();
@@ -88,7 +98,9 @@ list<DataNode>::const_iterator DataFile::begin() const
 
 
 
-// Get an iterator to the end of the list of nodes in this file.
+/**
+ * Get an iterator to the end of the list of nodes in this file.
+*/
 list<DataNode>::const_iterator DataFile::end() const
 {
 	return root.end();
@@ -96,7 +108,9 @@ list<DataNode>::const_iterator DataFile::end() const
 
 
 
-// Parse the given text.
+/**
+ * Parse the given text.
+*/
 void DataFile::LoadData(const string &data)
 {
 	// Keep track of the current stack of indentation levels and the most recent

@@ -280,7 +280,9 @@ vector<string> Files::List(string directory)
 
 
 
-// Get a list of any directories in the given directory.
+/**
+ * Get a list of any directories in the given directory.
+*/
 vector<string> Files::ListDirectories(string directory)
 {
 	if(directory.empty() || directory.back() != '/')
@@ -479,7 +481,9 @@ void Files::Delete(const string &filePath)
 
 
 
-// Get the filename from a path.
+/**
+ * Get the filename from a path.
+*/
 string Files::Name(const string &path)
 {
 	// string::npos = -1, so if there is no '/' in the path this will
@@ -569,7 +573,9 @@ void Files::CreateFolder(const std::string &path)
 
 
 
-// Open this user's plugins directory in their native file explorer.
+/**
+ * Open this user's plugins directory in their native file explorer.
+*/
 void Files::OpenUserPluginFolder()
 {
 	OpenFolder(Config() + "plugins");
@@ -577,7 +583,9 @@ void Files::OpenUserPluginFolder()
 
 
 
-// Open this user's save file directory in their native file explorer.
+/**
+ * Open this user's save file directory in their native file explorer.
+*/
 void Files::OpenUserSavesFolder()
 {
 	OpenFolder(savePath);

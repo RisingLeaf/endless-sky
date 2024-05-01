@@ -45,7 +45,9 @@ Point::Point(double x, double y) noexcept
 
 
 
-// Check if the point is anything but (0, 0).
+/**
+ * Check if the point is anything but (0, 0).
+*/
 Point::operator bool() const noexcept
 {
 	return !!*this;
@@ -216,7 +218,9 @@ void Point::Set(double x, double y)
 
 
 
-// Operations that treat this point as a vector from (0, 0):
+/**
+ * Operations that treat this point as a vector from (0, 0):
+*/
 double Point::Dot(const Point &point) const
 {
 #ifdef __SSE3__
@@ -299,7 +303,9 @@ double Point::DistanceSquared(const Point &point) const
 
 
 
-// Absolute value of both coordinates.
+/**
+ * Absolute value of both coordinates.
+*/
 Point abs(const Point &p)
 {
 #ifdef __SSE3__
@@ -313,7 +319,9 @@ Point abs(const Point &p)
 
 
 
-// Take the min of the x and y coordinates.
+/**
+ * Take the min of the x and y coordinates.
+*/
 Point min(const Point &p, const Point &q)
 {
 #ifdef __SSE3__
@@ -325,7 +333,9 @@ Point min(const Point &p, const Point &q)
 
 
 
-// Take the max of the x and y coordinates.
+/**
+ * Take the max of the x and y coordinates.
+*/
 Point max(const Point &p, const Point &q)
 {
 #ifdef __SSE3__
@@ -338,7 +348,9 @@ Point max(const Point &p, const Point &q)
 
 
 #ifdef __SSE3__
-// Private constructor, using a vector.
+/**
+ * Private constructor, using a vector.
+*/
 inline Point::Point(const __m128d &v)
 	: v(v)
 {

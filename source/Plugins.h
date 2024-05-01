@@ -22,46 +22,72 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-// Represents information about a single plugin.
+/**
+ * Represents information about a single plugin.
+*/
 struct Plugin {
-	// Checks whether this plugin is valid, i.e. whether it exists.
+	/**
+	 * Checks whether this plugin is valid, i.e. whether it exists.
+	*/
 	bool IsValid() const;
 
-	// The name that identifies this plugin.
+	/**
+	 * The name that identifies this plugin.
+	*/
 	std::string name;
-	// The path to the plugin's folder.
+	/**
+	 * The path to the plugin's folder.
+	*/
 	std::string path;
-	// The about text, if any, of this plugin.
+	/**
+	 * The about text, if any, of this plugin.
+	*/
 	std::string aboutText;
 
-	// Whether this plugin was enabled, i.e. if it was loaded by the game.
+	/**
+	 * Whether this plugin was enabled, i.e. if it was loaded by the game.
+	*/
 	bool enabled = true;
-	// The current state of the plugin.
+	/**
+	 * The current state of the plugin.
+	*/
 	bool currentState = true;
 };
 
 
 
-// Tracks enabled and disabled plugins for loading plugin data or skipping it.
-// This object is updated by toggling plugins in the Preferences UI.
+/**
+ * Tracks enabled and disabled plugins for loading plugin data or skipping it.
+ * This object is updated by toggling plugins in the Preferences UI.
+*/
 class Plugins {
 public:
-	// Attempt to load a plugin at the given path.
+	/**
+	 * Attempt to load a plugin at the given path.
+	*/
 	static const Plugin *Load(const std::string &path);
 
 	static void LoadSettings();
 	static void Save();
 
-	// Whether the path points to a valid plugin.
+	/**
+	 * Whether the path points to a valid plugin.
+	*/
 	static bool IsPlugin(const std::string &path);
-	// Returns true if any plugin enabled or disabled setting has changed since
-	// launched via user preferences.
+	/**
+	 * Returns true if any plugin enabled or disabled setting has changed since
+	 * launched via user preferences.
+	*/
 	static bool HasChanged();
 
-	// Returns the list of plugins that have been identified by the game.
+	/**
+	 * Returns the list of plugins that have been identified by the game.
+	*/
 	static const Set<Plugin> &Get();
 
-	// Toggles enabling or disabling a plugin for the next game restart.
+	/**
+	 * Toggles enabling or disabling a plugin for the next game restart.
+	*/
 	static void TogglePlugin(const std::string &name);
 };
 

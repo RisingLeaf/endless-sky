@@ -23,8 +23,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <vector>
 
 #ifdef ES_GLES
-// ES_GLES always uses the shader, not this, so use a dummy value to compile.
-// (the correct value is usually 0x8E46, so don't use that)
+/**
+ * ES_GLES always uses the shader, not this, so use a dummy value to compile.
+ * (the correct value is usually 0x8E46, so don't use that)
+*/
 #define GL_TEXTURE_SWIZZLE_RGBA 0xBEEF
 #endif
 
@@ -51,7 +53,9 @@ namespace {
 	const int SWIZZLES = 29;
 }
 
-// Initialize the shaders.
+/**
+ * Initialize the shaders.
+*/
 void SpriteShader::Init()
 {
 

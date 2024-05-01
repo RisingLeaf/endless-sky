@@ -34,7 +34,9 @@ const string &TestData::Name() const
 
 
 
-// Loader to load the generic test-data entry
+/**
+ * Loader to load the generic test-data entry
+*/
 void TestData::Load(const DataNode &node, const string &sourceDataFilePath)
 {
 	sourceDataFile = sourceDataFilePath;
@@ -66,7 +68,9 @@ void TestData::Load(const DataNode &node, const string &sourceDataFilePath)
 
 
 
-// Inject the test-data to the proper location.
+/**
+ * Inject the test-data to the proper location.
+*/
 bool TestData::Inject() const
 {
 	// Check if we have the required data to inject.
@@ -101,7 +105,9 @@ const DataNode *TestData::GetContentsNode(const DataFile &sourceData) const
 
 
 
-// Write out testdata as savegame into the saves directory.
+/**
+ * Write out testdata as savegame into the saves directory.
+*/
 bool TestData::InjectSavegame() const
 {
 	const DataFile sourceData(sourceDataFile);

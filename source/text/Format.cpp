@@ -185,9 +185,11 @@ namespace {
 
 
 
-// Convert the given number into abbreviated format with a suffix like
-// "M" for million, "B" for billion, or "T" for trillion. Any number
-// above 1 quadrillion is instead shown in scientific notation.
+/**
+ * Convert the given number into abbreviated format with a suffix like
+ * "M" for million, "B" for billion, or "T" for trillion. Any number
+ * above 1 quadrillion is instead shown in scientific notation.
+*/
 string Format::Credits(int64_t value)
 {
 	bool isNegative = (value < 0);
@@ -231,8 +233,10 @@ string Format::Credits(int64_t value)
 
 
 
-// Convert the given number into abbreviated format as described in Format::Credits,
-// then attach the ' credit' or ' credits' suffix to it.
+/**
+ * Convert the given number into abbreviated format as described in Format::Credits,
+ * then attach the ' credit' or ' credits' suffix to it.
+*/
 string Format::CreditString(int64_t value)
 {
 	if(value == 1)
@@ -243,8 +247,10 @@ string Format::CreditString(int64_t value)
 
 
 
-// Writes the given number into a string,
-// then attach the ' ton' or ' tons' suffix to it.
+/**
+ * Writes the given number into a string,
+ * then attach the ' ton' or ' tons' suffix to it.
+*/
 string Format::MassString(double amount)
 {
 	if(amount == 1)
@@ -254,7 +260,9 @@ string Format::MassString(double amount)
 
 
 
-// Creates a string similar to '<amount> tons of <cargo>'.
+/**
+ * Creates a string similar to '<amount> tons of <cargo>'.
+*/
 string Format::CargoString(double amount, const string &cargo)
 {
 	return MassString(amount) + " of " + cargo;
@@ -262,7 +270,9 @@ string Format::CargoString(double amount, const string &cargo)
 
 
 
-// Convert a time in seconds to years/days/hours/minutes/seconds
+/**
+ * Convert a time in seconds to years/days/hours/minutes/seconds
+*/
 string Format::PlayTime(double timeVal)
 {
 	string result;
@@ -291,8 +301,10 @@ string Format::PlayTime(double timeVal)
 
 
 
-// Convert the given number to a string, with a reasonable number of decimal
-// places. (This is primarily for displaying ship and outfit attributes.)
+/**
+ * Convert the given number to a string, with a reasonable number of decimal
+ * places. (This is primarily for displaying ship and outfit attributes.)
+*/
 string Format::Number(double value)
 {
 	if(!value)
@@ -343,8 +355,10 @@ string Format::Number(double value)
 
 
 
-// Format the given value as a number with exactly the given number of
-// decimal places (even if they are all 0).
+/**
+ * Format the given value as a number with exactly the given number of
+ * decimal places (even if they are all 0).
+*/
 string Format::Decimal(double value, int places)
 {
 	double integer;
@@ -375,7 +389,9 @@ string Format::WordForm(int64_t value, bool startOfSentence)
 
 
 
-// Chicago manual of style
+/**
+ * Chicago manual of style
+*/
 string Format::ChicagoForm(int64_t value, bool startOfSentence)
 {
 	if(startOfSentence)
@@ -399,7 +415,9 @@ string Format::ChicagoForm(int64_t value, bool startOfSentence)
 
 
 
-// MLA Handbook style
+/**
+ * MLA Handbook style
+*/
 string Format::MLAForm(int64_t value, bool startOfSentence)
 {
 	if(startOfSentence)
@@ -429,10 +447,12 @@ string Format::MLAForm(int64_t value, bool startOfSentence)
 
 
 
-// Convert a string into a number. As with the output of Number(), the
-// string can have suffixes like "M", "B", etc.
-// It can also contain spaces or "," as separators like 1,000 or 1 000.
-// Does not support parsing NaN or infinite values.
+/**
+ * Convert a string into a number. As with the output of Number(), the
+ * string can have suffixes like "M", "B", etc.
+ * It can also contain spaces or "," as separators like 1,000 or 1 000.
+ * Does not support parsing NaN or infinite values.
+*/
 double Format::Parse(const string &str)
 {
 	double place = 1.;
@@ -583,7 +603,9 @@ string Format::LowerCase(const string &str)
 
 
 
-// Split a single string into substrings with the given separator.
+/**
+ * Split a single string into substrings with the given separator.
+*/
 vector<string> Format::Split(const string &str, const string &separator)
 {
 	vector<string> result;

@@ -34,7 +34,9 @@ namespace {
 
 
 
-// Add a message to the list along with its level of importance
+/**
+ * Add a message to the list along with its level of importance
+*/
 void Messages::Add(const string &message, Importance importance)
 {
 	lock_guard<mutex> lock(incomingMutex);
@@ -44,8 +46,10 @@ void Messages::Add(const string &message, Importance importance)
 
 
 
-// Add a message to the log. For messages meant to be shown
-// also on the main panel, use Add instead.
+/**
+ * Add a message to the log. For messages meant to be shown
+ * also on the main panel, use Add instead.
+*/
 void Messages::AddLog(const string &message, Importance importance)
 {
 	if(logged.empty() || message != logged.front().first)
@@ -58,9 +62,11 @@ void Messages::AddLog(const string &message, Importance importance)
 
 
 
-// Get the messages for the given game step. Any messages that are too old
-// will be culled out, and new ones that have just been added will have
-// their "step" set to the given value.
+/**
+ * Get the messages for the given game step. Any messages that are too old
+ * will be culled out, and new ones that have just been added will have
+ * their "step" set to the given value.
+*/
 const vector<Messages::Entry> &Messages::Get(int step)
 {
 	lock_guard<mutex> lock(incomingMutex);
@@ -111,7 +117,9 @@ const deque<pair<string, Messages::Importance>> &Messages::GetLog()
 
 
 
-// Reset the messages (i.e. because a new game was loaded).
+/**
+ * Reset the messages (i.e. because a new game was loaded).
+*/
 void Messages::Reset()
 {
 	lock_guard<mutex> lock(incomingMutex);
@@ -122,7 +130,9 @@ void Messages::Reset()
 
 
 
-// Get color that should be used for drawing messages of given importance.
+/**
+ * Get color that should be used for drawing messages of given importance.
+*/
 const Color *Messages::GetColor(Importance importance, bool isLogPanel)
 {
 	string prefix = isLogPanel ? "message log importance " : "message importance ";

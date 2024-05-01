@@ -23,8 +23,10 @@ class Sprite;
 
 
 
-// Functions for drawing the "outline" of a sprite, i.e. a Sobel filter of its
-// alpha channel.
+/**
+ * Functions for drawing the "outline" of a sprite, i.e. a Sobel filter of its
+ * alpha channel.
+*/
 class OutlineShader {
 public:
 	static void Init();

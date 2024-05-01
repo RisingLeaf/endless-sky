@@ -20,8 +20,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-// Class representing the menu animation including sound effects and music
-// that appears when the game is started and everything is loaded.
+/**
+ * Class representing the menu animation including sound effects and music
+ * that appears when the game is started and everything is loaded.
+*/
 class MenuAnimationPanel final : public Panel {
 public:
 	MenuAnimationPanel();

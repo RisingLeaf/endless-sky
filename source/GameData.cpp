@@ -303,8 +303,10 @@ bool GameData::IsLoaded()
 
 
 
-// Begin loading a sprite that was previously deferred. Currently this is
-// done with all landscapes to speed up the program's startup.
+/**
+ * Begin loading a sprite that was previously deferred. Currently this is
+ * done with all landscapes to speed up the program's startup.
+*/
 void GameData::Preload(TaskQueue &queue, const Sprite *sprite)
 {
 	// Make sure this sprite actually is one that uses deferred loading.
@@ -350,7 +352,9 @@ void GameData::Preload(TaskQueue &queue, const Sprite *sprite)
 
 
 
-// Get the list of resource sources (i.e. plugin folders).
+/**
+ * Get the list of resource sources (i.e. plugin folders).
+*/
 const vector<string> &GameData::Sources()
 {
 	return sources;
@@ -358,7 +362,9 @@ const vector<string> &GameData::Sources()
 
 
 
-// Get a reference to the UniverseObjects object.
+/**
+ * Get a reference to the UniverseObjects object.
+*/
 UniverseObjects &GameData::Objects()
 {
 	return objects;
@@ -366,7 +372,9 @@ UniverseObjects &GameData::Objects()
 
 
 
-// Revert any changes that have been made to the universe.
+/**
+ * Revert any changes that have been made to the universe.
+*/
 void GameData::Revert()
 {
 	objects.fleets.Revert(defaultFleets);
@@ -521,7 +529,9 @@ void GameData::AddPurchase(const System &system, const string &commodity, int to
 
 
 
-// Apply the given change to the universe.
+/**
+ * Apply the given change to the universe.
+*/
 void GameData::Change(const DataNode &node)
 {
 	objects.Change(node);
@@ -529,8 +539,10 @@ void GameData::Change(const DataNode &node)
 
 
 
-// Update the neighbor lists and other information for all the systems.
-// This must be done any time that a change creates or moves a system.
+/**
+ * Update the neighbor lists and other information for all the systems.
+ * This must be done any time that a change creates or moves a system.
+*/
 void GameData::UpdateSystems()
 {
 	objects.UpdateSystems();
@@ -545,8 +557,10 @@ void GameData::AddJumpRange(double neighborDistance)
 
 
 
-// Re-activate any special persons that were created previously but that are
-// still alive.
+/**
+ * Re-activate any special persons that were created previously but that are
+ * still alive.
+*/
 void GameData::ResetPersons()
 {
 	for(auto &it : objects.persons)
@@ -555,7 +569,9 @@ void GameData::ResetPersons()
 
 
 
-// Mark all persons in the given list as dead.
+/**
+ * Mark all persons in the given list as dead.
+*/
 void GameData::DestroyPersons(vector<string> &names)
 {
 	for(const string &name : names)
@@ -774,7 +790,9 @@ const vector<Trade::Commodity> &GameData::SpecialCommodities()
 
 
 
-// Custom messages to be shown when trying to land on certain stellar objects.
+/**
+ * Custom messages to be shown when trying to land on certain stellar objects.
+*/
 bool GameData::HasLandingMessage(const Sprite *sprite)
 {
 	return objects.landingMessages.count(sprite);
@@ -791,7 +809,9 @@ const string &GameData::LandingMessage(const Sprite *sprite)
 
 
 
-// Get the solar power and wind output of the given stellar object sprite.
+/**
+ * Get the solar power and wind output of the given stellar object sprite.
+*/
 double GameData::SolarPower(const Sprite *sprite)
 {
 	auto it = objects.solarPower.find(sprite);
@@ -808,7 +828,9 @@ double GameData::SolarWind(const Sprite *sprite)
 
 
 
-// Strings for combat rating levels, etc.
+/**
+ * Strings for combat rating levels, etc.
+*/
 const string &GameData::Rating(const string &type, int level)
 {
 	static const string EMPTY;
@@ -822,7 +844,9 @@ const string &GameData::Rating(const string &type, int level)
 
 
 
-// Collections for ship, bay type, outfit, and other categories.
+/**
+ * Collections for ship, bay type, outfit, and other categories.
+*/
 const CategoryList &GameData::GetCategory(const CategoryType type)
 {
 	return objects.categories[type];
@@ -941,7 +965,9 @@ map<string, shared_ptr<ImageSet>> GameData::FindImages()
 
 
 
-// Thread-safe way to draw the menu background.
+/**
+ * Thread-safe way to draw the menu background.
+*/
 void GameData::DrawMenuBackground(Panel *panel)
 {
 	objects.DrawMenuBackground(panel);

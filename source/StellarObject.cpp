@@ -27,7 +27,9 @@ using namespace std;
 
 
 
-// Object default constructor.
+/**
+ * Object default constructor.
+*/
 StellarObject::StellarObject()
 	: planet(nullptr),
 	distance(0.), speed(0.), offset(0.), parent(-1),
@@ -40,7 +42,9 @@ StellarObject::StellarObject()
 
 
 
-// Get the radius of this planet, i.e. how close you must be to land.
+/**
+ * Get the radius of this planet, i.e. how close you must be to land.
+*/
 double StellarObject::Radius() const
 {
 	double radius = -1.;
@@ -71,7 +75,9 @@ const Planet *StellarObject::GetPlanet() const
 
 
 
-// Only planets that you can land on have names.
+/**
+ * Only planets that you can land on have names.
+*/
 const string &StellarObject::Name() const
 {
 	static const string UNKNOWN = "???";
@@ -80,8 +86,10 @@ const string &StellarObject::Name() const
 
 
 
-// If it is impossible to land on this planet, get the message
-// explaining why (e.g. too hot, too cold, etc.).
+/**
+ * If it is impossible to land on this planet, get the message
+ * explaining why (e.g. too hot, too cold, etc.).
+*/
 const string &StellarObject::LandingMessage() const
 {
 	// Check if there's a custom message for this sprite type.
@@ -94,7 +102,9 @@ const string &StellarObject::LandingMessage() const
 
 
 
-// Get the color to be used for displaying this object.
+/**
+ * Get the color to be used for displaying this object.
+*/
 int StellarObject::RadarType(const Ship *ship) const
 {
 	if(IsStar())
@@ -115,7 +125,9 @@ int StellarObject::RadarType(const Ship *ship) const
 
 
 
-// Check if this is a star.
+/**
+ * Check if this is a star.
+*/
 bool StellarObject::IsStar() const
 {
 	return isStar;
@@ -123,7 +135,9 @@ bool StellarObject::IsStar() const
 
 
 
-// Check if this is a station.
+/**
+ * Check if this is a station.
+*/
 bool StellarObject::IsStation() const
 {
 	return isStation;
@@ -131,7 +145,9 @@ bool StellarObject::IsStation() const
 
 
 
-// Check if this is a moon.
+/**
+ * Check if this is a moon.
+*/
 bool StellarObject::IsMoon() const
 {
 	return isMoon;
@@ -139,7 +155,9 @@ bool StellarObject::IsMoon() const
 
 
 
-// Get this object's parent index (in the System's vector of objects).
+/**
+ * Get this object's parent index (in the System's vector of objects).
+*/
 int StellarObject::Parent() const
 {
 	return parent;
@@ -147,7 +165,9 @@ int StellarObject::Parent() const
 
 
 
-// Find out how far this object is from its parent.
+/**
+ * Find out how far this object is from its parent.
+*/
 double StellarObject::Distance() const
 {
 	return distance;

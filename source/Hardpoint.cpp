@@ -43,7 +43,9 @@ namespace {
 
 
 
-// Constructor.
+/**
+ * Constructor.
+*/
 Hardpoint::Hardpoint(const Point &point, const Angle &baseAngle, bool isTurret,
 	bool isParallel, bool isUnder, const Outfit *outfit)
 	: outfit(outfit), point(point * .5), baseAngle(baseAngle), isTurret(isTurret), isParallel(isParallel), isUnder(isUnder)
@@ -52,7 +54,9 @@ Hardpoint::Hardpoint(const Point &point, const Angle &baseAngle, bool isTurret,
 
 
 
-// Get the weapon in this hardpoint. This returns null if there is none.
+/**
+ * Get the weapon in this hardpoint. This returns null if there is none.
+*/
 const Outfit *Hardpoint::GetOutfit() const
 {
 	return outfit;
@@ -60,8 +64,10 @@ const Outfit *Hardpoint::GetOutfit() const
 
 
 
-// Get the location, relative to the center of the ship, from which
-// projectiles of this weapon should originate.
+/**
+ * Get the location, relative to the center of the ship, from which
+ * projectiles of this weapon should originate.
+*/
 const Point &Hardpoint::GetPoint() const
 {
 	return point;
@@ -69,7 +75,9 @@ const Point &Hardpoint::GetPoint() const
 
 
 
-// Get the convergence angle adjustment of this weapon (guns only, not turrets).
+/**
+ * Get the convergence angle adjustment of this weapon (guns only, not turrets).
+*/
 const Angle &Hardpoint::GetAngle() const
 {
 	return angle;
@@ -77,7 +85,9 @@ const Angle &Hardpoint::GetAngle() const
 
 
 
-// Get the default facing direction for a gun
+/**
+ * Get the default facing direction for a gun
+*/
 const Angle &Hardpoint::GetBaseAngle() const
 {
 	return baseAngle;
@@ -85,7 +95,9 @@ const Angle &Hardpoint::GetBaseAngle() const
 
 
 
-// Get the angle this weapon ought to point at for ideal gun harmonization.
+/**
+ * Get the angle this weapon ought to point at for ideal gun harmonization.
+*/
 Angle Hardpoint::HarmonizedAngle() const
 {
 	if(!outfit)
@@ -106,7 +118,9 @@ Angle Hardpoint::HarmonizedAngle() const
 
 
 
-// Find out if this is a turret hardpoint (whether or not it has a turret installed).
+/**
+ * Find out if this is a turret hardpoint (whether or not it has a turret installed).
+*/
 bool Hardpoint::IsTurret() const
 {
 	return isTurret;
@@ -129,7 +143,9 @@ bool Hardpoint::IsUnder() const
 
 
 
-// Find out if this hardpoint has a homing weapon installed.
+/**
+ * Find out if this hardpoint has a homing weapon installed.
+*/
 bool Hardpoint::IsHoming() const
 {
 	return outfit && outfit->Homing();
@@ -137,8 +153,10 @@ bool Hardpoint::IsHoming() const
 
 
 
-// Find out if this hardpoint has a special weapon installed
-// (e.g. anti-missile, tractor beam).
+/**
+ * Find out if this hardpoint has a special weapon installed
+ * (e.g. anti-missile, tractor beam).
+*/
 bool Hardpoint::IsSpecial() const
 {
 	return outfit && (outfit->AntiMissile() || outfit->TractorBeam());
@@ -153,7 +171,9 @@ bool Hardpoint::CanAim() const
 
 
 
-// Check if this weapon is ready to fire.
+/**
+ * Check if this weapon is ready to fire.
+*/
 bool Hardpoint::IsReady() const
 {
 	return outfit && burstReload <= 0. && burstCount;
@@ -161,8 +181,10 @@ bool Hardpoint::IsReady() const
 
 
 
-// Check if this weapon fired the last time it was able to fire. This is to
-// figure out if the stream spacing timer should be applied or not.
+/**
+ * Check if this weapon fired the last time it was able to fire. This is to
+ * figure out if the stream spacing timer should be applied or not.
+*/
 bool Hardpoint::WasFiring() const
 {
 	return wasFiring;
@@ -170,7 +192,9 @@ bool Hardpoint::WasFiring() const
 
 
 
-// Get the number of remaining burst shots before a full reload is required.
+/**
+ * Get the number of remaining burst shots before a full reload is required.
+*/
 int Hardpoint::BurstRemaining() const
 {
 	return burstCount;
@@ -178,7 +202,9 @@ int Hardpoint::BurstRemaining() const
 
 
 
-// Perform one step (i.e. decrement the reload count).
+/**
+ * Perform one step (i.e. decrement the reload count).
+*/
 void Hardpoint::Step()
 {
 	if(!outfit)
@@ -200,8 +226,10 @@ void Hardpoint::Step()
 
 
 
-// Adjust this weapon's aim by the given amount, relative to its maximum
-// "turret turn" rate.
+/**
+ * Adjust this weapon's aim by the given amount, relative to its maximum
+ * "turret turn" rate.
+*/
 void Hardpoint::Aim(double amount)
 {
 	if(!outfit)
@@ -212,9 +240,11 @@ void Hardpoint::Aim(double amount)
 
 
 
-// Fire this weapon. If it is a turret, it automatically points toward
-// the given ship's target. If the weapon requires ammunition, it will
-// be subtracted from the given ship.
+/**
+ * Fire this weapon. If it is a turret, it automatically points toward
+ * the given ship's target. If the weapon requires ammunition, it will
+ * be subtracted from the given ship.
+*/
 void Hardpoint::Fire(Ship &ship, vector<Projectile> &projectiles, vector<Visual> &visuals)
 {
 	// Since this is only called internally by Armament (no one else has non-
@@ -244,7 +274,9 @@ void Hardpoint::Fire(Ship &ship, vector<Projectile> &projectiles, vector<Visual>
 
 
 
-// Fire an anti-missile. Returns true if the missile should be killed.
+/**
+ * Fire an anti-missile. Returns true if the missile should be killed.
+*/
 bool Hardpoint::FireAntiMissile(Ship &ship, const Projectile &projectile, vector<Visual> &visuals)
 {
 	// Make sure this hardpoint really is an anti-missile.
@@ -262,7 +294,9 @@ bool Hardpoint::FireAntiMissile(Ship &ship, const Projectile &projectile, vector
 
 
 
-// Fire a tractor beam. Returns true if the flotsam was hit.
+/**
+ * Fire a tractor beam. Returns true if the flotsam was hit.
+*/
 bool Hardpoint::FireTractorBeam(Ship &ship, const Flotsam &flotsam, std::vector<Visual> &visuals)
 {
 	// Make sure this hardpoint really is a tractor beam.
@@ -279,7 +313,9 @@ bool Hardpoint::FireTractorBeam(Ship &ship, const Flotsam &flotsam, std::vector<
 
 
 
-// This weapon jammed. Increase its reload counters, but don't fire.
+/**
+ * This weapon jammed. Increase its reload counters, but don't fire.
+*/
 void Hardpoint::Jam()
 {
 	// Since this is only called internally by Armament (no one else has non-
@@ -292,8 +328,10 @@ void Hardpoint::Jam()
 
 
 
-// Install a weapon here (assuming it is empty). This is only for
-// Armament to call internally.
+/**
+ * Install a weapon here (assuming it is empty). This is only for
+ * Armament to call internally.
+*/
 void Hardpoint::Install(const Outfit *outfit)
 {
 	// If the given outfit is not a valid weapon, this hardpoint becomes empty.
@@ -325,7 +363,9 @@ void Hardpoint::Install(const Outfit *outfit)
 
 
 
-// Reload this weapon.
+/**
+ * Reload this weapon.
+*/
 void Hardpoint::Reload()
 {
 	reload = 0.;
@@ -335,7 +375,9 @@ void Hardpoint::Reload()
 
 
 
-// Uninstall the outfit from this port (if it has one).
+/**
+ * Uninstall the outfit from this port (if it has one).
+*/
 void Hardpoint::Uninstall()
 {
 	outfit = nullptr;
@@ -343,8 +385,10 @@ void Hardpoint::Uninstall()
 
 
 
-// Check whether a projectile or flotsam is within the range of the anti-missile
-// or tractor beam system and create visuals if it is.
+/**
+ * Check whether a projectile or flotsam is within the range of the anti-missile
+ * or tractor beam system and create visuals if it is.
+*/
 bool Hardpoint::FireSpecialSystem(Ship &ship, const Body &body, std::vector<Visual> &visuals)
 {
 	// Get the weapon range. Anti-missile and tractor beam shots always last a
@@ -382,7 +426,9 @@ bool Hardpoint::FireSpecialSystem(Ship &ship, const Body &body, std::vector<Visu
 
 
 
-// Update any counters that change when this projectile fires.
+/**
+ * Update any counters that change when this projectile fires.
+*/
 void Hardpoint::Fire(Ship &ship, const Point &start, const Angle &aim)
 {
 	// Since this is only called internally, it is safe to assume that the

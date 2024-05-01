@@ -55,7 +55,9 @@ void Person::Load(const DataNode &node)
 
 
 
-// Finish loading all the ships in this person specification.
+/**
+ * Finish loading all the ships in this person specification.
+*/
 void Person::FinishLoading()
 {
 	for(const shared_ptr<Ship> &ship : ships)
@@ -64,7 +66,9 @@ void Person::FinishLoading()
 
 
 
-// Prevent this person from being spawned in any system.
+/**
+ * Prevent this person from being spawned in any system.
+*/
 void Person::NeverSpawn()
 {
 	frequency = 0;
@@ -72,8 +76,10 @@ void Person::NeverSpawn()
 
 
 
-// Find out how often this person should appear in the given system. If this
-// person is dead or already active, this will return zero.
+/**
+ * Find out how often this person should appear in the given system. If this
+ * person is dead or already active, this will return zero.
+*/
 int Person::Frequency(const System *system) const
 {
 	// Because persons always enter a system via one of the regular hyperspace
@@ -86,8 +92,10 @@ int Person::Frequency(const System *system) const
 
 
 
-// Get the person's characteristics. The ship object is persistent, i.e. it
-// will be recycled every time this person appears.
+/**
+ * Get the person's characteristics. The ship object is persistent, i.e. it
+ * will be recycled every time this person appears.
+*/
 const list<shared_ptr<Ship>> &Person::Ships() const
 {
 	return ships;
@@ -127,7 +135,9 @@ bool Person::IsDestroyed() const
 
 
 
-// Mark this person as destroyed.
+/**
+ * Mark this person as destroyed.
+*/
 void Person::Destroy()
 {
 	for(const shared_ptr<Ship> &ship : ships)
@@ -136,7 +146,9 @@ void Person::Destroy()
 
 
 
-// Mark this person as no longer destroyed.
+/**
+ * Mark this person as no longer destroyed.
+*/
 void Person::Restore()
 {
 	for(const shared_ptr<Ship> &ship : ships)
@@ -149,7 +161,9 @@ void Person::Restore()
 
 
 
-// Check if a person is already placed somewhere.
+/**
+ * Check if a person is already placed somewhere.
+*/
 bool Person::IsPlaced() const
 {
 	for(const shared_ptr<Ship> &ship : ships)
@@ -161,7 +175,9 @@ bool Person::IsPlaced() const
 
 
 
-// Mark this person as being no longer "placed" somewhere.
+/**
+ * Mark this person as being no longer "placed" somewhere.
+*/
 void Person::ClearPlacement()
 {
 	if(!IsDestroyed())

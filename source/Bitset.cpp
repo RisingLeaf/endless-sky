@@ -23,7 +23,9 @@ using namespace std;
 
 
 
-// Returns the number of bits this bitset can hold.
+/**
+ * Returns the number of bits this bitset can hold.
+*/
 size_t Bitset::Size() const noexcept
 {
 	return bits.size() * BITS_PER_BLOCK;
@@ -31,7 +33,9 @@ size_t Bitset::Size() const noexcept
 
 
 
-// Returns the number of bits this bitset has reserved.
+/**
+ * Returns the number of bits this bitset has reserved.
+*/
 size_t Bitset::Capacity() const noexcept
 {
 	return bits.capacity() * BITS_PER_BLOCK;
@@ -39,7 +43,9 @@ size_t Bitset::Capacity() const noexcept
 
 
 
-// Resizes the bitset to hold at least the specific amount of bits.
+/**
+ * Resizes the bitset to hold at least the specific amount of bits.
+*/
 void Bitset::Resize(size_t size)
 {
 	bits.resize(size / BITS_PER_BLOCK + 1);
@@ -47,7 +53,9 @@ void Bitset::Resize(size_t size)
 
 
 
-// Clears the bitset. After this call this bitset is empty.
+/**
+ * Clears the bitset. After this call this bitset is empty.
+*/
 void Bitset::Clear() noexcept
 {
 	bits.clear();
@@ -55,7 +63,9 @@ void Bitset::Clear() noexcept
 
 
 
-// Whether the given bitset has any bits that are also set in this bitset.
+/**
+ * Whether the given bitset has any bits that are also set in this bitset.
+*/
 bool Bitset::Intersects(const Bitset &other) const noexcept
 {
 	const auto size = min(bits.size(), other.bits.size());
@@ -67,7 +77,9 @@ bool Bitset::Intersects(const Bitset &other) const noexcept
 
 
 
-// Returns the value of the bit at the specified index.
+/**
+ * Returns the value of the bit at the specified index.
+*/
 bool Bitset::Test(size_t index) const noexcept
 {
 	const auto blockIndex = index / BITS_PER_BLOCK;
@@ -77,7 +89,9 @@ bool Bitset::Test(size_t index) const noexcept
 
 
 
-// Sets the bit at the specified index.
+/**
+ * Sets the bit at the specified index.
+*/
 void Bitset::Set(size_t index) noexcept
 {
 	const auto blockIndex = index / BITS_PER_BLOCK;
@@ -87,7 +101,9 @@ void Bitset::Set(size_t index) noexcept
 
 
 
-// Resets all bits in the bitset.
+/**
+ * Resets all bits in the bitset.
+*/
 void Bitset::Reset() noexcept
 {
 	for(auto &it : bits)
@@ -96,7 +112,9 @@ void Bitset::Reset() noexcept
 
 
 
-// Whether any bits are set.
+/**
+ * Whether any bits are set.
+*/
 bool Bitset::Any() const noexcept
 {
 	for(uint64_t block : bits)
@@ -107,7 +125,9 @@ bool Bitset::Any() const noexcept
 
 
 
-// Whether no bits are set.
+/**
+ * Whether no bits are set.
+*/
 bool Bitset::None() const noexcept
 {
 	return !Any();
@@ -115,7 +135,9 @@ bool Bitset::None() const noexcept
 
 
 
-// Fills the current bitset with the bits of other.
+/**
+ * Fills the current bitset with the bits of other.
+*/
 void Bitset::UpdateWith(const Bitset &other)
 {
 	const auto size = min(bits.size(), other.bits.size());

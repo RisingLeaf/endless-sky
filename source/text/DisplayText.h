@@ -21,7 +21,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <string>
 
 
-// Class for holding a displayed text and layout.
+/**
+ * Class for holding a displayed text and layout.
+*/
 class DisplayText {
 public:
 	DisplayText() = default;

@@ -49,7 +49,9 @@ ImageBuffer::~ImageBuffer()
 
 
 
-// Set the number of frames. This must be called before allocating.
+/**
+ * Set the number of frames. This must be called before allocating.
+*/
 void ImageBuffer::Clear(int frames)
 {
 	delete [] pixels;
@@ -59,8 +61,10 @@ void ImageBuffer::Clear(int frames)
 
 
 
-// Allocate the internal buffer. This must only be called once for each
-// image buffer; subsequent calls will be ignored.
+/**
+ * Allocate the internal buffer. This must only be called once for each
+ * image buffer; subsequent calls will be ignored.
+*/
 void ImageBuffer::Allocate(int width, int height)
 {
 	// Do nothing if the buffer is already allocated or if any of the dimensions

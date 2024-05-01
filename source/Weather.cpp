@@ -40,7 +40,9 @@ Weather::Weather(const Hazard *hazard, int totalLifetime, int lifetimeRemaining,
 
 
 
-// The hazard that is associated with this weather event.
+/**
+ * The hazard that is associated with this weather event.
+*/
 const Hazard *Weather::GetHazard() const
 {
 	return hazard;
@@ -48,7 +50,9 @@ const Hazard *Weather::GetHazard() const
 
 
 
-// Whether the hazard of this weather deals damage or not.
+/**
+ * Whether the hazard of this weather deals damage or not.
+*/
 bool Weather::HasWeapon() const
 {
 	return hazard->IsWeapon();
@@ -56,7 +60,9 @@ bool Weather::HasWeapon() const
 
 
 
-// The period of this weather, dictating how often it deals damage while active.
+/**
+ * The period of this weather, dictating how often it deals damage while active.
+*/
 int Weather::Period() const
 {
 	// If a hazard deviates, then the period is divided by the square root of the
@@ -74,7 +80,9 @@ const Point &Weather::Origin() const
 
 
 
-// Create any environmental effects and decrease the lifetime of this weather.
+/**
+ * Create any environmental effects and decrease the lifetime of this weather.
+*/
 void Weather::Step(vector<Visual> &visuals, const Point &center)
 {
 	// Environmental effects are created by choosing a random angle and distance from
@@ -126,8 +134,10 @@ void Weather::Step(vector<Visual> &visuals, const Point &center)
 
 
 
-// Calculate this weather's strength for the current frame, to be used to find
-// out what the current period and damage multipliers are.
+/**
+ * Calculate this weather's strength for the current frame, to be used to find
+ * out what the current period and damage multipliers are.
+*/
 void Weather::CalculateStrength()
 {
 	// If this hazard deviates, modulate strength by the current lifetime.
@@ -143,7 +153,9 @@ void Weather::CalculateStrength()
 
 
 
-// Get information on how this hazard impacted a ship.
+/**
+ * Get information on how this hazard impacted a ship.
+*/
 Weather::ImpactInfo Weather::GetInfo() const
 {
 	return ImpactInfo(*hazard, origin, DamageMultiplier());
@@ -151,7 +163,9 @@ Weather::ImpactInfo Weather::GetInfo() const
 
 
 
-// Check if this object is marked for removal from the game.
+/**
+ * Check if this object is marked for removal from the game.
+*/
 bool Weather::ShouldBeRemoved() const
 {
 	return shouldBeRemoved;
@@ -159,7 +173,9 @@ bool Weather::ShouldBeRemoved() const
 
 
 
-// What the hazard's damage is multiplied by given the current weather strength.
+/**
+ * What the hazard's damage is multiplied by given the current weather strength.
+*/
 double Weather::DamageMultiplier() const
 {
 	// If a hazard deviates, then the damage is multiplied by the square root of the

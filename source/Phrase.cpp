@@ -23,7 +23,9 @@ using namespace std;
 
 
 
-// Replace all occurrences ${phrase name} with the expanded phrase from GameData::Phrases()
+/**
+ * Replace all occurrences ${phrase name} with the expanded phrase from GameData::Phrases()
+*/
 std::string Phrase::ExpandPhrases(const std::string &source)
 {
 	string result;
@@ -89,8 +91,10 @@ bool Phrase::IsEmpty() const
 
 
 
-// Get the name associated with the node this phrase was instantiated
-// from, or "Unnamed Phrase" if it was anonymously defined.
+/**
+ * Get the name associated with the node this phrase was instantiated
+ * from, or "Unnamed Phrase" if it was anonymously defined.
+*/
 const string &Phrase::Name() const
 {
 	return name;
@@ -98,7 +102,9 @@ const string &Phrase::Name() const
 
 
 
-// Get a random sentence's text.
+/**
+ * Get a random sentence's text.
+*/
 string Phrase::Get() const
 {
 	string result;
@@ -123,8 +129,10 @@ string Phrase::Get() const
 
 
 
-// Inspect this phrase and all its subphrases to determine if a cyclic
-// reference exists between this phrase and the other.
+/**
+ * Inspect this phrase and all its subphrases to determine if a cyclic
+ * reference exists between this phrase and the other.
+*/
 bool Phrase::ReferencesPhrase(const Phrase *other) const
 {
 	if(other == this)
@@ -190,7 +198,9 @@ Phrase::Choice::Choice(const DataNode &node, bool isPhraseName)
 
 
 
-// Forwarding constructor, for use with emplace/emplace_back.
+/**
+ * Forwarding constructor, for use with emplace/emplace_back.
+*/
 Phrase::Sentence::Sentence(const DataNode &node, const Phrase *parent)
 {
 	Load(node, parent);
@@ -198,7 +208,9 @@ Phrase::Sentence::Sentence(const DataNode &node, const Phrase *parent)
 
 
 
-// Parse the children of the given node to populate the sentence's structure.
+/**
+ * Parse the children of the given node to populate the sentence's structure.
+*/
 void Phrase::Sentence::Load(const DataNode &node, const Phrase *parent)
 {
 	for(const DataNode &child : node)

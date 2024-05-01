@@ -30,7 +30,9 @@ namespace {
 
 
 
-// Define the constructor to set "linkColor" to the desired default color.
+/**
+ * Define the constructor to set "linkColor" to the desired default color.
+*/
 Wormhole::Wormhole()
 {
 	linkColor = ExclusiveItem<Color>(GameData::Colors().Get(DEFAULT_WORMHOLE_COLOR));
@@ -38,7 +40,9 @@ Wormhole::Wormhole()
 
 
 
-// Load a wormhole's description from a file.
+/**
+ * Load a wormhole's description from a file.
+*/
 void Wormhole::Load(const DataNode &node)
 {
 	if(node.Size() < 2)

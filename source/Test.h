@@ -35,40 +35,66 @@ class TestContext;
 
 
 
-// Class representing a single test.
+/**
+ * Class representing a single test.
+*/
 class Test {
 public:
-	// Status indicators for the test that we selected (if any).
+	/**
+	 * Status indicators for the test that we selected (if any).
+	*/
 	enum class Status {ACTIVE, PARTIAL, BROKEN, KNOWN_FAILURE, MISSING_FEATURE};
 
-	// A tag type to denote a failing test that is not an error, such as a
-	// "known failure" test failing.
+	/**
+	 * A tag type to denote a failing test that is not an error, such as a
+	 * "known failure" test failing.
+	*/
 	struct known_failure_tag {};
 
 
 public:
-	// Class representing a single step in a test
+	/**
+	 * Class representing a single step in a test
+	*/
 	class TestStep {
 	public:
-		// The different types of teststeps.
+		/**
+		 * The different types of teststeps.
+		*/
 		enum class Type {
-			// Step that assigns a value to a condition. Does not cause the game to step.
+			/**
+			 * Step that assigns a value to a condition. Does not cause the game to step.
+			*/
 			APPLY,
-			// Step that verifies if a certain condition is true. Does not cause the game to step.
+			/**
+			 * Step that verifies if a certain condition is true. Does not cause the game to step.
+			*/
 			ASSERT,
-			// Branch with a label to jump to when the condition in child is true.
-			// When a second label is given, then the second is to jump to on false.
-			// Does not cause the game to step, except when no step was done since last BRANCH or GOTO.
+			/**
+			 * Branch with a label to jump to when the condition in child is true.
+			 * When a second label is given, then the second is to jump to on false.
+			 * Does not cause the game to step, except when no step was done since last BRANCH or GOTO.
+			*/
 			BRANCH,
-			// Step that calls another test to handle some generic common actions.
+			/**
+			 * Step that calls another test to handle some generic common actions.
+			*/
 			CALL,
-			// Step that adds game-data, either in the config-directories or in the game directly.
+			/**
+			 * Step that adds game-data, either in the config-directories or in the game directly.
+			*/
 			INJECT,
-			// Step that performs input (key, mouse, command). Does cause the game to step (to process the inputs).
+			/**
+			 * Step that performs input (key, mouse, command). Does cause the game to step (to process the inputs).
+			*/
 			INPUT,
-			// Label to jump to (similar as is done in conversations). Does not cause the game to step.
+			/**
+			 * Label to jump to (similar as is done in conversations). Does not cause the game to step.
+			*/
 			LABEL,
-			// Instructs the game to set navigation / travel plan to a target system
+			/**
+			 * Instructs the game to set navigation / travel plan to a target system
+			*/
 			NAVIGATE,
 		};
 
@@ -82,25 +108,35 @@ public:
 	public:
 		Type stepType = Type::ASSERT;
 		std::string nameOrLabel;
-		// Variables for travelpan/navigate steps.
+		/**
+		 * Variables for travelpan/navigate steps.
+		*/
 		std::vector<const System *> travelPlan;
 		const Planet *travelDestination = nullptr;
-		// For applying condition changes, branching based on conditions or
-		// checking asserts (similar to Conversations).
+		/**
+		 * For applying condition changes, branching based on conditions or
+		 * checking asserts (similar to Conversations).
+		*/
 		ConditionSet conditions;
-		// Labels to jump to in case of branches. We could optimize during
-		// load to lookup the step numbers (and provide integer stepnumbers
-		// here), but we can also use the textual information during error/
-		// debug printing, so keeping the strings for now.
+		/**
+		 * Labels to jump to in case of branches. We could optimize during
+		 * load to lookup the step numbers (and provide integer stepnumbers
+		 * here), but we can also use the textual information during error/
+		 * debug printing, so keeping the strings for now.
+		*/
 		std::string jumpOnTrueTarget;
 		std::string jumpOnFalseTarget;
 
-		// Input variables.
+		/**
+		 * Input variables.
+		*/
 		Command command;
 		std::set<std::string> inputKeys;
 		Uint16 modKeys = 0;
 
-		// Mouse/Pointer input variables.
+		/**
+		 * Mouse/Pointer input variables.
+		*/
 		int XValue = 0;
 		int YValue = 0;
 		bool clickLeft = false;
@@ -115,7 +151,9 @@ public:
 	const std::string &StatusText() const;
 	std::set<std::string> RelevantConditions() const;
 
-	// Check the game status and perform the next test action.
+	/**
+	 * Check the game status and perform the next test action.
+	*/
 	void Step(TestContext &context, PlayerInfo &player, Command &commandToGive) const;
 
 	void Load(const DataNode &node);
@@ -124,7 +162,9 @@ public:
 private:
 	void LoadSequence(const DataNode &node);
 
-	// Fail the test using the given message as reason.
+	/**
+	 * Fail the test using the given message as reason.
+	*/
 	void Fail(const TestContext &context, const PlayerInfo &player, const std::string &testFailReason) const;
 	void UnexpectedSuccessResult() const;
 
@@ -132,7 +172,9 @@ private:
 private:
 	std::string name;
 	Status status = Status::ACTIVE;
-	// Jump-table that specifies which labels map to which teststeps.
+	/**
+	 * Jump-table that specifies which labels map to which teststeps.
+	*/
 	std::map<std::string, unsigned int> jumpTable;
 	std::vector<TestStep> steps;
 };

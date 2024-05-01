@@ -32,7 +32,9 @@ using namespace std;
 
 
 
-// Constructor, based on a Sprite.
+/**
+ * Constructor, based on a Sprite.
+*/
 Body::Body(const Sprite *sprite, Point position, Point velocity, Angle facing, double zoom)
 	: position(position), velocity(velocity), angle(facing), zoom(zoom), sprite(sprite), randomize(true)
 {
@@ -40,7 +42,9 @@ Body::Body(const Sprite *sprite, Point position, Point velocity, Angle facing, d
 
 
 
-// Constructor, based on the animation from another Body object.
+/**
+ * Constructor, based on the animation from another Body object.
+*/
 Body::Body(const Body &sprite, Point position, Point velocity, Angle facing, double zoom)
 {
 	*this = sprite;
@@ -52,7 +56,9 @@ Body::Body(const Body &sprite, Point position, Point velocity, Angle facing, dou
 
 
 
-// Check that this Body has a sprite and that the sprite has at least one frame.
+/**
+ * Check that this Body has a sprite and that the sprite has at least one frame.
+*/
 bool Body::HasSprite() const
 {
 	return (sprite && sprite->Frames());
@@ -60,7 +66,9 @@ bool Body::HasSprite() const
 
 
 
-// Access the underlying Sprite object.
+/**
+ * Access the underlying Sprite object.
+*/
 const Sprite *Body::GetSprite() const
 {
 	return sprite;
@@ -68,7 +76,9 @@ const Sprite *Body::GetSprite() const
 
 
 
-// Get the width of this object, in world coordinates (i.e. taking zoom and scale into account).
+/**
+ * Get the width of this object, in world coordinates (i.e. taking zoom and scale into account).
+*/
 double Body::Width() const
 {
 	return static_cast<double>(sprite ? (.5f * zoom) * scale * sprite->Width() : 0.f);
@@ -76,7 +86,9 @@ double Body::Width() const
 
 
 
-// Get the height of this object, in world coordinates (i.e. taking zoom and scale into account).
+/**
+ * Get the height of this object, in world coordinates (i.e. taking zoom and scale into account).
+*/
 double Body::Height() const
 {
 	return static_cast<double>(sprite ? (.5f * zoom) * scale * sprite->Height() : 0.f);
@@ -84,7 +96,9 @@ double Body::Height() const
 
 
 
-// Get the farthest a part of this sprite can be from its center.
+/**
+ * Get the farthest a part of this sprite can be from its center.
+*/
 double Body::Radius() const
 {
 	return .5 * Point(Width(), Height()).Length();
@@ -92,7 +106,9 @@ double Body::Radius() const
 
 
 
-// Which color swizzle should be applied to the sprite?
+/**
+ * Which color swizzle should be applied to the sprite?
+*/
 int Body::GetSwizzle() const
 {
 	return swizzle;
@@ -100,8 +116,10 @@ int Body::GetSwizzle() const
 
 
 
-// Get the frame index for the given time step. If no time step is given, this
-// will return the frame from the most recently given step.
+/**
+ * Get the frame index for the given time step. If no time step is given, this
+ * will return the frame from the most recently given step.
+*/
 float Body::GetFrame(int step) const
 {
 	if(step >= 0)
@@ -112,8 +130,10 @@ float Body::GetFrame(int step) const
 
 
 
-// Get the mask for the given time step. If no time step is given, this will
-// return the mask from the most recently given step.
+/**
+ * Get the mask for the given time step. If no time step is given, this will
+ * return the mask from the most recently given step.
+*/
 const Mask &Body::GetMask(int step) const
 {
 	if(step >= 0)
@@ -132,7 +152,9 @@ const Mask &Body::GetMask(int step) const
 
 
 
-// Position, in world coordinates (zero is the system center).
+/**
+ * Position, in world coordinates (zero is the system center).
+*/
 const Point &Body::Position() const
 {
 	return position;
@@ -140,7 +162,9 @@ const Point &Body::Position() const
 
 
 
-// Velocity, in pixels per second.
+/**
+ * Velocity, in pixels per second.
+*/
 const Point &Body::Velocity() const
 {
 	return velocity;
@@ -155,7 +179,9 @@ const Point Body::Center() const
 
 
 
-// Direction this Body is facing in.
+/**
+ * Direction this Body is facing in.
+*/
 const Angle &Body::Facing() const
 {
 	return angle;
@@ -163,8 +189,10 @@ const Angle &Body::Facing() const
 
 
 
-// Unit vector in the direction this body is facing. This represents the scale
-// and transform that should be applied to the sprite before drawing it.
+/**
+ * Unit vector in the direction this body is facing. This represents the scale
+ * and transform that should be applied to the sprite before drawing it.
+*/
 Point Body::Unit() const
 {
 	return angle.Unit() * (.5 * Zoom());
@@ -172,7 +200,9 @@ Point Body::Unit() const
 
 
 
-// Zoom factor. This controls how big the sprite should be drawn.
+/**
+ * Zoom factor. This controls how big the sprite should be drawn.
+*/
 double Body::Zoom() const
 {
 	return max(zoom, 0.f);
@@ -187,7 +217,9 @@ double Body::Scale() const
 
 
 
-// Check if this object is marked for removal from the game.
+/**
+ * Check if this object is marked for removal from the game.
+*/
 bool Body::ShouldBeRemoved() const
 {
 	return shouldBeRemoved;
@@ -195,8 +227,10 @@ bool Body::ShouldBeRemoved() const
 
 
 
-// Store the government here too, so that collision detection that is based
-// on the Body class can figure out which objects will collide.
+/**
+ * Store the government here too, so that collision detection that is based
+ * on the Body class can figure out which objects will collide.
+*/
 const Government *Body::GetGovernment() const
 {
 	return government;
@@ -204,7 +238,9 @@ const Government *Body::GetGovernment() const
 
 
 
-// Load the sprite specification, including all animation attributes.
+/**
+ * Load the sprite specification, including all animation attributes.
+*/
 void Body::LoadSprite(const DataNode &node)
 {
 	if(node.Size() < 2)
@@ -251,7 +287,9 @@ void Body::LoadSprite(const DataNode &node)
 
 
 
-// Save the sprite specification, including all animation attributes.
+/**
+ * Save the sprite specification, including all animation attributes.
+*/
 void Body::SaveSprite(DataWriter &out, const string &tag) const
 {
 	if(!sprite)
@@ -280,7 +318,9 @@ void Body::SaveSprite(DataWriter &out, const string &tag) const
 
 
 
-// Set the sprite.
+/**
+ * Set the sprite.
+*/
 void Body::SetSprite(const Sprite *sprite)
 {
 	this->sprite = sprite;
@@ -289,7 +329,9 @@ void Body::SetSprite(const Sprite *sprite)
 
 
 
-// Set the color swizzle.
+/**
+ * Set the color swizzle.
+*/
 void Body::SetSwizzle(int swizzle)
 {
 	this->swizzle = swizzle;
@@ -304,8 +346,10 @@ double Body::Alpha() const
 
 
 
-// Set the frame rate of the sprite. This is used for objects that just specify
-// a sprite instead of a full animation data structure.
+/**
+ * Set the frame rate of the sprite. This is used for objects that just specify
+ * a sprite instead of a full animation data structure.
+*/
 void Body::SetFrameRate(float framesPerSecond)
 {
 	frameRate = framesPerSecond / 60.f;
@@ -313,7 +357,9 @@ void Body::SetFrameRate(float framesPerSecond)
 
 
 
-// Add the given amount to the frame rate.
+/**
+ * Add the given amount to the frame rate.
+*/
 void Body::AddFrameRate(float framesPerSecond)
 {
 	frameRate += framesPerSecond / 60.f;
@@ -328,7 +374,9 @@ void Body::PauseAnimation()
 
 
 
-// Mark this object to be removed from the game.
+/**
+ * Mark this object to be removed from the game.
+*/
 void Body::MarkForRemoval()
 {
 	shouldBeRemoved = true;
@@ -336,7 +384,9 @@ void Body::MarkForRemoval()
 
 
 
-// Mark this object to not be removed from the game.
+/**
+ * Mark this object to not be removed from the game.
+*/
 void Body::UnmarkForRemoval()
 {
 	shouldBeRemoved = false;
@@ -344,7 +394,9 @@ void Body::UnmarkForRemoval()
 
 
 
-// Turn this object around its center of rotation.
+/**
+ * Turn this object around its center of rotation.
+*/
 void Body::Turn(double amount)
 {
 	angle += amount;
@@ -377,7 +429,9 @@ void Body::Turn(const Angle &amount)
 
 
 
-// Set the current time step.
+/**
+ * Set the current time step.
+*/
 void Body::SetStep(int step) const
 {
 	// If the animation is paused, reduce the step by however many frames it has

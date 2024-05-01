@@ -21,7 +21,9 @@ class Point;
 
 
 
-// Functions for drawing triangular "pointers," e.g. for target crosshairs.
+/**
+ * Functions for drawing triangular "pointers," e.g. for target crosshairs.
+*/
 class PointerShader {
 public:
 	static void Init();

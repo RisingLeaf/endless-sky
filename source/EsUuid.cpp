@@ -36,7 +36,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 namespace es_uuid {
 namespace detail {
 #if defined(_WIN32)
-// Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122).
+/**
+ * Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122).
+*/
 EsUuid::UuidType MakeUuid()
 {
 	EsUuid::UuidType value;
@@ -93,7 +95,9 @@ signed int Compare(const EsUuid::UuidType &a, const EsUuid::UuidType &b)
 #else
 constexpr std::size_t UUID_BUFFER_LENGTH = 37;
 
-// Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122).
+/**
+ * Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122).
+*/
 EsUuid::UuidType MakeUuid()
 {
 	EsUuid::UuidType value;
@@ -143,7 +147,9 @@ EsUuid EsUuid::FromString(const std::string &input)
 
 
 
-// Explicitly copy the value of the other UUID.
+/**
+ * Explicitly copy the value of the other UUID.
+*/
 void EsUuid::clone(const EsUuid &other)
 {
 	value = other.Value();
@@ -179,8 +185,10 @@ std::string EsUuid::ToString() const noexcept(false)
 
 
 
-// Internal constructor. Note that the provided value may not be a valid v4 UUID,
-// in which case an error is logged and we return a new UUID.
+/**
+ * Internal constructor. Note that the provided value may not be a valid v4 UUID,
+ * in which case an error is logged and we return a new UUID.
+*/
 EsUuid::EsUuid(const std::string &input)
 {
 	try {

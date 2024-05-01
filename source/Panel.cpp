@@ -32,7 +32,9 @@ using namespace std;
 
 
 
-// Draw a sprite repeatedly to make a vertical edge.
+/**
+ * Draw a sprite repeatedly to make a vertical edge.
+*/
 void Panel::DrawEdgeSprite(const Sprite *edgeSprite, int posX)
 {
 	if(edgeSprite->Height())
@@ -49,7 +51,9 @@ void Panel::DrawEdgeSprite(const Sprite *edgeSprite, int posX)
 
 
 
-// Move the state of this panel forward one game step.
+/**
+ * Move the state of this panel forward one game step.
+*/
 void Panel::Step()
 {
 	// It is ok for panels to be stateless.
@@ -57,8 +61,10 @@ void Panel::Step()
 
 
 
-// Return true if this is a full-screen panel, so there is no point in
-// drawing any of the panels under it.
+/**
+ * Return true if this is a full-screen panel, so there is no point in
+ * drawing any of the panels under it.
+*/
 bool Panel::IsFullScreen() const noexcept
 {
 	return isFullScreen;
@@ -66,8 +72,10 @@ bool Panel::IsFullScreen() const noexcept
 
 
 
-// Return true if, when this panel is on the stack, no events should be
-// passed to any panel under it. By default, all panels do this.
+/**
+ * Return true if, when this panel is on the stack, no events should be
+ * passed to any panel under it. By default, all panels do this.
+*/
 bool Panel::TrapAllEvents() const noexcept
 {
 	return trapAllEvents;
@@ -75,7 +83,9 @@ bool Panel::TrapAllEvents() const noexcept
 
 
 
-// Check if this panel can be "interrupted" to return to the main menu.
+/**
+ * Check if this panel can be "interrupted" to return to the main menu.
+*/
 bool Panel::IsInterruptible() const noexcept
 {
 	return isInterruptible;
@@ -83,7 +93,9 @@ bool Panel::IsInterruptible() const noexcept
 
 
 
-// Clear the list of clickable zones.
+/**
+ * Clear the list of clickable zones.
+*/
 void Panel::ClearZones()
 {
 	zones.clear();
@@ -91,7 +103,9 @@ void Panel::ClearZones()
 
 
 
-// Add a clickable zone to the panel.
+/**
+ * Add a clickable zone to the panel.
+*/
 void Panel::AddZone(const Rectangle &rect, const function<void()> &fun)
 {
 	// The most recently added zone will typically correspond to what was drawn
@@ -108,8 +122,10 @@ void Panel::AddZone(const Rectangle &rect, SDL_Keycode key)
 
 
 
-// Check if a click at the given coordinates triggers a clickable zone. If
-// so, apply that zone's action and return true.
+/**
+ * Check if a click at the given coordinates triggers a clickable zone. If
+ * so, apply that zone's action and return true.
+*/
 bool Panel::ZoneClick(const Point &point)
 {
 	for(const Zone &zone : zones)
@@ -127,8 +143,10 @@ bool Panel::ZoneClick(const Point &point)
 
 
 
-// Panels will by default not allow fast-forward. The ones that do allow
-// it will override this (virtual) function and return true.
+/**
+ * Panels will by default not allow fast-forward. The ones that do allow
+ * it will override this (virtual) function and return true.
+*/
 bool Panel::AllowsFastForward() const noexcept
 {
 	return false;
@@ -136,7 +154,9 @@ bool Panel::AllowsFastForward() const noexcept
 
 
 
-// Only override the ones you need; the default action is to return false.
+/**
+ * Only override the ones you need; the default action is to return false.
+*/
 bool Panel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
 {
 	return false;
@@ -207,7 +227,9 @@ void Panel::SetInterruptible(bool set)
 
 
 
-// Dim the background of this panel.
+/**
+ * Dim the background of this panel.
+*/
 void Panel::DrawBackdrop() const
 {
 	if(!GetUI()->IsTop(this))
@@ -227,10 +249,12 @@ UI *Panel::GetUI() const noexcept
 
 
 
-// This is not for overriding, but for calling KeyDown with only one or two
-// arguments. In this form, the command is never set, so you can call this
-// with a key representing a known keyboard shortcut without worrying that a
-// user-defined command key will override it.
+/**
+ * This is not for overriding, but for calling KeyDown with only one or two
+ * arguments. In this form, the command is never set, so you can call this
+ * with a key representing a known keyboard shortcut without worrying that a
+ * user-defined command key will override it.
+*/
 bool Panel::DoKey(SDL_Keycode key, Uint16 mod)
 {
 	return KeyDown(key, mod, Command(), true);
@@ -238,8 +262,10 @@ bool Panel::DoKey(SDL_Keycode key, Uint16 mod)
 
 
 
-// A lot of different UI elements allow a modifier to change the number of
-// something you are buying, so the shared function is defined here:
+/**
+ * A lot of different UI elements allow a modifier to change the number of
+ * something you are buying, so the shared function is defined here:
+*/
 int Panel::Modifier()
 {
 	SDL_Keymod mod = SDL_GetModState();
@@ -257,8 +283,10 @@ int Panel::Modifier()
 
 
 
-// Display the given help message if it has not yet been shown
-// (or if force is set to true). Return true if the message was displayed.
+/**
+ * Display the given help message if it has not yet been shown
+ * (or if force is set to true). Return true if the message was displayed.
+*/
 bool Panel::DoHelp(const string &name, bool force) const
 {
 	string preference = "help: " + name;

@@ -33,7 +33,9 @@ namespace {
 
 
 
-// Load account information from a data file (saved game or starting conditions).
+/**
+ * Load account information from a data file (saved game or starting conditions).
+*/
 void Account::Load(const DataNode &node, bool clearFirst)
 {
 	if(clearFirst)
@@ -76,7 +78,9 @@ void Account::Load(const DataNode &node, bool clearFirst)
 
 
 
-// Write account information to a saved game file.
+/**
+ * Write account information to a saved game file.
+*/
 void Account::Save(DataWriter &out) const
 {
 	out.Write("account");
@@ -115,7 +119,9 @@ void Account::Save(DataWriter &out) const
 
 
 
-// How much the player currently has in the bank.
+/**
+ * How much the player currently has in the bank.
+*/
 int64_t Account::Credits() const
 {
 	return credits;
@@ -123,8 +129,10 @@ int64_t Account::Credits() const
 
 
 
-// Give the player credits (or pass  negative number to subtract). If subtracting,
-// the calling function needs to check that this will not result in negative credits.
+/**
+ * Give the player credits (or pass  negative number to subtract). If subtracting,
+ * the calling function needs to check that this will not result in negative credits.
+*/
 void Account::AddCredits(int64_t value)
 {
 	credits += value;
@@ -132,7 +140,9 @@ void Account::AddCredits(int64_t value)
 
 
 
-// Pay down extra principal on a mortgage.
+/**
+ * Pay down extra principal on a mortgage.
+*/
 void Account::PayExtra(int mortgage, int64_t amount)
 {
 	if(static_cast<unsigned>(mortgage) >= mortgages.size() || amount > credits
@@ -150,7 +160,9 @@ void Account::PayExtra(int mortgage, int64_t amount)
 
 
 
-// Step forward one day, and return a string summarizing payments made.
+/**
+ * Step forward one day, and return a string summarizing payments made.
+*/
 string Account::Step(int64_t assets, int64_t salaries, int64_t maintenance)
 {
 	ostringstream out;
@@ -361,7 +373,9 @@ void Account::PayMaintenance(int64_t amount)
 
 
 
-// Access the list of mortgages.
+/**
+ * Access the list of mortgages.
+*/
 const vector<Mortgage> &Account::Mortgages() const
 {
 	return mortgages;
@@ -369,8 +383,10 @@ const vector<Mortgage> &Account::Mortgages() const
 
 
 
-// Add a new mortgage for the given amount, with an interest rate determined by
-// your credit score.
+/**
+ * Add a new mortgage for the given amount, with an interest rate determined by
+ * your credit score.
+*/
 void Account::AddMortgage(int64_t principal)
 {
 	mortgages.emplace_back(principal, creditScore);
@@ -379,7 +395,9 @@ void Account::AddMortgage(int64_t principal)
 
 
 
-// Add a "fine" with a high, fixed interest rate and a short term.
+/**
+ * Add a "fine" with a high, fixed interest rate and a short term.
+*/
 void Account::AddFine(int64_t amount)
 {
 	mortgages.emplace_back(amount, 0, 60);
@@ -387,7 +405,9 @@ void Account::AddFine(int64_t amount)
 
 
 
-// Check how big a mortgage the player can afford to pay at their current income.
+/**
+ * Check how big a mortgage the player can afford to pay at their current income.
+*/
 int64_t Account::Prequalify() const
 {
 	double payments = 0.;
@@ -408,7 +428,9 @@ int64_t Account::Prequalify() const
 
 
 
-// Get the player's total net worth (counting all ships and all debts).
+/**
+ * Get the player's total net worth (counting all ships and all debts).
+*/
 int64_t Account::NetWorth() const
 {
 	return history.empty() ? 0 : history.back();
@@ -416,7 +438,9 @@ int64_t Account::NetWorth() const
 
 
 
-// Find out the player's credit rating.
+/**
+ * Find out the player's credit rating.
+*/
 int Account::CreditScore() const
 {
 	return creditScore;
@@ -424,7 +448,9 @@ int Account::CreditScore() const
 
 
 
-// Get the total amount owed for "Mortgage", "Fine", or both.
+/**
+ * Get the total amount owed for "Mortgage", "Fine", or both.
+*/
 int64_t Account::TotalDebt(const string &type) const
 {
 	int64_t total = 0;
@@ -437,8 +463,10 @@ int64_t Account::TotalDebt(const string &type) const
 
 
 
-// Extrapolate from the player's current net worth history to determine how much
-// their net worth is expected to change over the course of the next year.
+/**
+ * Extrapolate from the player's current net worth history to determine how much
+ * their net worth is expected to change over the course of the next year.
+*/
 int64_t Account::YearlyRevenue() const
 {
 	if(history.empty() || history.back() <= history.front())

@@ -75,7 +75,9 @@ void InitConsole();
 
 
 
-// Entry point for the EndlessSky executable
+/**
+ * Entry point for the EndlessSky executable
+*/
 int main(int argc, char *argv[])
 {
 	// Handle command-line arguments
@@ -548,8 +550,10 @@ Conversation LoadConversation()
 
 
 
-// This prints out the list of tests that are available and their status
-// (active/missing feature/known failure)..
+/**
+ * This prints out the list of tests that are available and their status
+ * (active/missing feature/known failure)..
+*/
 void PrintTestsTable()
 {
 	for(auto &it : GameData::Tests())

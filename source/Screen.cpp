@@ -104,7 +104,9 @@ void Screen::SetZoom(int percent)
 
 
 
-// Specify that this is a high-DPI window.
+/**
+ * Specify that this is a high-DPI window.
+*/
 void Screen::SetHighDPI(bool isHighDPI)
 {
 	HIGH_DPI = isHighDPI;
@@ -112,7 +114,9 @@ void Screen::SetHighDPI(bool isHighDPI)
 
 
 
-// This is true if the screen is high DPI, or if the zoom is above 100%.
+/**
+ * This is true if the screen is high DPI, or if the zoom is above 100%.
+*/
 bool Screen::IsHighResolution()
 {
 	return HIGH_DPI || (EFFECTIVE_ZOOM > 100);

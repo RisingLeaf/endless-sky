@@ -29,8 +29,10 @@ namespace {
 
 
 
-// Find out how much you can afford to borrow with the given annual revenue
-// and the given credit score (which should be between 200 and 800).
+/**
+ * Find out how much you can afford to borrow with the given annual revenue
+ * and the given credit score (which should be between 200 and 800).
+*/
 int64_t Mortgage::Maximum(int64_t annualRevenue, int creditScore, double currentPayments)
 {
 	const double revenue = annualRevenue - MORTGAGE_TERM * currentPayments;
@@ -45,7 +47,9 @@ int64_t Mortgage::Maximum(int64_t annualRevenue, int creditScore, double current
 
 
 
-// Create a new mortgage of the given amount.
+/**
+ * Create a new mortgage of the given amount.
+*/
 Mortgage::Mortgage(int64_t principal, int creditScore, int term)
 	: type(creditScore <= 0 ? "Fine" : "Mortgage"),
 	principal(principal),
@@ -57,7 +61,9 @@ Mortgage::Mortgage(int64_t principal, int creditScore, int term)
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 Mortgage::Mortgage(const DataNode &node)
 {
 	Load(node);
@@ -65,7 +71,9 @@ Mortgage::Mortgage(const DataNode &node)
 
 
 
-// Load or save mortgage data.
+/**
+ * Load or save mortgage data.
+*/
 void Mortgage::Load(const DataNode &node)
 {
 	if(node.Size() >= 2)
@@ -104,7 +112,9 @@ void Mortgage::Save(DataWriter &out) const
 
 
 
-// Make a mortgage payment. The return value is the amount paid.
+/**
+ * Make a mortgage payment. The return value is the amount paid.
+*/
 int64_t Mortgage::MakePayment()
 {
 	int64_t payment = Payment();
@@ -124,10 +134,12 @@ void Mortgage::MissPayment()
 
 
 
-// Pay down additional principal. Unlike a "real" mortgage, this reduces
-// the minimum amount of your future payments, not the term of the mortgage.
-// This returns the actual amount paid, which may be less if the total
-// principal remaining is less than the given amount.
+/**
+ * Pay down additional principal. Unlike a "real" mortgage, this reduces
+ * the minimum amount of your future payments, not the term of the mortgage.
+ * This returns the actual amount paid, which may be less if the total
+ * principal remaining is less than the given amount.
+*/
 int64_t Mortgage::PayExtra(int64_t amount)
 {
 	amount = min(principal, amount);
@@ -137,8 +149,10 @@ int64_t Mortgage::PayExtra(int64_t amount)
 
 
 
-// The type is "Mortgage" if this is a mortgage you applied for from a bank,
-// and "Fine" if this is a fine imposed on you for illegal activities.
+/**
+ * The type is "Mortgage" if this is a mortgage you applied for from a bank,
+ * and "Fine" if this is a fine imposed on you for illegal activities.
+*/
 const string &Mortgage::Type() const
 {
 	return type;
@@ -146,7 +160,9 @@ const string &Mortgage::Type() const
 
 
 
-// Get the remaining mortgage principal.
+/**
+ * Get the remaining mortgage principal.
+*/
 int64_t Mortgage::Principal() const
 {
 	return principal;
@@ -154,8 +170,10 @@ int64_t Mortgage::Principal() const
 
 
 
-// Get the interest rate. It is formatted as a string, because all that the
-// program will ever do with this is display it.
+/**
+ * Get the interest rate. It is formatted as a string, because all that the
+ * program will ever do with this is display it.
+*/
 const string &Mortgage::Interest() const
 {
 	return interestString;
@@ -163,7 +181,9 @@ const string &Mortgage::Interest() const
 
 
 
-// Get the remaining number of payments that must be made.
+/**
+ * Get the remaining number of payments that must be made.
+*/
 int Mortgage::Term() const
 {
 	return term;
@@ -171,7 +191,9 @@ int Mortgage::Term() const
 
 
 
-// Check the amount of the next payment due (rounded to the nearest credit).
+/**
+ * Check the amount of the next payment due (rounded to the nearest credit).
+*/
 int64_t Mortgage::Payment() const
 {
 	if(!term)
@@ -186,7 +208,9 @@ int64_t Mortgage::Payment() const
 
 
 
-// Check the amount of the next payment due.
+/**
+ * Check the amount of the next payment due.
+*/
 double Mortgage::PrecisePayment() const
 {
 	if(!term)

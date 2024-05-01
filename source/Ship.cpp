@@ -220,7 +220,9 @@ namespace {
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 Ship::Ship(const DataNode &node)
 {
 	Load(node);
@@ -567,8 +569,10 @@ void Ship::Load(const DataNode &node)
 
 
 
-// When loading a ship, some of the outfits it lists may not have been
-// loaded yet. So, wait until everything has been loaded, then call this.
+/**
+ * When loading a ship, some of the outfits it lists may not have been
+ * loaded yet. So, wait until everything has been loaded, then call this.
+*/
 void Ship::FinishLoading(bool isNewInstance)
 {
 	// All copies of this ship should save pointers to the "explosion" weapon
@@ -874,7 +878,9 @@ void Ship::FinishLoading(bool isNewInstance)
 
 
 
-// Check if this ship (model) and its outfits have been defined.
+/**
+ * Check if this ship (model) and its outfits have been defined.
+*/
 bool Ship::IsValid() const
 {
 	for(auto &&outfit : outfits)
@@ -886,7 +892,9 @@ bool Ship::IsValid() const
 
 
 
-// Save a full description of this ship, as currently configured.
+/**
+ * Save a full description of this ship, as currently configured.
+*/
 void Ship::Save(DataWriter &out) const
 {
 	out.Write("ship", trueModelName);
@@ -1124,7 +1132,9 @@ const string &Ship::Name() const
 
 
 
-// Set / Get the name of this class of ships, e.g. "Marauder Raven."
+/**
+ * Set / Get the name of this class of ships, e.g. "Marauder Raven."
+*/
 void Ship::SetTrueModelName(const string &model)
 {
 	this->trueModelName = model;
@@ -1153,7 +1163,9 @@ const string &Ship::PluralModelName() const
 
 
 
-// Get the name of this ship as a variant.
+/**
+ * Get the name of this ship as a variant.
+*/
 const string &Ship::VariantName() const
 {
 	return variantName.empty() ? trueModelName : variantName;
@@ -1161,7 +1173,9 @@ const string &Ship::VariantName() const
 
 
 
-// Get the generic noun (e.g. "ship") to be used when describing this ship.
+/**
+ * Get the generic noun (e.g. "ship") to be used when describing this ship.
+*/
 const string &Ship::Noun() const
 {
 	static const string SHIP = "ship";
@@ -1170,7 +1184,9 @@ const string &Ship::Noun() const
 
 
 
-// Get this ship's description.
+/**
+ * Get this ship's description.
+*/
 const string &Ship::Description() const
 {
 	return description;
@@ -1178,7 +1194,9 @@ const string &Ship::Description() const
 
 
 
-// Get the shipyard thumbnail for this ship.
+/**
+ * Get the shipyard thumbnail for this ship.
+*/
 const Sprite *Ship::Thumbnail() const
 {
 	return thumbnail;
@@ -1186,7 +1204,9 @@ const Sprite *Ship::Thumbnail() const
 
 
 
-// Get this ship's cost.
+/**
+ * Get this ship's cost.
+*/
 int64_t Ship::Cost() const
 {
 	return attributes.Cost();
@@ -1194,7 +1214,9 @@ int64_t Ship::Cost() const
 
 
 
-// Get the cost of this ship's chassis, with no outfits installed.
+/**
+ * Get the cost of this ship's chassis, with no outfits installed.
+*/
 int64_t Ship::ChassisCost() const
 {
 	return baseAttributes.Cost();
@@ -1223,8 +1245,10 @@ double Ship::Deterrence() const
 
 
 
-// Check if this ship is configured in such a way that it would be difficult
-// or impossible to fly.
+/**
+ * Check if this ship is configured in such a way that it would be difficult
+ * or impossible to fly.
+*/
 vector<string> Ship::FlightCheck() const
 {
 	auto checks = vector<string>{};
@@ -1304,7 +1328,9 @@ void Ship::SetPosition(Point position)
 
 
 
-// Instantiate a newly-created ship in-flight.
+/**
+ * Instantiate a newly-created ship in-flight.
+*/
 void Ship::Place(Point position, Point velocity, Angle angle, bool isDeparting)
 {
 	this->position = position;
@@ -1360,7 +1386,9 @@ void Ship::Place(Point position, Point velocity, Angle angle, bool isDeparting)
 
 
 
-// Set the name of this particular ship.
+/**
+ * Set the name of this particular ship.
+*/
 void Ship::SetName(const string &name)
 {
 	this->name = name;
@@ -1368,7 +1396,9 @@ void Ship::SetName(const string &name)
 
 
 
-// Set which system this ship is in.
+/**
+ * Set which system this ship is in.
+*/
 void Ship::SetSystem(const System *system)
 {
 	currentSystem = system;
@@ -1537,7 +1567,9 @@ bool Ship::CanSendHail(const PlayerInfo &player, bool allowUntranslated) const
 
 
 
-// Set the commands for this ship to follow this timestep.
+/**
+ * Set the commands for this ship to follow this timestep.
+*/
 void Ship::SetCommands(const Command &command)
 {
 	commands = command;
@@ -1566,9 +1598,11 @@ const FireCommand &Ship::FiringCommands() const noexcept
 
 
 
-// Move this ship. A ship may create effects as it moves, in particular if
-// it is in the process of blowing up. If this returns false, the ship
-// should be deleted.
+/**
+ * Move this ship. A ship may create effects as it moves, in particular if
+ * it is in the process of blowing up. If this returns false, the ship
+ * should be deleted.
+*/
 void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 {
 	// Do nothing with ships that are being forgotten.
@@ -1629,7 +1663,9 @@ void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 
 
 
-// Launch any ships that are ready to launch.
+/**
+ * Launch any ships that are ready to launch.
+*/
 void Ship::Launch(list<shared_ptr<Ship>> &ships, vector<Visual> &visuals)
 {
 	// Allow carried ships to launch from a disabled ship, but not from a ship that
@@ -1708,7 +1744,9 @@ void Ship::Launch(list<shared_ptr<Ship>> &ships, vector<Visual> &visuals)
 
 
 
-// Check if this ship is boarding another ship.
+/**
+ * Check if this ship is boarding another ship.
+*/
 shared_ptr<Ship> Ship::Board(bool autoPlunder, bool nonDocking)
 {
 	if(!hasBoarded)
@@ -1773,8 +1811,10 @@ shared_ptr<Ship> Ship::Board(bool autoPlunder, bool nonDocking)
 
 
 
-// Scan the target, if able and commanded to. Return a ShipEvent bitmask
-// giving the types of scan that succeeded.
+/**
+ * Scan the target, if able and commanded to. Return a ShipEvent bitmask
+ * giving the types of scan that succeeded.
+*/
 int Ship::Scan(const PlayerInfo &player)
 {
 	if(!commands.Has(Command::SCAN) || CannotAct())
@@ -1925,7 +1965,9 @@ int Ship::Scan(const PlayerInfo &player)
 
 
 
-// Find out what fraction of the scan is complete.
+/**
+ * Find out what fraction of the scan is complete.
+*/
 double Ship::CargoScanFraction() const
 {
 	return cargoScan / SCAN_TIME;
@@ -1940,9 +1982,11 @@ double Ship::OutfitScanFraction() const
 
 
 
-// Fire any primary or secondary weapons that are ready to fire. Determines
-// if any special weapons (e.g. anti-missile, tractor beam) are ready to fire.
-// The firing of special weapons is handled separately.
+/**
+ * Fire any primary or secondary weapons that are ready to fire. Determines
+ * if any special weapons (e.g. anti-missile, tractor beam) are ready to fire.
+ * The firing of special weapons is handled separately.
+*/
 void Ship::Fire(vector<Projectile> &projectiles, vector<Visual> &visuals)
 {
 	isInSystem = true;
@@ -1996,7 +2040,9 @@ bool Ship::HasTractorBeam() const
 
 
 
-// Fire an anti-missile.
+/**
+ * Fire an anti-missile.
+*/
 bool Ship::FireAntiMissile(const Projectile &projectile, vector<Visual> &visuals)
 {
 	if(projectile.Position().Distance(position) > antiMissileRange)
@@ -2020,8 +2066,10 @@ bool Ship::FireAntiMissile(const Projectile &projectile, vector<Visual> &visuals
 
 
 
-// Fire tractor beams at the given flotsam. Returns a Point representing the net
-// pull on the flotsam from this ship's tractor beams.
+/**
+ * Fire tractor beams at the given flotsam. Returns a Point representing the net
+ * pull on the flotsam from this ship's tractor beams.
+*/
 Point Ship::FireTractorBeam(const Flotsam &flotsam, vector<Visual> &visuals)
 {
 	Point pullVector;
@@ -2084,7 +2132,9 @@ const System *Ship::GetActualSystem() const
 
 
 
-// If the ship is landed, get the planet it has landed on.
+/**
+ * If the ship is landed, get the planet it has landed on.
+*/
 const Planet *Ship::GetPlanet() const
 {
 	return zoom ? nullptr : landingPlanet;
@@ -2146,7 +2196,9 @@ bool Ship::IsFleeing() const
 
 
 
-// Check if this ship is currently able to begin landing on its target.
+/**
+ * Check if this ship is currently able to begin landing on its target.
+*/
 bool Ship::CanLand() const
 {
 	if(!GetTargetStellar() || !GetTargetStellar()->GetPlanet() || isDisabled || IsDestroyed())
@@ -2198,7 +2250,9 @@ int Ship::GetHyperspacePercentage() const
 
 
 
-// Check if this ship is hyperspacing, specifically via a jump drive.
+/**
+ * Check if this ship is hyperspacing, specifically via a jump drive.
+*/
 bool Ship::IsUsingJumpDrive() const
 {
 	return (hyperspaceSystem || hyperspaceCount) && isUsingJumpDrive;
@@ -2206,7 +2260,9 @@ bool Ship::IsUsingJumpDrive() const
 
 
 
-// Check if this ship is allowed to land on this planet, accounting for its personality.
+/**
+ * Check if this ship is allowed to land on this planet, accounting for its personality.
+*/
 bool Ship::IsRestrictedFrom(const Planet &planet) const
 {
 	// The player's ships have no travel restrictions.
@@ -2223,7 +2279,9 @@ bool Ship::IsRestrictedFrom(const Planet &planet) const
 
 
 
-// Check if this ship is allowed to enter this system, accounting for its personality.
+/**
+ * Check if this ship is allowed to enter this system, accounting for its personality.
+*/
 bool Ship::IsRestrictedFrom(const System &system) const
 {
 	// The player's ships have no travel restrictions.
@@ -2240,7 +2298,9 @@ bool Ship::IsRestrictedFrom(const System &system) const
 
 
 
-// Check if this ship is currently able to enter hyperspace to its target.
+/**
+ * Check if this ship is currently able to enter hyperspace to its target.
+*/
 bool Ship::IsReadyToJump(bool waitingIsReady) const
 {
 	// Ships can't jump while waiting for someone else, carried, or if already jumping.
@@ -2294,14 +2354,18 @@ bool Ship::IsReadyToJump(bool waitingIsReady) const
 
 
 
-// Get this ship's custom swizzle.
+/**
+ * Get this ship's custom swizzle.
+*/
 int Ship::CustomSwizzle() const
 {
 	return customSwizzle;
 }
 
 
-// Check if the ship is thrusting. If so, the engine sound should be played.
+/**
+ * Check if the ship is thrusting. If so, the engine sound should be played.
+*/
 bool Ship::IsThrusting() const
 {
 	return isThrusting;
@@ -2330,7 +2394,9 @@ double Ship::SteeringDirection() const
 
 
 
-// Get the points from which engine flares should be drawn.
+/**
+ * Get the points from which engine flares should be drawn.
+*/
 const vector<Ship::EnginePoint> &Ship::EnginePoints() const
 {
 	return enginePoints;
@@ -2352,8 +2418,10 @@ const vector<Ship::EnginePoint> &Ship::SteeringEnginePoints() const
 
 
 
-// Reduce a ship's hull to low enough to disable it. This is so a ship can be
-// created as a derelict.
+/**
+ * Reduce a ship's hull to low enough to disable it. This is so a ship can be
+ * created as a derelict.
+*/
 void Ship::Disable()
 {
 	shields = 0.;
@@ -2363,7 +2431,9 @@ void Ship::Disable()
 
 
 
-// Mark a ship as destroyed.
+/**
+ * Mark a ship as destroyed.
+*/
 void Ship::Destroy()
 {
 	hull = -1.;
@@ -2371,7 +2441,9 @@ void Ship::Destroy()
 
 
 
-// Trigger the death of this ship.
+/**
+ * Trigger the death of this ship.
+*/
 void Ship::SelfDestruct()
 {
 	Destroy();
@@ -2399,7 +2471,9 @@ bool Ship::IsDamaged() const
 
 
 
-// Check if this ship has been destroyed.
+/**
+ * Check if this ship has been destroyed.
+*/
 bool Ship::IsDestroyed() const
 {
 	return (hull < 0.);
@@ -2407,7 +2481,9 @@ bool Ship::IsDestroyed() const
 
 
 
-// Recharge and repair this ship (e.g. because it has landed).
+/**
+ * Recharge and repair this ship (e.g. because it has landed).
+*/
 void Ship::Recharge(int rechargeType, bool hireCrew)
 {
 	if(IsDestroyed())
@@ -2463,9 +2539,11 @@ double Ship::TransferFuel(double amount, Ship *to)
 
 
 
-// Convert this ship from one government to another, as a result of boarding
-// actions (if the player is capturing) or player death (poor decision-making).
-// Returns the number of crew transferred from the capturer.
+/**
+ * Convert this ship from one government to another, as a result of boarding
+ * actions (if the player is capturing) or player death (poor decision-making).
+ * Returns the number of crew transferred from the capturer.
+*/
 int Ship::WasCaptured(const shared_ptr<Ship> &capturer)
 {
 	// Repair up to the point where this ship is just barely not disabled.
@@ -2517,7 +2595,9 @@ int Ship::WasCaptured(const shared_ptr<Ship> &capturer)
 
 
 
-// Clear all orders and targets this ship has (after capture or transfer of control).
+/**
+ * Clear all orders and targets this ship has (after capture or transfer of control).
+*/
 void Ship::ClearTargetsAndOrders()
 {
 	commands.Clear();
@@ -2534,7 +2614,9 @@ void Ship::ClearTargetsAndOrders()
 
 
 
-// Get characteristics of this ship, as a fraction between 0 and 1.
+/**
+ * Get characteristics of this ship, as a fraction between 0 and 1.
+*/
 double Ship::Shields() const
 {
 	double maximum = MaxShields();
@@ -2567,8 +2649,10 @@ double Ship::Energy() const
 
 
 
-// Allow returning a heat value greater than 1 (i.e. conveying how overheated
-// this ship has become).
+/**
+ * Allow returning a heat value greater than 1 (i.e. conveying how overheated
+ * this ship has become).
+*/
 double Ship::Heat() const
 {
 	double maximum = MaximumHeat();
@@ -2577,7 +2661,9 @@ double Ship::Heat() const
 
 
 
-// Get the ship's "health," where <=0 is disabled and 1 means full health.
+/**
+ * Get the ship's "health," where <=0 is disabled and 1 means full health.
+*/
 double Ship::Health() const
 {
 	double minimumHull = MinimumHull();
@@ -2594,7 +2680,9 @@ double Ship::Health() const
 
 
 
-// Get the hull fraction at which this ship is disabled.
+/**
+ * Get the hull fraction at which this ship is disabled.
+*/
 double Ship::DisabledHull() const
 {
 	double hull = MaxHull();
@@ -2605,7 +2693,9 @@ double Ship::DisabledHull() const
 
 
 
-// Get the maximum shield and hull values of the ship, accounting for multipliers.
+/**
+ * Get the maximum shield and hull values of the ship, accounting for multipliers.
+*/
 double Ship::MaxShields() const
 {
 	return attributes.Get("shields") * (1 + attributes.Get("shield multiplier"));
@@ -2619,7 +2709,9 @@ double Ship::MaxHull() const
 
 
 
-// Get the actual shield level of the ship.
+/**
+ * Get the actual shield level of the ship.
+*/
 double Ship::ShieldLevel() const
 {
 	return shields;
@@ -2627,7 +2719,9 @@ double Ship::ShieldLevel() const
 
 
 
-// Get how disrupted this ship's shields are.
+/**
+ * Get how disrupted this ship's shields are.
+*/
 double Ship::DisruptionLevel() const
 {
 	return disruption;
@@ -2635,9 +2729,11 @@ double Ship::DisruptionLevel() const
 
 
 
-// Get the (absolute) amount of hull that needs to be damaged until the
-// ship becomes disabled. Returns 0 if the ships hull is already below the
-// disabled threshold.
+/**
+ * Get the (absolute) amount of hull that needs to be damaged until the
+ * ship becomes disabled. Returns 0 if the ships hull is already below the
+ * disabled threshold.
+*/
 double Ship::HullUntilDisabled() const
 {
 	// Ships become disabled when they surpass their minimum hull threshold,
@@ -2648,7 +2744,9 @@ double Ship::HullUntilDisabled() const
 
 
 
-// Returns the remaining damage timer, for the damage overlay.
+/**
+ * Returns the remaining damage timer, for the damage overlay.
+*/
 int Ship::DamageOverlayTimer() const
 {
 	return damageOverlayTimer;
@@ -2714,7 +2812,9 @@ double Ship::JumpFuelMissing() const
 
 
 
-// Get the heat level at idle.
+/**
+ * Get the heat level at idle.
+*/
 double Ship::IdleHeat() const
 {
 	// This ship's cooling ability:
@@ -2734,7 +2834,9 @@ double Ship::IdleHeat() const
 
 
 
-// Get the heat dissipation, in heat units per heat unit per frame.
+/**
+ * Get the heat dissipation, in heat units per heat unit per frame.
+*/
 double Ship::HeatDissipation() const
 {
 	return .001 * attributes.Get("heat dissipation");
@@ -2742,7 +2844,9 @@ double Ship::HeatDissipation() const
 
 
 
-// Get the maximum heat level, in heat units (not temperature).
+/**
+ * Get the maximum heat level, in heat units (not temperature).
+*/
 double Ship::MaximumHeat() const
 {
 	return MAXIMUM_TEMPERATURE * (cargo.Used() + attributes.Mass() + attributes.Get("heat capacity"));
@@ -2750,7 +2854,9 @@ double Ship::MaximumHeat() const
 
 
 
-// Calculate the multiplier for cooling efficiency.
+/**
+ * Calculate the multiplier for cooling efficiency.
+*/
 double Ship::CoolingEfficiency() const
 {
 	// This is an S-curve where the efficiency is 100% if you have no outfits
@@ -2769,7 +2875,9 @@ int Ship::Crew() const
 
 
 
-// Calculate the drag on this ship. The drag can be no greater than the mass.
+/**
+ * Calculate the drag on this ship. The drag can be no greater than the mass.
+*/
 double Ship::Drag() const
 {
 	double drag = attributes.Get("drag") / (1. + attributes.Get("drag reduction"));
@@ -2779,8 +2887,10 @@ double Ship::Drag() const
 
 
 
-// Calculate the drag force that this ship experiences. The drag force is the drag
-// divided by the mass, up to a value of 1.
+/**
+ * Calculate the drag force that this ship experiences. The drag force is the drag
+ * divided by the mass, up to a value of 1.
+*/
 double Ship::DragForce() const
 {
 	double drag = attributes.Get("drag") / (1. + attributes.Get("drag reduction"));
@@ -2818,7 +2928,9 @@ void Ship::AddCrew(int count)
 
 
 
-// Check if this is a ship that can be used as a flagship.
+/**
+ * Check if this is a ship that can be used as a flagship.
+*/
 bool Ship::CanBeFlagship() const
 {
 	return RequiredCrew() && Crew() && !IsDisabled();
@@ -2833,7 +2945,9 @@ double Ship::Mass() const
 
 
 
-// Account for inertia reduction, which affects movement but has no effect on the ship's heat capacity.
+/**
+ * Account for inertia reduction, which affects movement but has no effect on the ship's heat capacity.
+*/
 double Ship::InertialMass() const
 {
 	return Mass() / (1. + attributes.Get("inertia reduction"));
@@ -2884,10 +2998,12 @@ double Ship::MaxReverseVelocity() const
 
 
 
-// This ship just got hit by a weapon. Take damage according to the
-// DamageDealt from that weapon. The return value is a ShipEvent type,
-// which may be a combination of PROVOKED, DISABLED, and DESTROYED.
-// Create any target effects as sparks.
+/**
+ * This ship just got hit by a weapon. Take damage according to the
+ * DamageDealt from that weapon. The return value is a ShipEvent type,
+ * which may be a combination of PROVOKED, DISABLED, and DESTROYED.
+ * Create any target effects as sparks.
+*/
 int Ship::TakeDamage(vector<Visual> &visuals, const DamageDealt &damage, const Government *sourceGovernment)
 {
 	damageOverlayTimer = TOTAL_DAMAGE_FRAMES;
@@ -2978,8 +3094,10 @@ int Ship::TakeDamage(vector<Visual> &visuals, const DamageDealt &damage, const G
 
 
 
-// Apply a force to this ship, accelerating it. This might be from a weapon
-// impact, or from firing a weapon, for example.
+/**
+ * Apply a force to this ship, accelerating it. This might be from a weapon
+ * impact, or from firing a weapon, for example.
+*/
 void Ship::ApplyForce(const Point &force, bool gravitational)
 {
 	if(gravitational)
@@ -3007,8 +3125,10 @@ bool Ship::HasBays() const
 
 
 
-// Check how many bays are not occupied at present. This does not check whether
-// one of your escorts plans to use that bay.
+/**
+ * Check how many bays are not occupied at present. This does not check whether
+ * one of your escorts plans to use that bay.
+*/
 int Ship::BaysFree(const string &category) const
 {
 	int count = 0;
@@ -3019,7 +3139,9 @@ int Ship::BaysFree(const string &category) const
 
 
 
-// Check how many bays this ship has of a given category.
+/**
+ * Check how many bays this ship has of a given category.
+*/
 int Ship::BaysTotal(const string &category) const
 {
 	int count = 0;
@@ -3030,8 +3152,10 @@ int Ship::BaysTotal(const string &category) const
 
 
 
-// Check if this ship has a bay free for the given ship, and the bay is
-// not reserved for one of its existing escorts.
+/**
+ * Check if this ship has a bay free for the given ship, and the bay is
+ * not reserved for one of its existing escorts.
+*/
 bool Ship::CanCarry(const Ship &ship) const
 {
 	if(!HasBays() || !ship.CanBeCarried() || (IsYours() && !ship.IsYours()))
@@ -3144,8 +3268,10 @@ const vector<Ship::Bay> &Ship::Bays() const
 
 
 
-// Adjust the positions and velocities of any visible carried fighters or
-// drones. If any are visible, return true.
+/**
+ * Adjust the positions and velocities of any visible carried fighters or
+ * drones. If any are visible, return true.
+*/
 bool Ship::PositionFighters() const
 {
 	bool hasVisible = false;
@@ -3177,7 +3303,9 @@ const CargoHold &Ship::Cargo() const
 
 
 
-// Display box effects from jettisoning this much cargo.
+/**
+ * Display box effects from jettisoning this much cargo.
+*/
 void Ship::Jettison(const string &commodity, int tons, bool wasAppeasing)
 {
 	cargo.Remove(commodity, tons);
@@ -3247,7 +3375,9 @@ const Outfit &Ship::BaseAttributes() const
 
 
 
-// Get outfit information.
+/**
+ * Get outfit information.
+*/
 const map<const Outfit *, int> &Ship::Outfits() const
 {
 	return outfits;
@@ -3263,7 +3393,9 @@ int Ship::OutfitCount(const Outfit *outfit) const
 
 
 
-// Add or remove outfits. (To remove, pass a negative number.)
+/**
+ * Add or remove outfits. (To remove, pass a negative number.)
+*/
 void Ship::AddOutfit(const Outfit *outfit, int count)
 {
 	if(outfit && count)
@@ -3312,7 +3444,9 @@ void Ship::AddOutfit(const Outfit *outfit, int count)
 
 
 
-// Get the list of weapons.
+/**
+ * Get the list of weapons.
+*/
 Armament &Ship::GetArmament()
 {
 	return armament;
@@ -3327,8 +3461,10 @@ const vector<Hardpoint> &Ship::Weapons() const
 
 
 
-// Check if we are able to fire the given weapon (i.e. there is enough
-// energy, ammo, and fuel to fire it).
+/**
+ * Check if we are able to fire the given weapon (i.e. there is enough
+ * energy, ammo, and fuel to fire it).
+*/
 bool Ship::CanFire(const Weapon *weapon) const
 {
 	if(!weapon || !weapon->IsWeapon())
@@ -3368,9 +3504,11 @@ bool Ship::CanFire(const Weapon *weapon) const
 
 
 
-// Fire the given weapon (i.e. deduct whatever energy, ammo, hull, shields
-// or fuel it uses and add whatever heat it generates). Assume that CanFire()
-// is true.
+/**
+ * Fire the given weapon (i.e. deduct whatever energy, ammo, hull, shields
+ * or fuel it uses and add whatever heat it generates). Assume that CanFire()
+ * is true.
+*/
 void Ship::ExpendAmmo(const Weapon &weapon)
 {
 	// Compute this ship's initial capacities, in case the consumption of the ammunition outfit(s)
@@ -3411,8 +3549,10 @@ void Ship::ExpendAmmo(const Weapon &weapon)
 
 
 
-// Each ship can have a target system (to travel to), a target planet (to
-// land on) and a target ship (to move to, and attack if hostile).
+/**
+ * Each ship can have a target system (to travel to), a target planet (to
+ * land on) and a target ship (to move to, and attack if hostile).
+*/
 shared_ptr<Ship> Ship::GetTargetShip() const
 {
 	return targetShip.lock();
@@ -3441,7 +3581,9 @@ const System *Ship::GetTargetSystem() const
 
 
 
-// Mining target.
+/**
+ * Mining target.
+*/
 shared_ptr<Minable> Ship::GetTargetAsteroid() const
 {
 	return targetAsteroid.lock();
@@ -3470,7 +3612,9 @@ void Ship::SetFleeing(bool fleeing)
 
 
 
-// Set this ship's targets.
+/**
+ * Set this ship's targets.
+*/
 void Ship::SetTargetShip(const shared_ptr<Ship> &ship)
 {
 	if(ship != GetTargetShip())
@@ -3506,7 +3650,9 @@ void Ship::SetTargetSystem(const System *system)
 
 
 
-// Mining target.
+/**
+ * Mining target.
+*/
 void Ship::SetTargetAsteroid(const shared_ptr<Minable> &asteroid)
 {
 	targetAsteroid = asteroid;
@@ -3574,10 +3720,12 @@ void Ship::Linger()
 
 
 
-// Check if this ship has been in a different system from the player for so
-// long that it should be "forgotten." Also eliminate ships that have no
-// system set because they just entered a fighter bay. Clear the hyperspace
-// targets of ships that can't enter hyperspace.
+/**
+ * Check if this ship has been in a different system from the player for so
+ * long that it should be "forgotten." Also eliminate ships that have no
+ * system set because they just entered a fighter bay. Clear the hyperspace
+ * targets of ships that can't enter hyperspace.
+*/
 bool Ship::StepFlags()
 {
 	forget += !isInSystem;
@@ -3598,8 +3746,10 @@ bool Ship::StepFlags()
 
 
 
-// Step ship destruction logic. Returns 1 if the ship has been destroyed, -1 if it is being
-// destroyed, or 0 otherwise.
+/**
+ * Step ship destruction logic. Returns 1 if the ship has been destroyed, -1 if it is being
+ * destroyed, or 0 otherwise.
+*/
 int Ship::StepDestroyed(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 {
 	if(!IsDestroyed())
@@ -3713,7 +3863,9 @@ int Ship::StepDestroyed(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flot
 
 
 
-// Generate energy, heat, etc. (This is called by Move().)
+/**
+ * Generate energy, heat, etc. (This is called by Move().)
+*/
 void Ship::DoGeneration()
 {
 	// First, allow any carried ships to do their own generation.
@@ -4328,8 +4480,10 @@ void Ship::StepPilot()
 
 
 
-// This ship is not landing or entering hyperspace. So, move it. If it is
-// disabled, all it can do is slow down to a stop.
+/**
+ * This ship is not landing or entering hyperspace. So, move it. If it is
+ * disabled, all it can do is slow down to a stop.
+*/
 void Ship::DoMovement(bool &isUsingAfterburner)
 {
 	isUsingAfterburner = false;
@@ -4610,7 +4764,9 @@ void Ship::StepTargeting()
 
 
 
-// Finally, move the ship and create any movement visuals.
+/**
+ * Finally, move the ship and create any movement visuals.
+*/
 void Ship::DoEngineVisuals(vector<Visual> &visuals, bool isUsingAfterburner)
 {
 	if(isUsingAfterburner && !Attributes().AfterburnerEffects().empty())
@@ -4634,8 +4790,10 @@ void Ship::DoEngineVisuals(vector<Visual> &visuals, bool isUsingAfterburner)
 
 
 
-// Add escorts to this ship. Escorts look to the parent ship for movement
-// cues and try to stay with it when it lands or goes into hyperspace.
+/**
+ * Add escorts to this ship. Escorts look to the parent ship for movement
+ * cues and try to stay with it when it lands or goes into hyperspace.
+*/
 void Ship::AddEscort(Ship &ship)
 {
 	escorts.push_back(ship.shared_from_this());
@@ -4712,7 +4870,9 @@ void Ship::CreateExplosion(vector<Visual> &visuals, bool spread)
 
 
 
-// Place a "spark" effect, like ionization or disruption.
+/**
+ * Place a "spark" effect, like ionization or disruption.
+*/
 void Ship::CreateSparks(vector<Visual> &visuals, const string &name, double amount)
 {
 	CreateSparks(visuals, GameData::Effects().Get(name), amount);

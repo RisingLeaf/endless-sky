@@ -161,7 +161,9 @@ namespace {
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 LocationFilter::LocationFilter(const DataNode &node)
 {
 	Load(node);
@@ -279,7 +281,9 @@ void LocationFilter::Save(DataWriter &out) const
 
 
 
-// Check if this filter contains any specifications.
+/**
+ * Check if this filter contains any specifications.
+*/
 bool LocationFilter::IsEmpty() const
 {
 	return isEmpty;
@@ -287,9 +291,11 @@ bool LocationFilter::IsEmpty() const
 
 
 
-// Check if all of this filter's named content is invalid (e.g. its known members only
-// match to content that is currently unavailable). If at least one valid parameter
-// from every restriction is valid, then this filter is valid.
+/**
+ * Check if all of this filter's named content is invalid (e.g. its known members only
+ * match to content that is currently unavailable). If at least one valid parameter
+ * from every restriction is valid, then this filter is valid.
+*/
 bool LocationFilter::IsValid() const
 {
 	if(IsEmpty())
@@ -333,7 +339,9 @@ bool LocationFilter::IsValid() const
 
 
 
-// If the player is in the given system, does this filter match?
+/**
+ * If the player is in the given system, does this filter match?
+*/
 bool LocationFilter::Matches(const Planet *planet, const System *origin) const
 {
 	if(!planet || !planet->IsValid())
@@ -377,8 +385,10 @@ bool LocationFilter::Matches(const System *system, const System *origin) const
 
 
 
-// Check for matches with the ship's system, government, category,
-// outfits (installed and carried), and attributes.
+/**
+ * Check for matches with the ship's system, government, category,
+ * outfits (installed and carried), and attributes.
+*/
 bool LocationFilter::Matches(const Ship &ship) const
 {
 	const System *origin = ship.GetSystem();
@@ -434,7 +444,9 @@ bool LocationFilter::Matches(const Ship &ship) const
 
 
 
-// Convert a "distance" filter into a "near" filter.
+/**
+ * Convert a "distance" filter into a "near" filter.
+*/
 LocationFilter LocationFilter::SetOrigin(const System *origin) const
 {
 	// If there is no distance filter, then no conversion is needed.
@@ -463,7 +475,9 @@ LocationFilter LocationFilter::SetOrigin(const System *origin) const
 
 
 
-// Pick a random system that matches this filter, based on the given origin.
+/**
+ * Pick a random system that matches this filter, based on the given origin.
+*/
 const System *LocationFilter::PickSystem(const System *origin) const
 {
 	// Find a planet that satisfies the filter.
@@ -482,7 +496,9 @@ const System *LocationFilter::PickSystem(const System *origin) const
 
 
 
-// Pick a random planet that matches this filter, based on the given origin.
+/**
+ * Pick a random planet that matches this filter, based on the given origin.
+*/
 const Planet *LocationFilter::PickPlanet(const System *origin, bool hasClearance, bool requireSpaceport) const
 {
 	// Find a planet that satisfies the filter.
@@ -507,7 +523,9 @@ const Planet *LocationFilter::PickPlanet(const System *origin, bool hasClearance
 
 
 
-// Load one particular line of conditions.
+/**
+ * Load one particular line of conditions.
+*/
 void LocationFilter::LoadChild(const DataNode &child)
 {
 	bool isNot = (child.Token(0) == "not" || child.Token(0) == "neighbor");

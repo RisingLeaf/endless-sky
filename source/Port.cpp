@@ -41,7 +41,9 @@ namespace {
 
 
 
-// Load a port's description from a node.
+/**
+ * Load a port's description from a node.
+*/
 void Port::Load(const DataNode &node)
 {
 	loaded = true;
@@ -145,7 +147,9 @@ bool Port::CustomLoaded() const
 
 
 
-// Whether this port has any services available.
+/**
+ * Whether this port has any services available.
+*/
 bool Port::HasServices() const
 {
 	return services;
@@ -153,7 +157,9 @@ bool Port::HasServices() const
 
 
 
-// Get all the possible sources that can get recharged at this port.
+/**
+ * Get all the possible sources that can get recharged at this port.
+*/
 int Port::GetRecharges() const
 {
 	return recharge;
@@ -182,7 +188,9 @@ const string &Port::Description() const
 
 
 
-// Check whether the given recharging is possible.
+/**
+ * Check whether the given recharging is possible.
+*/
 bool Port::CanRecharge(int type) const
 {
 	return (recharge & type);
@@ -190,7 +198,9 @@ bool Port::CanRecharge(int type) const
 
 
 
-// Check whether the given service is available.
+/**
+ * Check whether the given service is available.
+*/
 bool Port::HasService(int type) const
 {
 	return (services & type);

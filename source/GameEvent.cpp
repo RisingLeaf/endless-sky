@@ -42,7 +42,9 @@ namespace {
 
 
 
-// Determine the universe object definitions that are defined by the given list of changes.
+/**
+ * Determine the universe object definitions that are defined by the given list of changes.
+*/
 map<string, set<string>> GameEvent::DeferredDefinitions(const list<DataNode> &changes)
 {
 	auto definitions = map<string, set<string>> {};
@@ -73,7 +75,9 @@ map<string, set<string>> GameEvent::DeferredDefinitions(const list<DataNode> &ch
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 GameEvent::GameEvent(const DataNode &node)
 {
 	Load(node);
@@ -155,8 +159,10 @@ void GameEvent::Save(DataWriter &out) const
 
 
 
-// Prevent this GameEvent from being applied or written into a player's save.
-// (Events read from a save are not associated with the managed Set of GameData::Events.)
+/**
+ * Prevent this GameEvent from being applied or written into a player's save.
+ * (Events read from a save are not associated with the managed Set of GameData::Events.)
+*/
 void GameEvent::Disable()
 {
 	isDisabled = true;
@@ -164,7 +170,9 @@ void GameEvent::Disable()
 
 
 
-// All events held by GameData have a name, but those loaded from a save do not.
+/**
+ * All events held by GameData have a name, but those loaded from a save do not.
+*/
 const string &GameEvent::Name() const
 {
 	return name;
@@ -172,7 +180,9 @@ const string &GameEvent::Name() const
 
 
 
-// "Stock" GameEvents require a name to be serialized with an accepted mission.
+/**
+ * "Stock" GameEvents require a name to be serialized with an accepted mission.
+*/
 void GameEvent::SetName(const string &name)
 {
 	this->name = name;
@@ -187,9 +197,11 @@ const Date &GameEvent::GetDate() const
 
 
 
-// Check that this GameEvent has been loaded from a file (vs. referred to only
-// by name), and that the systems & planets it references are similarly defined.
-// Returns an empty string if it is valid. If not, a reason will be given in the string.
+/**
+ * Check that this GameEvent has been loaded from a file (vs. referred to only
+ * by name), and that the systems & planets it references are similarly defined.
+ * Returns an empty string if it is valid. If not, a reason will be given in the string.
+*/
 string GameEvent::IsValid() const
 {
 	// When Apply is called, we mutate the universe definition before we update
@@ -218,8 +230,10 @@ void GameEvent::SetDate(const Date &date)
 
 
 
-// Apply this event's changes to the player. Returns a list of data changes that need to
-// be applied in a batch with other events that are applied at the same time.
+/**
+ * Apply this event's changes to the player. Returns a list of data changes that need to
+ * be applied in a batch with other events that are applied at the same time.
+*/
 list<DataNode> GameEvent::Apply(PlayerInfo &player)
 {
 	if(isDisabled)

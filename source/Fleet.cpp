@@ -49,7 +49,9 @@ namespace {
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 Fleet::Fleet(const DataNode &node)
 {
 	Load(node);
@@ -174,7 +176,9 @@ void Fleet::RemoveInvalidVariants()
 
 
 
-// Get the government of this fleet.
+/**
+ * Get the government of this fleet.
+*/
 const Government *Fleet::GetGovernment() const
 {
 	return government;
@@ -182,7 +186,9 @@ const Government *Fleet::GetGovernment() const
 
 
 
-// Choose a fleet to be created during flight, and have it enter the system via jump or planetary departure.
+/**
+ * Choose a fleet to be created during flight, and have it enter the system via jump or planetary departure.
+*/
 void Fleet::Enter(const System &system, list<shared_ptr<Ship>> &ships, const Planet *planet) const
 {
 	if(variants.empty() || personality.IsDerelict())
@@ -374,8 +380,10 @@ void Fleet::Enter(const System &system, list<shared_ptr<Ship>> &ships, const Pla
 
 
 
-// Place one of the variants in the given system, already "in action." If the carried flag is set,
-// only uncarried ships will be added to the list (as any carriables will be stored in bays).
+/**
+ * Place one of the variants in the given system, already "in action." If the carried flag is set,
+ * only uncarried ships will be added to the list (as any carriables will be stored in bays).
+*/
 void Fleet::Place(const System &system, list<shared_ptr<Ship>> &ships, bool carried, bool addCargo) const
 {
 	if(variants.empty())
@@ -422,7 +430,9 @@ void Fleet::Place(const System &system, list<shared_ptr<Ship>> &ships, bool carr
 
 
 
-// Do the randomization to make a ship enter or be in the given system.
+/**
+ * Do the randomization to make a ship enter or be in the given system.
+*/
 const System *Fleet::Enter(const System &system, Ship &ship, const System *source)
 {
 	bool canEnter = (source != nullptr || any_of(system.Links().begin(), system.Links().end(),
@@ -484,8 +494,10 @@ int64_t Fleet::Strength() const
 
 
 
-// Obtain a positional reference and the radius of the object at that position (e.g. a planet).
-// Spaceport status can be modified during normal gameplay, so this information is not cached.
+/**
+ * Obtain a positional reference and the radius of the object at that position (e.g. a planet).
+ * Spaceport status can be modified during normal gameplay, so this information is not cached.
+*/
 pair<Point, double> Fleet::ChooseCenter(const System &system)
 {
 	auto centers = vector<pair<Point, double>>();

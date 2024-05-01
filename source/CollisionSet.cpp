@@ -42,8 +42,10 @@ namespace {
 }
 
 
-// Initialize a collision set. The cell size and cell count should both be
-// powers of two; otherwise, they are rounded down to a power of two.
+/**
+ * Initialize a collision set. The cell size and cell count should both be
+ * powers of two; otherwise, they are rounded down to a power of two.
+*/
 CollisionSet::CollisionSet(unsigned cellSize, unsigned cellCount, CollisionType collisionType)
 	: collisionType(collisionType)
 {
@@ -66,7 +68,9 @@ CollisionSet::CollisionSet(unsigned cellSize, unsigned cellCount, CollisionType 
 
 
 
-// Clear all objects in the set.
+/**
+ * Clear all objects in the set.
+*/
 void CollisionSet::Clear(int step)
 {
 	this->step = step;
@@ -82,7 +86,9 @@ void CollisionSet::Clear(int step)
 
 
 
-// Add an object to the set.
+/**
+ * Add an object to the set.
+*/
 void CollisionSet::Add(Body &body)
 {
 	// Calculate the range of (x, y) grid coordinates this object covers.
@@ -109,7 +115,9 @@ void CollisionSet::Add(Body &body)
 
 
 
-// Finish adding objects (and organize them into the final lookup table).
+/**
+ * Finish adding objects (and organize them into the final lookup table).
+*/
 void CollisionSet::Finish()
 {
 	// Perform a partial sum to convert the counts of items in each bin into the
@@ -138,8 +146,10 @@ void CollisionSet::Finish()
 
 
 
-// Get all possible collisions for the given projectile. Collisions are not necessarily
-// sorted by distance.
+/**
+ * Get all possible collisions for the given projectile. Collisions are not necessarily
+ * sorted by distance.
+*/
 const vector<Collision> &CollisionSet::Line(const Projectile &projectile) const
 {
 	// What objects the projectile hits depends on its government.
@@ -153,8 +163,10 @@ const vector<Collision> &CollisionSet::Line(const Projectile &projectile) const
 
 
 
-// Get all possible collisions along a line. Collisions are not necessarily sorted by
-// distance.
+/**
+ * Get all possible collisions along a line. Collisions are not necessarily sorted by
+ * distance.
+*/
 const vector<Collision> &CollisionSet::Line(const Point &from, const Point &to,
 		const Government *pGov, const Body *target) const
 {
@@ -313,7 +325,9 @@ const vector<Collision> &CollisionSet::Line(const Point &from, const Point &to,
 
 
 
-// Get all objects within the given range of the given point.
+/**
+ * Get all objects within the given range of the given point.
+*/
 const vector<Body *> &CollisionSet::Circle(const Point &center, double radius) const
 {
 	return Ring(center, 0., radius);
@@ -321,8 +335,10 @@ const vector<Body *> &CollisionSet::Circle(const Point &center, double radius) c
 
 
 
-// Get all objects touching a ring with a given inner and outer range
-// centered at the given point.
+/**
+ * Get all objects touching a ring with a given inner and outer range
+ * centered at the given point.
+*/
 const vector<Body *> &CollisionSet::Ring(const Point &center, double inner, double outer) const
 {
 	// Calculate the range of (x, y) grid coordinates this ring covers.

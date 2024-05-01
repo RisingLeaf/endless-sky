@@ -26,7 +26,9 @@ using namespace std;
 
 
 
-// Constructor.
+/**
+ * Constructor.
+*/
 CaptureOdds::CaptureOdds(const Ship &attacker, const Ship &defender)
 {
 	powerA = Power(attacker, false);
@@ -36,8 +38,10 @@ CaptureOdds::CaptureOdds(const Ship &attacker, const Ship &defender)
 
 
 
-// Get the odds of the attacker winning if the two ships have the given
-// number of crew members remaining.
+/**
+ * Get the odds of the attacker winning if the two ships have the given
+ * number of crew members remaining.
+*/
 double CaptureOdds::Odds(int attackingCrew, int defendingCrew) const
 {
 	// If the defender has no crew remaining, odds are 100%.
@@ -56,8 +60,10 @@ double CaptureOdds::Odds(int attackingCrew, int defendingCrew) const
 
 
 
-// Get the expected number of casualties for the attacker in the remainder of
-// the battle if the two ships have the given number of crew remaining.
+/**
+ * Get the expected number of casualties for the attacker in the remainder of
+ * the battle if the two ships have the given number of crew remaining.
+*/
 double CaptureOdds::AttackerCasualties(int attackingCrew, int defendingCrew) const
 {
 	// If the attacker has fewer than two crew, they cannot attack. If the
@@ -71,8 +77,10 @@ double CaptureOdds::AttackerCasualties(int attackingCrew, int defendingCrew) con
 
 
 
-// Get the expected number of casualties for the defender in the remainder of
-// the battle if the two ships have the given number of crew remaining.
+/**
+ * Get the expected number of casualties for the defender in the remainder of
+ * the battle if the two ships have the given number of crew remaining.
+*/
 double CaptureOdds::DefenderCasualties(int attackingCrew, int defendingCrew) const
 {
 	// If the attacker has fewer than two crew, they cannot attack. If the
@@ -86,8 +94,10 @@ double CaptureOdds::DefenderCasualties(int attackingCrew, int defendingCrew) con
 
 
 
-// Get the total power (inherent crew power plus bonuses from hand to hand
-// weapons) for the attacker when they have the given number of crew remaining.
+/**
+ * Get the total power (inherent crew power plus bonuses from hand to hand
+ * weapons) for the attacker when they have the given number of crew remaining.
+*/
 double CaptureOdds::AttackerPower(int attackingCrew) const
 {
 	if(static_cast<unsigned>(attackingCrew - 1) >= powerA.size())
@@ -98,8 +108,10 @@ double CaptureOdds::AttackerPower(int attackingCrew) const
 
 
 
-// Get the total power (inherent crew power plus bonuses from hand to hand
-// weapons) for the defender when they have the given number of crew remaining.
+/**
+ * Get the total power (inherent crew power plus bonuses from hand to hand
+ * weapons) for the defender when they have the given number of crew remaining.
+*/
 double CaptureOdds::DefenderPower(int defendingCrew) const
 {
 	if(static_cast<unsigned>(defendingCrew - 1) >= powerD.size())
@@ -110,7 +122,9 @@ double CaptureOdds::DefenderPower(int defendingCrew) const
 
 
 
-// Generate the lookup tables.
+/**
+ * Generate the lookup tables.
+*/
 void CaptureOdds::Calculate()
 {
 	if(powerD.empty() || powerA.empty())
@@ -150,8 +164,10 @@ void CaptureOdds::Calculate()
 
 
 
-// Map the given crew complements to an index in the lookup tables. There is no
-// row in the table for 0 crew on either ship.
+/**
+ * Map the given crew complements to an index in the lookup tables. There is no
+ * row in the table for 0 crew on either ship.
+*/
 int CaptureOdds::Index(int attackingCrew, int defendingCrew) const
 {
 	if(static_cast<unsigned>(attackingCrew - 1) > powerA.size())
@@ -164,8 +180,10 @@ int CaptureOdds::Index(int attackingCrew, int defendingCrew) const
 
 
 
-// Generate a vector with the total power of the given ship's crew when any
-// number of them are left, either for attacking or for defending.
+/**
+ * Generate a vector with the total power of the given ship's crew when any
+ * number of them are left, either for attacking or for defending.
+*/
 vector<double> CaptureOdds::Power(const Ship &ship, bool isDefender)
 {
 	vector<double> power;

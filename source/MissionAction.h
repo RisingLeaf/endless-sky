@@ -36,41 +36,57 @@ class UI;
 
 
 
-// A MissionAction represents what happens when a Mission reaches a certain
-// milestone, including offered, accepted, declined, completed, or failed.
-// In addition to performing a GameAction, a MissionAction can gate the task on
-// the ownership of specific outfits and also display dialogs or conversations.
+/**
+ * A MissionAction represents what happens when a Mission reaches a certain
+ * milestone, including offered, accepted, declined, completed, or failed.
+ * In addition to performing a GameAction, a MissionAction can gate the task on
+ * the ownership of specific outfits and also display dialogs or conversations.
+*/
 class MissionAction {
 public:
 	MissionAction() = default;
-	// Construct and Load() at the same time.
+	/**
+	 * Construct and Load() at the same time.
+	*/
 	MissionAction(const DataNode &node);
 
 	void Load(const DataNode &node);
 	void LoadSingle(const DataNode &node);
-	// Note: the Save() function can assume this is an instantiated mission, not
-	// a template, so it only has to save a subset of the data.
+	/**
+	 * Note: the Save() function can assume this is an instantiated mission, not
+	 * a template, so it only has to save a subset of the data.
+	*/
 	void Save(DataWriter &out) const;
 	void SaveBody(DataWriter &out) const;
-	// Determine if this MissionAction references content that is not fully defined.
+	/**
+	 * Determine if this MissionAction references content that is not fully defined.
+	*/
 	std::string Validate() const;
 
 	const std::string &DialogText() const;
 
-	// Check if this action can be completed right now. It cannot be completed
-	// if it takes away money or outfits that the player does not have, or should
-	// take place in a system that does not match the specified LocationFilter.
+	/**
+	 * Check if this action can be completed right now. It cannot be completed
+	 * if it takes away money or outfits that the player does not have, or should
+	 * take place in a system that does not match the specified LocationFilter.
+	*/
 	bool CanBeDone(const PlayerInfo &player, const std::shared_ptr<Ship> &boardingShip = nullptr) const;
-	// Check if this action requires this ship to exist in order to ever be completed.
+	/**
+	 * Check if this action requires this ship to exist in order to ever be completed.
+	*/
 	bool RequiresGiftedShip(const std::string &shipId) const;
-	// Perform this action. If a conversation is shown, the given destination
-	// will be highlighted in the map if you bring it up.
+	/**
+	 * Perform this action. If a conversation is shown, the given destination
+	 * will be highlighted in the map if you bring it up.
+	*/
 	void Do(PlayerInfo &player, UI *ui, const Mission *caller,
 		const System *destination = nullptr, const std::shared_ptr<Ship> &ship = nullptr,
 		const bool isUnique = true) const;
 
-	// "Instantiate" this action by filling in the wildcard text for the actual
-	// destination, payment, cargo, etc.
+	/**
+	 * "Instantiate" this action by filling in the wildcard text for the actual
+	 * destination, payment, cargo, etc.
+	*/
 	MissionAction Instantiate(std::map<std::string, std::string> &subs,
 		const System *origin, int jumps, int64_t payload) const;
 
@@ -85,10 +101,14 @@ private:
 	ExclusiveItem<Phrase> dialogPhrase;
 	ExclusiveItem<Conversation> conversation;
 
-	// Outfits that are required to be owned (or not) for this action to be performable.
+	/**
+	 * Outfits that are required to be owned (or not) for this action to be performable.
+	*/
 	std::map<const Outfit *, int> requiredOutfits;
 
-	// Tasks this mission action performs, such as modifying accounts, inventory, or conditions.
+	/**
+	 * Tasks this mission action performs, such as modifying accounts, inventory, or conditions.
+	*/
 	GameAction action;
 };
 

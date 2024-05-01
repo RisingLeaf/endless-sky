@@ -113,7 +113,9 @@ namespace {
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 Mission::Mission(const DataNode &node)
 {
 	Load(node);
@@ -121,7 +123,9 @@ Mission::Mission(const DataNode &node)
 
 
 
-// Load a mission, either from the game data or from a saved game.
+/**
+ * Load a mission, either from the game data or from a saved game.
+*/
 void Mission::Load(const DataNode &node)
 {
 	// All missions need a name.
@@ -334,8 +338,10 @@ void Mission::Load(const DataNode &node)
 
 
 
-// Save a mission. It is safe to assume that any mission that is being saved
-// is already "instantiated," so only a subset of the data must be saved.
+/**
+ * Save a mission. It is safe to assume that any mission that is being saved
+ * is already "instantiated," so only a subset of the data must be saved.
+*/
 void Mission::Save(DataWriter &out, const string &tag) const
 {
 	out.Write(tag, name);
@@ -479,7 +485,9 @@ void Mission::NeverOffer()
 
 
 
-// Basic mission information.
+/**
+ * Basic mission information.
+*/
 const EsUuid &Mission::UUID() const noexcept
 {
 	return uuid;
@@ -501,8 +509,10 @@ const string &Mission::Description() const
 
 
 
-// Check if this mission should be shown in your mission list. If not, the
-// player will not know this mission exists (which is sometimes useful).
+/**
+ * Check if this mission should be shown in your mission list. If not, the
+ * player will not know this mission exists (which is sometimes useful).
+*/
 bool Mission::IsVisible() const
 {
 	return isVisible;
@@ -510,8 +520,10 @@ bool Mission::IsVisible() const
 
 
 
-// Check if this instantiated mission uses any systems, planets, or ships that are
-// not fully defined. If everything is fully defined, this is a valid mission.
+/**
+ * Check if this instantiated mission uses any systems, planets, or ships that are
+ * not fully defined. If everything is fully defined, this is a valid mission.
+*/
 bool Mission::IsValid() const
 {
 	// Planets must be defined and in a system. However, a source system does not necessarily exist.
@@ -560,9 +572,11 @@ bool Mission::IsValid() const
 
 
 
-// Check if this mission has high priority. If any high-priority missions
-// are available, no others will be shown at landing or in the spaceport.
-// This is to be used for missions that are part of a series.
+/**
+ * Check if this mission has high priority. If any high-priority missions
+ * are available, no others will be shown at landing or in the spaceport.
+ * This is to be used for missions that are part of a series.
+*/
 bool Mission::HasPriority() const
 {
 	return hasPriority;
@@ -570,8 +584,10 @@ bool Mission::HasPriority() const
 
 
 
-// Check if this mission is a "minor" mission. Minor missions will only be
-// offered if no other missions (minor or otherwise) are being offered.
+/**
+ * Check if this mission is a "minor" mission. Minor missions will only be
+ * offered if no other missions (minor or otherwise) are being offered.
+*/
 bool Mission::IsMinor() const
 {
 	return isMinor;
@@ -586,7 +602,9 @@ bool Mission::IsAtLocation(Location location) const
 
 
 
-// Information about what you are doing.
+/**
+ * Information about what you are doing.
+*/
 const Ship *Mission::SourceShip() const
 {
 	return sourceShip;
@@ -685,7 +703,9 @@ const int Mission::ExpectedJumps() const
 
 
 
-// The mission must be completed by this deadline (if there is a deadline).
+/**
+ * The mission must be completed by this deadline (if there is a deadline).
+*/
 const Date &Mission::Deadline() const
 {
 	return deadline;
@@ -693,8 +713,10 @@ const Date &Mission::Deadline() const
 
 
 
-// If this mission's deadline was before the given date and it has not been
-// marked as failing already, mark it and return true.
+/**
+ * If this mission's deadline was before the given date and it has not been
+ * marked as failing already, mark it and return true.
+*/
 bool Mission::CheckDeadline(const Date &today)
 {
 	if(!hasFailed && deadline && deadline < today)
@@ -707,7 +729,9 @@ bool Mission::CheckDeadline(const Date &today)
 
 
 
-// Check if you have special clearance to land on your destination.
+/**
+ * Check if you have special clearance to land on your destination.
+*/
 bool Mission::HasClearance(const Planet *planet) const
 {
 	if(clearance.empty())
@@ -719,8 +743,10 @@ bool Mission::HasClearance(const Planet *planet) const
 
 
 
-// Get the string to be shown in the destination planet's hailing dialog. If
-// this is "auto", you don't have to hail them to get landing permission.
+/**
+ * Get the string to be shown in the destination planet's hailing dialog. If
+ * this is "auto", you don't have to hail them to get landing permission.
+*/
 const string &Mission::ClearanceMessage() const
 {
 	return clearance;
@@ -728,8 +754,10 @@ const string &Mission::ClearanceMessage() const
 
 
 
-// Check whether we have full clearance to land and use the planet's
-// services, or whether we are landing in secret ("infiltrating").
+/**
+ * Check whether we have full clearance to land and use the planet's
+ * services, or whether we are landing in secret ("infiltrating").
+*/
 bool Mission::HasFullClearance() const
 {
 	return hasFullClearance;
@@ -737,7 +765,9 @@ bool Mission::HasFullClearance() const
 
 
 
-// Check if it's possible to offer or complete this mission right now.
+/**
+ * Check if it's possible to offer or complete this mission right now.
+*/
 bool Mission::CanOffer(const PlayerInfo &player, const shared_ptr<Ship> &boardingShip) const
 {
 	if(location == BOARDING || location == ASSISTING)
@@ -817,7 +847,9 @@ bool Mission::HasSpace(const PlayerInfo &player) const
 
 
 
-// Check if this mission's cargo can fit entirely on the referenced ship.
+/**
+ * Check if this mission's cargo can fit entirely on the referenced ship.
+*/
 bool Mission::HasSpace(const Ship &ship) const
 {
 	return (cargoSize <= ship.Cargo().Free() && passengers <= ship.Cargo().BunksFree());
@@ -835,8 +867,10 @@ bool Mission::CanComplete(const PlayerInfo &player) const
 
 
 
-// This function dictates whether missions on the player's map are shown in
-// bright or dim text colors, and may be called while in-flight or landed.
+/**
+ * This function dictates whether missions on the player's map are shown in
+ * bright or dim text colors, and may be called while in-flight or landed.
+*/
 bool Mission::IsSatisfied(const PlayerInfo &player) const
 {
 	if(!waypoints.empty() || !stopovers.empty())
@@ -907,7 +941,9 @@ bool Mission::OverridesCapture() const
 
 
 
-// Mark a mission failed (e.g. due to a "fail" action in another mission).
+/**
+ * Mark a mission failed (e.g. due to a "fail" action in another mission).
+*/
 void Mission::Fail()
 {
 	hasFailed = true;
@@ -915,10 +951,12 @@ void Mission::Fail()
 
 
 
-// Get a string to show if this mission is "blocked" from being offered
-// because it requires you to have more passenger or cargo space free. After
-// calling this function, any future calls to it will return an empty string
-// so that you do not display the same message multiple times.
+/**
+ * Get a string to show if this mission is "blocked" from being offered
+ * because it requires you to have more passenger or cargo space free. After
+ * calling this function, any future calls to it will return an empty string
+ * so that you do not display the same message multiple times.
+*/
 string Mission::BlockedMessage(const PlayerInfo &player)
 {
 	if(blocked.empty())
@@ -973,9 +1011,11 @@ string Mission::BlockedMessage(const PlayerInfo &player)
 
 
 
-// Check if this mission recommends that the game be autosaved when it is
-// accepted. This should be set for main story line missions that have a
-// high chance of failing, such as escort missions.
+/**
+ * Check if this mission recommends that the game be autosaved when it is
+ * accepted. This should be set for main story line missions that have a
+ * high chance of failing, such as escort missions.
+*/
 bool Mission::RecommendsAutosave() const
 {
 	return autosave;
@@ -983,8 +1023,10 @@ bool Mission::RecommendsAutosave() const
 
 
 
-// Check if this mission is unique, i.e. not something that will be offered
-// over and over again in different variants.
+/**
+ * Check if this mission is unique, i.e. not something that will be offered
+ * over and over again in different variants.
+*/
 bool Mission::IsUnique() const
 {
 	return (repeat == 1);
@@ -992,9 +1034,11 @@ bool Mission::IsUnique() const
 
 
 
-// When the state of this mission changes, it may make changes to the player
-// information or show new UI panels. PlayerInfo::MissionCallback() will be
-// used as the callback for any UI panel that returns a value.
+/**
+ * When the state of this mission changes, it may make changes to the player
+ * information or show new UI panels. PlayerInfo::MissionCallback() will be
+ * used as the callback for any UI panel that returns a value.
+*/
 bool Mission::Do(Trigger trigger, PlayerInfo &player, UI *ui, const shared_ptr<Ship> &boardingShip)
 {
 	if(trigger == STOPOVER)
@@ -1114,8 +1158,10 @@ bool Mission::RequiresGiftedShip(const string &shipId) const
 
 
 
-// Get a list of NPCs associated with this mission. Every time the player
-// takes off from a planet, they should be added to the active ships.
+/**
+ * Get a list of NPCs associated with this mission. Every time the player
+ * takes off from a planet, they should be added to the active ships.
+*/
 const list<NPC> &Mission::NPCs() const
 {
 	return npcs;
@@ -1123,7 +1169,9 @@ const list<NPC> &Mission::NPCs() const
 
 
 
-// Update which NPCs are active based on their spawn and despawn conditions.
+/**
+ * Update which NPCs are active based on their spawn and despawn conditions.
+*/
 void Mission::UpdateNPCs(const PlayerInfo &player)
 {
 	for(auto &npc : npcs)
@@ -1132,7 +1180,9 @@ void Mission::UpdateNPCs(const PlayerInfo &player)
 
 
 
-// Checks if the given ship belongs to one of the mission's NPCs.
+/**
+ * Checks if the given ship belongs to one of the mission's NPCs.
+*/
 bool Mission::HasShip(const shared_ptr<Ship> &ship) const
 {
 	for(const auto &npc : npcs)
@@ -1144,8 +1194,10 @@ bool Mission::HasShip(const shared_ptr<Ship> &ship) const
 
 
 
-// If any event occurs between two ships, check to see if this mission cares
-// about it. This may affect the mission status or display a message.
+/**
+ * If any event occurs between two ships, check to see if this mission cares
+ * about it. This may affect the mission status or display a message.
+*/
 void Mission::Do(const ShipEvent &event, PlayerInfo &player, UI *ui)
 {
 	if(event.TargetGovernment()->IsPlayer() && !hasFailed)
@@ -1207,9 +1259,11 @@ void Mission::Do(const ShipEvent &event, PlayerInfo &player, UI *ui)
 
 
 
-// Get the internal name used for this mission. This name is unique and is
-// never modified by string substitution, so it can be used in condition
-// variables, etc.
+/**
+ * Get the internal name used for this mission. This name is unique and is
+ * never modified by string substitution, so it can be used in condition
+ * variables, etc.
+*/
 const string &Mission::Identifier() const
 {
 	return name;
@@ -1217,9 +1271,11 @@ const string &Mission::Identifier() const
 
 
 
-// Get a specific mission action from this mission.
-// If a mission action is not found for the given trigger, returns an empty
-// mission action.
+/**
+ * Get a specific mission action from this mission.
+ * If a mission action is not found for the given trigger, returns an empty
+ * mission action.
+*/
 const MissionAction &Mission::GetAction(Trigger trigger) const
 {
 	auto ait = actions.find(trigger);
@@ -1229,8 +1285,10 @@ const MissionAction &Mission::GetAction(Trigger trigger) const
 
 
 
-// "Instantiate" a mission by replacing randomly selected values and places
-// with a single choice, and then replacing any wildcard text as well.
+/**
+ * "Instantiate" a mission by replacing randomly selected values and places
+ * with a single choice, and then replacing any wildcard text as well.
+*/
 Mission Mission::Instantiate(const PlayerInfo &player, const shared_ptr<Ship> &boardingShip) const
 {
 	Mission result;
@@ -1554,8 +1612,10 @@ int Mission::CalculateJumps(const System *sourceSystem)
 
 
 
-// Perform an "on enter" MissionAction associated with the current system.
-// Returns true if an action was performed.
+/**
+ * Perform an "on enter" MissionAction associated with the current system.
+ * Returns true if an action was performed.
+*/
 bool Mission::Enter(const System *system, PlayerInfo &player, UI *ui)
 {
 	const auto eit = onEnter.find(system);
@@ -1581,8 +1641,10 @@ bool Mission::Enter(const System *system, PlayerInfo &player, UI *ui)
 
 
 
-// For legacy code, contraband definitions can be placed in two different
-// locations, so move that parsing out to a helper function.
+/**
+ * For legacy code, contraband definitions can be placed in two different
+ * locations, so move that parsing out to a helper function.
+*/
 bool Mission::ParseContraband(const DataNode &node)
 {
 	if(node.Token(0) == "illegal" && node.Size() == 2)

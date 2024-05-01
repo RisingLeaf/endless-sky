@@ -25,7 +25,9 @@ using namespace std;
 
 
 
-// Default constructor
+/**
+ * Default constructor
+*/
 ConditionsStore::DerivedProvider::DerivedProvider(const string &name, bool isPrefixProvider)
 	: name(name), isPrefixProvider(isPrefixProvider)
 {
@@ -142,7 +144,9 @@ ConditionsStore::ConditionEntry &ConditionsStore::ConditionEntry::operator-=(int
 
 
 
-// Constructor with loading primary conditions from datanode.
+/**
+ * Constructor with loading primary conditions from datanode.
+*/
 ConditionsStore::ConditionsStore(const DataNode &node)
 {
 	Load(node);
@@ -150,7 +154,9 @@ ConditionsStore::ConditionsStore(const DataNode &node)
 
 
 
-// Constructor where a number of initial manually-set values are set.
+/**
+ * Constructor where a number of initial manually-set values are set.
+*/
 ConditionsStore::ConditionsStore(initializer_list<pair<string, int64_t>> initialConditions)
 {
 	for(const auto &it : initialConditions)
@@ -159,7 +165,9 @@ ConditionsStore::ConditionsStore(initializer_list<pair<string, int64_t>> initial
 
 
 
-// Constructor where a number of initial manually-set values are set.
+/**
+ * Constructor where a number of initial manually-set values are set.
+*/
 ConditionsStore::ConditionsStore(const map<string, int64_t> &initialConditions)
 {
 	for(const auto &it : initialConditions)
@@ -199,9 +207,11 @@ void ConditionsStore::Save(DataWriter &out) const
 
 
 
-// Get a condition from the Conditions-Store. Retrieves both conditions
-// that were directly set (primary conditions) as well as conditions
-// derived from other data-structures (derived conditions).
+/**
+ * Get a condition from the Conditions-Store. Retrieves both conditions
+ * that were directly set (primary conditions) as well as conditions
+ * derived from other data-structures (derived conditions).
+*/
 int64_t ConditionsStore::Get(const string &name) const
 {
 	const ConditionEntry *ce = GetEntry(name);
@@ -230,8 +240,10 @@ bool ConditionsStore::Has(const string &name) const
 
 
 
-// Returns a pair where the boolean indicates if the game has this condition set,
-// and an int64_t which contains the value if the condition was set.
+/**
+ * Returns a pair where the boolean indicates if the game has this condition set,
+ * and an int64_t which contains the value if the condition was set.
+*/
 pair<bool, int64_t> ConditionsStore::HasGet(const string &name) const
 {
 	const ConditionEntry *ce = GetEntry(name);
@@ -251,7 +263,9 @@ pair<bool, int64_t> ConditionsStore::HasGet(const string &name) const
 
 
 
-// Add a value to a condition. Returns true on success, false on failure.
+/**
+ * Add a value to a condition. Returns true on success, false on failure.
+*/
 bool ConditionsStore::Add(const string &name, int64_t value)
 {
 	// This code performers 2 lookups of the condition, once for get and
@@ -262,8 +276,10 @@ bool ConditionsStore::Add(const string &name, int64_t value)
 
 
 
-// Set a value for a condition, either for the local value, or by performing
-// a set on the provider.
+/**
+ * Set a value for a condition, either for the local value, or by performing
+ * a set on the provider.
+*/
 bool ConditionsStore::Set(const string &name, int64_t value)
 {
 	ConditionEntry *ce = GetEntry(name);
@@ -282,8 +298,10 @@ bool ConditionsStore::Set(const string &name, int64_t value)
 
 
 
-// Erase a condition completely, either the local value or by performing
-// an erase on the provider.
+/**
+ * Erase a condition completely, either the local value or by performing
+ * an erase on the provider.
+*/
 bool ConditionsStore::Erase(const string &name)
 {
 	ConditionEntry *ce = GetEntry(name);
@@ -323,7 +341,9 @@ ConditionsStore::ConditionEntry &ConditionsStore::operator[](const string &name)
 
 
 
-// Build a provider for a given prefix.
+/**
+ * Build a provider for a given prefix.
+*/
 ConditionsStore::DerivedProvider &ConditionsStore::GetProviderPrefixed(const string &prefix)
 {
 	auto it = providers.emplace(std::piecewise_construct,
@@ -358,7 +378,9 @@ ConditionsStore::DerivedProvider &ConditionsStore::GetProviderPrefixed(const str
 
 
 
-// Build a provider for the condition identified by the given name.
+/**
+ * Build a provider for the condition identified by the given name.
+*/
 ConditionsStore::DerivedProvider &ConditionsStore::GetProviderNamed(const string &name)
 {
 	auto it = providers.emplace(std::piecewise_construct,
@@ -374,7 +396,9 @@ ConditionsStore::DerivedProvider &ConditionsStore::GetProviderNamed(const string
 
 
 
-// Helper to completely remove all data and linked condition-providers from the store.
+/**
+ * Helper to completely remove all data and linked condition-providers from the store.
+*/
 void ConditionsStore::Clear()
 {
 	storage.clear();
@@ -383,7 +407,9 @@ void ConditionsStore::Clear()
 
 
 
-// Helper for testing; check how many primary conditions are registered.
+/**
+ * Helper for testing; check how many primary conditions are registered.
+*/
 int64_t ConditionsStore::PrimariesSize() const
 {
 	int64_t result = 0;
@@ -433,7 +459,9 @@ const ConditionsStore::ConditionEntry *ConditionsStore::GetEntry(const string &n
 
 
 
-// Helper function to check if we can safely add a provider with the given name.
+/**
+ * Helper function to check if we can safely add a provider with the given name.
+*/
 bool ConditionsStore::VerifyProviderLocation(const string &name, DerivedProvider *provider) const
 {
 	auto it = storage.upper_bound(name);

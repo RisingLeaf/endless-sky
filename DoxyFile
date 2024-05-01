@@ -27,7 +27,9 @@ PROJECT_NAME           = "Endless Sky"
 PROJECT_NUMBER         =
 PROJECT_BRIEF          =
 PROJECT_LOGO           =
-OUTPUT_DIRECTORY       = doxygen/
+OUTPUT_DIRECTORY       = esdocs.github.io/generated/
+
+CREATE_SUBDIRS         = YES
 
 INPUT                  = source/ source/comparators source/ship source/text
 

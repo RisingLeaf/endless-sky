@@ -25,7 +25,9 @@ using namespace std;
 
 
 
-// Construct a DataNode and remember what its parent is.
+/**
+ * Construct a DataNode and remember what its parent is.
+*/
 DataNode::DataNode(const DataNode *parent) noexcept(false)
 	: parent(parent)
 {
@@ -37,7 +39,9 @@ DataNode::DataNode(const DataNode *parent) noexcept(false)
 
 
 
-// Copy constructor.
+/**
+ * Copy constructor.
+*/
 DataNode::DataNode(const DataNode &other)
 	: children(other.children), tokens(other.tokens), lineNumber(std::move(other.lineNumber))
 {
@@ -46,7 +50,9 @@ DataNode::DataNode(const DataNode &other)
 
 
 
-// Copy assignment operator.
+/**
+ * Copy assignment operator.
+*/
 DataNode &DataNode::operator=(const DataNode &other)
 {
 	children = other.children;
@@ -77,7 +83,9 @@ DataNode &DataNode::operator=(DataNode &&other) noexcept
 
 
 
-// Get the number of tokens in this line of the data file.
+/**
+ * Get the number of tokens in this line of the data file.
+*/
 int DataNode::Size() const noexcept
 {
 	return tokens.size();
@@ -85,7 +93,9 @@ int DataNode::Size() const noexcept
 
 
 
-// Get all tokens.
+/**
+ * Get all tokens.
+*/
 const vector<string> &DataNode::Tokens() const noexcept
 {
 	return tokens;
@@ -93,8 +103,10 @@ const vector<string> &DataNode::Tokens() const noexcept
 
 
 
-// Get the token with the given index. No bounds checking is done.
-// DataFile loading guarantees index 0 always exists.
+/**
+ * Get the token with the given index. No bounds checking is done.
+ * DataFile loading guarantees index 0 always exists.
+*/
 const string &DataNode::Token(int index) const
 {
 	return tokens[index];
@@ -102,7 +114,9 @@ const string &DataNode::Token(int index) const
 
 
 
-// Convert the token with the given index to a numerical value.
+/**
+ * Convert the token with the given index to a numerical value.
+*/
 double DataNode::Value(int index) const
 {
 	// Check for empty strings and out-of-bounds indices.
@@ -118,7 +132,9 @@ double DataNode::Value(int index) const
 
 
 
-// Static helper function for any class which needs to parse string -> number.
+/**
+ * Static helper function for any class which needs to parse string -> number.
+*/
 double DataNode::Value(const string &token)
 {
 	// Allowed format: "[+-]?[0-9]*[.]?[0-9]*([eE][+-]?[0-9]*)?".
@@ -170,8 +186,10 @@ double DataNode::Value(const string &token)
 
 
 
-// Check if the token at the given index is a number in a format that this
-// class is able to parse.
+/**
+ * Check if the token at the given index is a number in a format that this
+ * class is able to parse.
+*/
 bool DataNode::IsNumber(int index) const
 {
 	// Make sure this token exists and is not empty.
@@ -221,9 +239,11 @@ bool DataNode::IsNumber(const string &token)
 
 
 
-// Convert the token at the given index to a boolean. This returns false
-// and prints an error if the index is out of range or the token cannot
-// be interpreted as a number.
+/**
+ * Convert the token at the given index to a boolean. This returns false
+ * and prints an error if the index is out of range or the token cannot
+ * be interpreted as a number.
+*/
 bool DataNode::BoolValue(int index) const
 {
 	// Check for empty strings and out-of-bounds indices.
@@ -242,8 +262,10 @@ bool DataNode::BoolValue(int index) const
 
 
 
-// Check if the token at the given index is a boolean, i.e. "true"/"1" or "false"/"0"
-// as a string.
+/**
+ * Check if the token at the given index is a boolean, i.e. "true"/"1" or "false"/"0"
+ * as a string.
+*/
 bool DataNode::IsBool(int index) const
 {
 	// Make sure this token exists and is not empty.
@@ -262,7 +284,9 @@ bool DataNode::IsBool(const string &token)
 
 
 
-// Check if this node has any children.
+/**
+ * Check if this node has any children.
+*/
 bool DataNode::HasChildren() const noexcept
 {
 	return !children.empty();
@@ -270,7 +294,9 @@ bool DataNode::HasChildren() const noexcept
 
 
 
-// Iterator to the beginning of the list of children.
+/**
+ * Iterator to the beginning of the list of children.
+*/
 list<DataNode>::const_iterator DataNode::begin() const noexcept
 {
 	return children.begin();
@@ -278,7 +304,9 @@ list<DataNode>::const_iterator DataNode::begin() const noexcept
 
 
 
-// Iterator to the end of the list of children.
+/**
+ * Iterator to the end of the list of children.
+*/
 list<DataNode>::const_iterator DataNode::end() const noexcept
 {
 	return children.end();
@@ -286,7 +314,9 @@ list<DataNode>::const_iterator DataNode::end() const noexcept
 
 
 
-// Print a message followed by a "trace" of this node and its parents.
+/**
+ * Print a message followed by a "trace" of this node and its parents.
+*/
 int DataNode::PrintTrace(const string &message) const
 {
 	if(!message.empty())
@@ -327,7 +357,9 @@ int DataNode::PrintTrace(const string &message) const
 
 
 
-// Adjust the parent pointers when a copy is made of a DataNode.
+/**
+ * Adjust the parent pointers when a copy is made of a DataNode.
+*/
 void DataNode::Reparent() noexcept
 {
 	for(DataNode &child : children)

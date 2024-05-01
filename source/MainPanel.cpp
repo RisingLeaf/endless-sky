@@ -163,7 +163,9 @@ void MainPanel::Draw()
 
 
 
-// The planet panel calls this when it closes.
+/**
+ * The planet panel calls this when it closes.
+*/
 void MainPanel::OnCallback()
 {
 	engine.Place();
@@ -178,7 +180,9 @@ void MainPanel::OnCallback()
 
 
 
-// The hail panel calls this when it closes.
+/**
+ * The hail panel calls this when it closes.
+*/
 void MainPanel::OnBribeCallback(const Government *bribed)
 {
 	engine.BreakTargeting(bribed);
@@ -200,7 +204,9 @@ Engine &MainPanel::GetEngine()
 
 
 
-// Only override the ones you need; the default action is to return false.
+/**
+ * Only override the ones you need; the default action is to return false.
+*/
 bool MainPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
 {
 	if(command.Has(Command::MAP | Command::INFO | Command::MESSAGE_LOG | Command::HAIL | Command::HELP))
@@ -587,8 +593,10 @@ bool MainPanel::ShowHelp(bool force)
 
 
 
-// Handle ShipEvents from this and previous Engine::Step calls. Start with the
-// oldest and then process events until any create a new UI element.
+/**
+ * Handle ShipEvents from this and previous Engine::Step calls. Start with the
+ * oldest and then process events until any create a new UI element.
+*/
 void MainPanel::StepEvents(bool &isActive)
 {
 	while(isActive && !eventQueue.empty())

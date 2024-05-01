@@ -38,7 +38,9 @@ namespace {
 
 
 
-// Clear the list, also setting the global time step for animation.
+/**
+ * Clear the list, also setting the global time step for animation.
+*/
 void BatchDrawList::Clear(int step, double zoom)
 {
 	data.clear();
@@ -56,7 +58,9 @@ void BatchDrawList::SetCenter(const Point &center)
 
 
 
-// Add an unswizzled object based on the Body class.
+/**
+ * Add an unswizzled object based on the Body class.
+*/
 bool BatchDrawList::Add(const Body &body, float clip)
 {
 	// TODO: Rather than compensate using 1/2 the Visual | Projectile velocity, we should
@@ -74,7 +78,9 @@ bool BatchDrawList::Add(const Body &body, float clip)
 
 
 
-// TODO: Once we have sprite reference positions, this method will not be needed.
+/**
+ * TODO: Once we have sprite reference positions, this method will not be needed.
+*/
 bool BatchDrawList::AddVisual(const Body &visual)
 {
 	return Add(visual, (visual.Position() - center) * zoom, 1.f);
@@ -82,7 +88,9 @@ bool BatchDrawList::AddVisual(const Body &visual)
 
 
 
-// Draw all the items in this list.
+/**
+ * Draw all the items in this list.
+*/
 void BatchDrawList::Draw() const
 {
 	BatchShader::Bind();

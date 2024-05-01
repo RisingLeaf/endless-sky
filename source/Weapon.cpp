@@ -28,7 +28,9 @@ using namespace std;
 
 
 
-// Load from a "weapon" node, either in an outfit or in a ship (explosion).
+/**
+ * Load from a "weapon" node, either in an outfit or in a ship (explosion).
+*/
 void Weapon::LoadWeapon(const DataNode &node)
 {
 	isWeapon = true;
@@ -398,7 +400,9 @@ bool Weapon::IsWeapon() const
 
 
 
-// Get assets used by this weapon.
+/**
+ * Get assets used by this weapon.
+*/
 const Body &Weapon::WeaponSprite() const
 {
 	return sprite;
@@ -448,7 +452,9 @@ const Sprite *Weapon::Icon() const
 
 
 
-// Effects to be created at the start or end of the weapon's lifetime.
+/**
+ * Effects to be created at the start or end of the weapon's lifetime.
+*/
 const map<const Effect *, int> &Weapon::FireEffects() const
 {
 	return fireEffects;
@@ -514,8 +520,10 @@ double Weapon::Range() const
 
 
 
-// Calculate the fraction of full damage that this weapon deals given the
-// distance that the projectile traveled if it has a damage dropoff range.
+/**
+ * Calculate the fraction of full damage that this weapon deals given the
+ * distance that the projectile traveled if it has a damage dropoff range.
+*/
 double Weapon::DamageDropoff(double distance) const
 {
 	double minDropoff = damageDropoffRange.first;
@@ -532,7 +540,9 @@ double Weapon::DamageDropoff(double distance) const
 
 
 
-// Return the weapon's damage dropoff at maximum range.
+/**
+ * Return the weapon's damage dropoff at maximum range.
+*/
 double Weapon::MaxDropoff() const
 {
 	return damageDropoffModifier;
@@ -540,7 +550,9 @@ double Weapon::MaxDropoff() const
 
 
 
-// Return the ranges at which the weapon's damage dropoff begins and ends.
+/**
+ * Return the ranges at which the weapon's damage dropoff begins and ends.
+*/
 const pair<double, double> &Weapon::DropoffRanges() const
 {
 	return damageDropoffRange;
@@ -548,8 +560,10 @@ const pair<double, double> &Weapon::DropoffRanges() const
 
 
 
-// Legacy support: allow turret outfits with no turn rate to specify a
-// default turnrate.
+/**
+ * Legacy support: allow turret outfits with no turn rate to specify a
+ * default turnrate.
+*/
 void Weapon::SetTurretTurn(double rate)
 {
 	turretTurn = rate;

@@ -27,8 +27,10 @@ using namespace std;
 
 
 
-// Create a timer that is just responsible for measuring the time that
-// elapses until Time() is called.
+/**
+ * Create a timer that is just responsible for measuring the time that
+ * elapses until Time() is called.
+*/
 FrameTimer::FrameTimer()
 {
 	next = chrono::steady_clock::now();
@@ -36,9 +38,11 @@ FrameTimer::FrameTimer()
 
 
 
-// Create a frame timer that will space frames out at exactly the given FPS,
-// _unless_ a frame takes too long by at least the given lag, in which case
-// the next frame happens immediately but no "catch-up" is done.
+/**
+ * Create a frame timer that will space frames out at exactly the given FPS,
+ * _unless_ a frame takes too long by at least the given lag, in which case
+ * the next frame happens immediately but no "catch-up" is done.
+*/
 FrameTimer::FrameTimer(int fps, int maxLagMsec)
 	: step(chrono::nanoseconds(1000000000 / fps)),
 	maxLag(chrono::milliseconds(maxLagMsec))
@@ -49,7 +53,9 @@ FrameTimer::FrameTimer(int fps, int maxLagMsec)
 
 
 
-// Wait until the next frame should begin.
+/**
+ * Wait until the next frame should begin.
+*/
 void FrameTimer::Wait()
 {
 	// Note: in theory this could get interrupted by a signal handler, although
@@ -84,7 +90,9 @@ void FrameTimer::Wait()
 
 
 
-// Find out how long it has been since this timer was created, in seconds.
+/**
+ * Find out how long it has been since this timer was created, in seconds.
+*/
 double FrameTimer::Time() const
 {
 	chrono::steady_clock::time_point now = chrono::steady_clock::now();
@@ -93,7 +101,9 @@ double FrameTimer::Time() const
 
 
 
-// Change the frame rate (for viewing in slow motion).
+/**
+ * Change the frame rate (for viewing in slow motion).
+*/
 void FrameTimer::SetFrameRate(int fps)
 {
 	step = chrono::nanoseconds(1000000000 / fps);
@@ -101,7 +111,9 @@ void FrameTimer::SetFrameRate(int fps)
 
 
 
-// Calculate when the next frame should begin.
+/**
+ * Calculate when the next frame should begin.
+*/
 void FrameTimer::Step()
 {
 	next += step;

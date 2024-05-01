@@ -69,7 +69,9 @@ namespace {
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 NPC::NPC(const DataNode &node)
 {
 	Load(node);
@@ -279,8 +281,10 @@ void NPC::Load(const DataNode &node)
 
 
 
-// Note: the Save() function can assume this is an instantiated NPC, not
-// a template, so fleets will be replaced by individual ships already.
+/**
+ * Note: the Save() function can assume this is an instantiated NPC, not
+ * a template, so fleets will be replaced by individual ships already.
+*/
 void NPC::Save(DataWriter &out) const
 {
 	// If this NPC should no longer appear in-game, don't serialize it.
@@ -418,7 +422,9 @@ const EsUuid &NPC::UUID() const noexcept
 
 
 
-// Update spawning and despawning for this NPC.
+/**
+ * Update spawning and despawning for this NPC.
+*/
 void NPC::UpdateSpawning(const PlayerInfo &player)
 {
 	checkedSpawnConditions = true;
@@ -438,7 +444,9 @@ void NPC::UpdateSpawning(const PlayerInfo &player)
 
 
 
-// Determine if this NPC should be placed in-flight.
+/**
+ * Determine if this NPC should be placed in-flight.
+*/
 bool NPC::ShouldSpawn() const
 {
 	return passedSpawnConditions && !passedDespawnConditions;
@@ -446,7 +454,9 @@ bool NPC::ShouldSpawn() const
 
 
 
-// Get the ships associated with this set of NPCs.
+/**
+ * Get the ships associated with this set of NPCs.
+*/
 const list<shared_ptr<Ship>> NPC::Ships() const
 {
 	return ships;
@@ -454,7 +464,9 @@ const list<shared_ptr<Ship>> NPC::Ships() const
 
 
 
-// Handle the given ShipEvent.
+/**
+ * Handle the given ShipEvent.
+*/
 void NPC::Do(const ShipEvent &event, PlayerInfo &player, UI *ui, const Mission *caller, bool isVisible)
 {
 	// First, check if this ship is part of this NPC. If not, do nothing. If it
@@ -589,7 +601,9 @@ bool NPC::HasSucceeded(const System *playerSystem, bool ignoreIfDespawnable) con
 
 
 
-// Check if the NPC is supposed to be accompanied and is not.
+/**
+ * Check if the NPC is supposed to be accompanied and is not.
+*/
 bool NPC::IsLeftBehind(const System *playerSystem) const
 {
 	if(HasFailed())
@@ -629,8 +643,10 @@ bool NPC::HasFailed() const
 
 
 
-// Create a copy of this NPC but with the fleets replaced by the actual
-// ships they represent, wildcards in the conversation text replaced, etc.
+/**
+ * Create a copy of this NPC but with the fleets replaced by the actual
+ * ships they represent, wildcards in the conversation text replaced, etc.
+*/
 NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const System *destination,
 		int jumps, int64_t payload) const
 {
@@ -737,7 +753,9 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Syst
 
 
 
-// Handle any NPC mission actions that may have been triggered by a ShipEvent.
+/**
+ * Handle any NPC mission actions that may have been triggered by a ShipEvent.
+*/
 void NPC::DoActions(const ShipEvent &event, bool newEvent, PlayerInfo &player, UI *ui, const Mission *caller)
 {
 	// Map the ShipEvent that was received to the Triggers it could flip.

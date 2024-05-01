@@ -959,8 +959,10 @@ void OutfitterPanel::Refill()
 
 
 
-// Determine which ships of the selected ships should be referenced in this
-// iteration of Buy / Sell.
+/**
+ * Determine which ships of the selected ships should be referenced in this
+ * iteration of Buy / Sell.
+*/
 const vector<Ship *> OutfitterPanel::GetShipsToOutfit(bool isBuy) const
 {
 	vector<Ship *> shipsToOutfit;

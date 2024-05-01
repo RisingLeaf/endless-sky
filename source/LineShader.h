@@ -21,8 +21,10 @@ class Point;
 
 
 
-// Class to be used for drawing lines. The sides of a line are anti-aliased, but
-// the start and end of the line are not.
+/**
+ * Class to be used for drawing lines. The sides of a line are anti-aliased, but
+ * the start and end of the line are not.
+*/
 class LineShader {
 public:
 	static void Init();

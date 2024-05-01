@@ -163,12 +163,14 @@ void FleetCargo::LoadSingle(const DataNode &node)
 
 
 
-// Choose the cargo associated with this ship.
-// If outfits were specified, but not commodities, do not pick commodities.
-// If commodities were specified, but not outfits, do not pick outfits.
-// If neither or both were specified, choose commodities more often.
-// Also adds a random amount of extra crew in addition to the required crew,
-// up to the number of bunks remaining after required crew.
+/**
+ * Choose the cargo associated with this ship.
+ * If outfits were specified, but not commodities, do not pick commodities.
+ * If commodities were specified, but not outfits, do not pick outfits.
+ * If neither or both were specified, choose commodities more often.
+ * Also adds a random amount of extra crew in addition to the required crew,
+ * up to the number of bunks remaining after required crew.
+*/
 void FleetCargo::SetCargo(Ship *ship) const
 {
 	const bool canChooseOutfits = commodities.empty() || !outfitters.empty();

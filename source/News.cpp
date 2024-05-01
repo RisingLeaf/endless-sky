@@ -108,7 +108,9 @@ bool News::IsEmpty() const
 
 
 
-// Check if this news item is available given the player's planet and conditions.
+/**
+ * Check if this news item is available given the player's planet and conditions.
+*/
 bool News::Matches(const Planet *planet, const ConditionsStore &conditions) const
 {
 	// If no location filter is specified, it should never match. This can be
@@ -120,7 +122,9 @@ bool News::Matches(const Planet *planet, const ConditionsStore &conditions) cons
 
 
 
-// Get the speaker's name.
+/**
+ * Get the speaker's name.
+*/
 string News::Name() const
 {
 	return names.Get();
@@ -128,7 +132,9 @@ string News::Name() const
 
 
 
-// Pick a portrait at random out of the possible options.
+/**
+ * Pick a portrait at random out of the possible options.
+*/
 const Sprite *News::Portrait() const
 {
 	return portraits.empty() ? nullptr : portraits[Random::Int(portraits.size())];
@@ -136,7 +142,9 @@ const Sprite *News::Portrait() const
 
 
 
-// Get the speaker's message, chosen randomly.
+/**
+ * Get the speaker's message, chosen randomly.
+*/
 string News::Message() const
 {
 	return messages.Get();

@@ -224,12 +224,14 @@ bool ShopPanel::CanSellMultiple() const
 
 
 
-// Helper function for UI buttons to determine if the selected item is
-// already owned. Affects if "Install" is shown for already owned items
-// or if "Buy" is shown for items not yet owned.
-//
-// If we are buying into cargo, then items in cargo don't count as already
-// owned, but they count as "already installed" in cargo.
+/**
+ * Helper function for UI buttons to determine if the selected item is
+ * already owned. Affects if "Install" is shown for already owned items
+ * or if "Buy" is shown for items not yet owned.
+ *
+ * If we are buying into cargo, then items in cargo don't count as already
+ * owned, but they count as "already installed" in cargo.
+*/
 bool ShopPanel::IsAlreadyOwned() const
 {
 	return (playerShip && selectedOutfit && player.Cargo().Get(selectedOutfit))
@@ -282,7 +284,9 @@ void ShopPanel::ToggleCargo()
 
 
 
-// Only override the ones you need; the default action is to return false.
+/**
+ * Only override the ones you need; the default action is to return false.
+*/
 bool ShopPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
 {
 	bool toStorage = planet && planet->HasOutfitter() && (key == 'r' || key == 'u');
@@ -1193,7 +1197,9 @@ void ShopPanel::SideSelect(Ship *ship)
 
 
 
-// If selected item is offscreen, scroll just enough to put it on.
+/**
+ * If selected item is offscreen, scroll just enough to put it on.
+*/
 void ShopPanel::MainAutoScroll(const vector<Zone>::const_iterator &selected)
 {
 	const int TILE_SIZE = TileSize();
@@ -1337,7 +1343,9 @@ void ShopPanel::MainDown()
 
 
 
-// If the selected item is no longer displayed, advance selection until we find something that is.
+/**
+ * If the selected item is no longer displayed, advance selection until we find something that is.
+*/
 void ShopPanel::CheckSelection()
 {
 	if((!selectedOutfit && !selectedShip) ||
@@ -1392,7 +1400,9 @@ void ShopPanel::CheckSelection()
 
 
 
-// The selected item's category has collapsed, to advance to next displayed item.
+/**
+ * The selected item's category has collapsed, to advance to next displayed item.
+*/
 void ShopPanel::CategoryAdvance(const string &category)
 {
 	vector<Zone>::const_iterator it = Selected();
@@ -1441,7 +1451,9 @@ void ShopPanel::CategoryAdvance(const string &category)
 
 
 
-// Find the currently selected item.
+/**
+ * Find the currently selected item.
+*/
 vector<ShopPanel::Zone>::const_iterator ShopPanel::Selected() const
 {
 	vector<Zone>::const_iterator it = zones.begin();
@@ -1454,8 +1466,10 @@ vector<ShopPanel::Zone>::const_iterator ShopPanel::Selected() const
 
 
 
-// Check if the given point is within the button zone, and if so return the
-// letter of the button (or ' ' if it's not on a button).
+/**
+ * Check if the given point is within the button zone, and if so return the
+ * letter of the button (or ' ' if it's not on a button).
+*/
 char ShopPanel::CheckButton(int x, int y)
 {
 	if(x > Screen::Right() - SIDEBAR_WIDTH - 342 && x < Screen::Right() - SIDEBAR_WIDTH - 316 &&

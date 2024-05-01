@@ -53,7 +53,9 @@ namespace {
 
 
 
-// Load a planet's description from a file.
+/**
+ * Load a planet's description from a file.
+*/
 void Planet::Load(const DataNode &node, Set<Wormhole> &wormholes)
 {
 	if(node.Size() < 2)
@@ -295,8 +297,10 @@ void Planet::Load(const DataNode &node, Set<Wormhole> &wormholes)
 
 
 
-// Legacy wormhole do not have an associated Wormhole object so
-// we must auto generate one if we detect such legacy wormhole.
+/**
+ * Legacy wormhole do not have an associated Wormhole object so
+ * we must auto generate one if we detect such legacy wormhole.
+*/
 void Planet::FinishLoading(Set<Wormhole> &wormholes)
 {
 	// If this planet is in multiple systems, then it is a wormhole.
@@ -314,8 +318,10 @@ void Planet::FinishLoading(Set<Wormhole> &wormholes)
 
 
 
-// Test if this planet has been loaded (vs. just referred to). It must also be located in
-// at least one system, and all systems that claim it must themselves be valid.
+/**
+ * Test if this planet has been loaded (vs. just referred to). It must also be located in
+ * at least one system, and all systems that claim it must themselves be valid.
+*/
 bool Planet::IsValid() const
 {
 	return isDefined && !systems.empty() && all_of(systems.begin(), systems.end(),
@@ -324,7 +330,9 @@ bool Planet::IsValid() const
 
 
 
-// Get the name of the planet.
+/**
+ * Get the name of the planet.
+*/
 const string &Planet::Name() const
 {
 	return IsWormhole() ? wormhole->Name() : name;
@@ -339,7 +347,9 @@ void Planet::SetName(const string &name)
 
 
 
-// Get the name used for this planet in the data files.
+/**
+ * Get the name used for this planet in the data files.
+*/
 const string &Planet::TrueName() const
 {
 	return name;
@@ -347,7 +357,9 @@ const string &Planet::TrueName() const
 
 
 
-// Get the planet's descriptive text.
+/**
+ * Get the planet's descriptive text.
+*/
 const string &Planet::Description() const
 {
 	return description;
@@ -355,7 +367,9 @@ const string &Planet::Description() const
 
 
 
-// Get the landscape sprite.
+/**
+ * Get the landscape sprite.
+*/
 const Sprite *Planet::Landscape() const
 {
 	return landscape;
@@ -363,7 +377,9 @@ const Sprite *Planet::Landscape() const
 
 
 
-// Get the name of the ambient audio to play on this planet.
+/**
+ * Get the name of the ambient audio to play on this planet.
+*/
 const string &Planet::MusicName() const
 {
 	return music;
@@ -371,7 +387,9 @@ const string &Planet::MusicName() const
 
 
 
-// Get the list of "attributes" of the planet.
+/**
+ * Get the list of "attributes" of the planet.
+*/
 const set<string> &Planet::Attributes() const
 {
 	return attributes;
@@ -379,7 +397,9 @@ const set<string> &Planet::Attributes() const
 
 
 
-// Get planet's noun descriptor from attributes
+/**
+ * Get planet's noun descriptor from attributes
+*/
 const string &Planet::Noun() const
 {
 	if(IsWormhole())
@@ -394,7 +414,9 @@ const string &Planet::Noun() const
 
 
 
-// Check whether this planet's port is named.
+/**
+ * Check whether this planet's port is named.
+*/
 bool Planet::HasNamedPort() const
 {
 	return !port.Name().empty();
@@ -402,7 +424,9 @@ bool Planet::HasNamedPort() const
 
 
 
-// Get this planet's port.
+/**
+ * Get this planet's port.
+*/
 const Port &Planet::GetPort() const
 {
 	return port;
@@ -410,8 +434,10 @@ const Port &Planet::GetPort() const
 
 
 
-// Check whether there are port services (such as trading, jobs, banking, and hiring)
-// available on this planet.
+/**
+ * Check whether there are port services (such as trading, jobs, banking, and hiring)
+ * available on this planet.
+*/
 bool Planet::HasServices() const
 {
 	return port.HasServices();
@@ -419,8 +445,10 @@ bool Planet::HasServices() const
 
 
 
-// Check if this planet is inhabited (i.e. it has a spaceport, and does not
-// have the "uninhabited" attribute).
+/**
+ * Check if this planet is inhabited (i.e. it has a spaceport, and does not
+ * have the "uninhabited" attribute).
+*/
 bool Planet::IsInhabited() const
 {
 	return inhabited;
@@ -428,7 +456,9 @@ bool Planet::IsInhabited() const
 
 
 
-// Check if this planet has a shipyard.
+/**
+ * Check if this planet has a shipyard.
+*/
 bool Planet::HasShipyard() const
 {
 	return !Shipyard().empty();
@@ -436,7 +466,9 @@ bool Planet::HasShipyard() const
 
 
 
-// Get the list of ships in the shipyard.
+/**
+ * Get the list of ships in the shipyard.
+*/
 const Sale<Ship> &Planet::Shipyard() const
 {
 	shipyard.clear();
@@ -448,7 +480,9 @@ const Sale<Ship> &Planet::Shipyard() const
 
 
 
-// Check if this planet has an outfitter.
+/**
+ * Check if this planet has an outfitter.
+*/
 bool Planet::HasOutfitter() const
 {
 	return !Outfitter().empty();
@@ -456,7 +490,9 @@ bool Planet::HasOutfitter() const
 
 
 
-// Get the list of outfits available from the outfitter.
+/**
+ * Get the list of outfits available from the outfitter.
+*/
 const Sale<Outfit> &Planet::Outfitter() const
 {
 	outfitter.clear();
@@ -468,7 +504,9 @@ const Sale<Outfit> &Planet::Outfitter() const
 
 
 
-// Get this planet's government. Most planets follow the government of the system they are in.
+/**
+ * Get this planet's government. Most planets follow the government of the system they are in.
+*/
 const Government *Planet::GetGovernment() const
 {
 	return government ? government : systems.empty() ? nullptr : GetSystem()->GetGovernment();
@@ -476,7 +514,9 @@ const Government *Planet::GetGovernment() const
 
 
 
-// You need this good a reputation with this system's government to land here.
+/**
+ * You need this good a reputation with this system's government to land here.
+*/
 double Planet::RequiredReputation() const
 {
 	return requiredReputation;
@@ -484,8 +524,10 @@ double Planet::RequiredReputation() const
 
 
 
-// This is what fraction of your fleet's value you must pay as a bribe in
-// order to land on this planet. (If zero, you cannot bribe it.)
+/**
+ * This is what fraction of your fleet's value you must pay as a bribe in
+ * order to land on this planet. (If zero, you cannot bribe it.)
+*/
 double Planet::GetBribeFraction() const
 {
 	return bribe;
@@ -493,8 +535,10 @@ double Planet::GetBribeFraction() const
 
 
 
-// This is how likely the planet's authorities are to notice if you are
-// doing something illegal.
+/**
+ * This is how likely the planet's authorities are to notice if you are
+ * doing something illegal.
+*/
 double Planet::Security() const
 {
 	return security;
@@ -516,8 +560,10 @@ const System *Planet::GetSystem() const
 
 
 
-// Check if this planet is in the given system. Note that wormholes may be
-// in more than one system.
+/**
+ * Check if this planet is in the given system. Note that wormholes may be
+ * in more than one system.
+*/
 bool Planet::IsInSystem(const System *system) const
 {
 	return (find(systems.begin(), systems.end(), system) != systems.end());
@@ -533,8 +579,10 @@ void Planet::SetSystem(const System *system)
 
 
 
-// Remove the given system from the list of systems this planet is in. This
-// must be done when game events rearrange the planets in a system.
+/**
+ * Remove the given system from the list of systems this planet is in. This
+ * must be done when game events rearrange the planets in a system.
+*/
 void Planet::RemoveSystem(const System *system)
 {
 	auto it = find(systems.begin(), systems.end(), system);
@@ -551,7 +599,9 @@ const vector<const System *> &Planet::Systems() const
 
 
 
-// Check if this is a wormhole (that is, it appears in multiple systems).
+/**
+ * Check if this is a wormhole (that is, it appears in multiple systems).
+*/
 bool Planet::IsWormhole() const
 {
 	return wormhole;
@@ -566,8 +616,10 @@ const Wormhole *Planet::GetWormhole() const
 
 
 
-// Check if the given ship has all the attributes necessary to allow it to
-// land on this planet.
+/**
+ * Check if the given ship has all the attributes necessary to allow it to
+ * land on this planet.
+*/
 bool Planet::IsAccessible(const Ship *ship) const
 {
 	// If this is a wormhole that leads to an inaccessible system, no ship can land here.
@@ -586,7 +638,9 @@ bool Planet::IsAccessible(const Ship *ship) const
 
 
 
-// Check if this planet has any required attributes that restrict landability.
+/**
+ * Check if this planet has any required attributes that restrict landability.
+*/
 bool Planet::IsUnrestricted() const
 {
 	return requiredAttributes.empty();
@@ -594,8 +648,10 @@ bool Planet::IsUnrestricted() const
 
 
 
-// Below are convenience functions which access the game state in Politics,
-// but do so with a less convoluted syntax:
+/**
+ * Below are convenience functions which access the game state in Politics,
+ * but do so with a less convoluted syntax:
+*/
 bool Planet::HasFuelFor(const Ship &ship) const
 {
 	return !IsWormhole() && port.CanRecharge(Port::RechargeType::Fuel) && CanLand(ship);
@@ -645,7 +701,9 @@ void Planet::Bribe(bool fullAccess) const
 
 
 
-// Demand tribute, and get the planet's response.
+/**
+ * Demand tribute, and get the planet's response.
+*/
 string Planet::DemandTribute(PlayerInfo &player) const
 {
 	const auto &playerTribute = player.GetTribute();
@@ -693,7 +751,9 @@ string Planet::DemandTribute(PlayerInfo &player) const
 
 
 
-// While being tributed, attempt to spawn the next specified defense fleet.
+/**
+ * While being tributed, attempt to spawn the next specified defense fleet.
+*/
 void Planet::DeployDefense(list<shared_ptr<Ship>> &ships) const
 {
 	if(!isDefending || Random::Int(60) || defenseDeployed == defenseFleets.size())

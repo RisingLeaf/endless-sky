@@ -27,9 +27,11 @@ using namespace std;
 
 
 
-// Find paths to the given system. If the given maximum count is above zero,
-// it is a limit on how many systems should be returned. If it is below zero
-// it specifies the maximum distance away that paths should be found.
+/**
+ * Find paths to the given system. If the given maximum count is above zero,
+ * it is a limit on how many systems should be returned. If it is below zero
+ * it specifies the maximum distance away that paths should be found.
+*/
 DistanceMap::DistanceMap(const System *center, int maxCount, int maxDistance)
 	: DistanceMap(center, WormholeStrategy::NONE, false, maxCount, maxDistance)
 {
@@ -37,8 +39,10 @@ DistanceMap::DistanceMap(const System *center, int maxCount, int maxDistance)
 
 
 
-// Constructor that allows configuring the use of wormholes and jump drive travel.
-// Since no ship instance is available, we use the base game's default fuel for jump travel.
+/**
+ * Constructor that allows configuring the use of wormholes and jump drive travel.
+ * Since no ship instance is available, we use the base game's default fuel for jump travel.
+*/
 DistanceMap::DistanceMap(const System *center, WormholeStrategy wormholeStrategy,
 		bool useJumpDrive, int maxCount, int maxDistance)
 	: center(center), wormholeStrategy(wormholeStrategy), maxCount(maxCount),
@@ -49,9 +53,11 @@ DistanceMap::DistanceMap(const System *center, WormholeStrategy wormholeStrategy
 
 
 
-// If a player is given, the map will only use hyperspace paths known to the
-// player; that is, one end of the path has been visited. Also, if the
-// player's flagship has a jump drive, the jumps will be make use of it.
+/**
+ * If a player is given, the map will only use hyperspace paths known to the
+ * player; that is, one end of the path has been visited. Also, if the
+ * player's flagship has a jump drive, the jumps will be make use of it.
+*/
 DistanceMap::DistanceMap(const PlayerInfo &player, const System *center)
 	: player(&player)
 {
@@ -75,11 +81,13 @@ DistanceMap::DistanceMap(const PlayerInfo &player, const System *center)
 
 
 
-// Calculate the path for the given ship to get to the given system. The
-// ship will use a jump drive or hyperdrive depending on what it has. The
-// pathfinding will stop once a path to the destination is found.
-// If a player is given, the path will only include systems that the
-// player has visited.
+/**
+ * Calculate the path for the given ship to get to the given system. The
+ * ship will use a jump drive or hyperdrive depending on what it has. The
+ * pathfinding will stop once a path to the destination is found.
+ * If a player is given, the path will only include systems that the
+ * player has visited.
+*/
 DistanceMap::DistanceMap(const Ship &ship, const System *destination, const PlayerInfo *player)
 	: player(player), source(ship.GetSystem()), center(destination)
 {
@@ -91,7 +99,9 @@ DistanceMap::DistanceMap(const Ship &ship, const System *destination, const Play
 
 
 
-// Find out if the given system is reachable.
+/**
+ * Find out if the given system is reachable.
+*/
 bool DistanceMap::HasRoute(const System *system) const
 {
 	return route.count(system);
@@ -99,7 +109,9 @@ bool DistanceMap::HasRoute(const System *system) const
 
 
 
-// Find out how many days away the given system is.
+/**
+ * Find out how many days away the given system is.
+*/
 int DistanceMap::Days(const System *system) const
 {
 	auto it = route.find(system);
@@ -108,7 +120,9 @@ int DistanceMap::Days(const System *system) const
 
 
 
-// Starting in the given system, what is the next system along the route?
+/**
+ * Starting in the given system, what is the next system along the route?
+*/
 const System *DistanceMap::Route(const System *system) const
 {
 	auto it = route.find(system);
@@ -117,7 +131,9 @@ const System *DistanceMap::Route(const System *system) const
 
 
 
-// Get a set containing all the systems.
+/**
+ * Get a set containing all the systems.
+*/
 set<const System *> DistanceMap::Systems() const
 {
 	set<const System *> systems;
@@ -128,7 +144,9 @@ set<const System *> DistanceMap::Systems() const
 
 
 
-// Return the destination system - the 'center' system.
+/**
+ * Return the destination system - the 'center' system.
+*/
 const System *DistanceMap::End() const
 {
 	return center;
@@ -154,9 +172,11 @@ DistanceMap::Edge::Edge(const System *system)
 
 
 
-// Sorting operator to prioritize the "best" edges. The priority queue
-// returns the "largest" item, so this should return true if this item
-// is lower priority than the given item.
+/**
+ * Sorting operator to prioritize the "best" edges. The priority queue
+ * returns the "largest" item, so this should return true if this item
+ * is lower priority than the given item.
+*/
 bool DistanceMap::Edge::operator<(const Edge &other) const
 {
 	if(fuel != other.fuel)
@@ -170,9 +190,11 @@ bool DistanceMap::Edge::operator<(const Edge &other) const
 
 
 
-// Depending on the capabilities of the given ship, use hyperspace paths,
-// jump drive paths, or both to find the shortest route. Bail out if the
-// source system or the maximum count is reached.
+/**
+ * Depending on the capabilities of the given ship, use hyperspace paths,
+ * jump drive paths, or both to find the shortest route. Bail out if the
+ * source system or the maximum count is reached.
+*/
 void DistanceMap::Init(const Ship *ship)
 {
 	if(!center || (ship && ship->IsRestrictedFrom(*center)))
@@ -273,7 +295,9 @@ void DistanceMap::Init(const Ship *ship)
 
 
 
-// Add the given links to the map. Return false if an end condition is hit.
+/**
+ * Add the given links to the map. Return false if an end condition is hit.
+*/
 bool DistanceMap::Propagate(Edge edge, bool useJump)
 {
 	edge.fuel += (useJump ? jumpFuel : hyperspaceFuel);
@@ -294,7 +318,9 @@ bool DistanceMap::Propagate(Edge edge, bool useJump)
 
 
 
-// Check if we already have a better path to the given system.
+/**
+ * Check if we already have a better path to the given system.
+*/
 bool DistanceMap::HasBetter(const System &to, const Edge &edge)
 {
 	auto it = route.find(&to);
@@ -303,7 +329,9 @@ bool DistanceMap::HasBetter(const System &to, const Edge &edge)
 
 
 
-// Add the given path to the record.
+/**
+ * Add the given path to the record.
+*/
 void DistanceMap::Add(const System &to, Edge edge)
 {
 	// This is the best path we have found so far to this system, but it is
@@ -316,9 +344,11 @@ void DistanceMap::Add(const System &to, Edge edge)
 
 
 
-// Check whether the given link is travelable. If no player was given in the
-// constructor then this depends on travel restrictions; otherwise, the player must know
-// that the given link exists.
+/**
+ * Check whether the given link is travelable. If no player was given in the
+ * constructor then this depends on travel restrictions; otherwise, the player must know
+ * that the given link exists.
+*/
 bool DistanceMap::CheckLink(const System &from, const System &to, bool useJump) const
 {
 	if(!player)

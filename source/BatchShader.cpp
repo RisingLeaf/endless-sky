@@ -37,7 +37,9 @@ namespace {
 
 
 
-// Initialize the shaders.
+/**
+ * Initialize the shaders.
+*/
 void BatchShader::Init()
 {
 	static const char *vertexCode =

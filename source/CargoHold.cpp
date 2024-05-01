@@ -51,7 +51,9 @@ namespace {
 
 
 
-// Remove any items in this cargo hold.
+/**
+ * Remove any items in this cargo hold.
+*/
 void CargoHold::Clear()
 {
 	size = 0;
@@ -64,8 +66,10 @@ void CargoHold::Clear()
 
 
 
-// Load the cargo manifest from a DataFile. This must be done after the
-// GameData is loaded, so that the sizes of any outfits are known.
+/**
+ * Load the cargo manifest from a DataFile. This must be done after the
+ * GameData is loaded, so that the sizes of any outfits are known.
+*/
 void CargoHold::Load(const DataNode &node)
 {
 	// Cargo is stored as name / amount pairs in two lists: commodities and outfits.
@@ -94,7 +98,9 @@ void CargoHold::Load(const DataNode &node)
 
 
 
-// Save the cargo manifest to a file.
+/**
+ * Save the cargo manifest to a file.
+*/
 void CargoHold::Save(DataWriter &out) const
 {
 	bool first = true;
@@ -154,7 +160,9 @@ void CargoHold::Save(DataWriter &out) const
 
 
 
-// Set the capacity of this cargo hold.
+/**
+ * Set the capacity of this cargo hold.
+*/
 void CargoHold::SetSize(int tons)
 {
 	size = tons;
@@ -162,7 +170,9 @@ void CargoHold::SetSize(int tons)
 
 
 
-// Get the capacity of this hold.
+/**
+ * Get the capacity of this hold.
+*/
 int CargoHold::Size() const
 {
 	return size;
@@ -170,7 +180,9 @@ int CargoHold::Size() const
 
 
 
-// Get the amount of free cargo space.
+/**
+ * Get the amount of free cargo space.
+*/
 int CargoHold::Free() const
 {
 	return size - Used();
@@ -185,8 +197,10 @@ double CargoHold::FreePrecise() const
 
 
 
-// Get the total amount of cargo space used, rounded up to the nearest ton.
-// (Some outfits may have non-integral masses.)
+/**
+ * Get the total amount of cargo space used, rounded up to the nearest ton.
+ * (Some outfits may have non-integral masses.)
+*/
 int CargoHold::Used() const
 {
 	return CommoditiesSize() + OutfitsSize() + MissionCargoSize();
@@ -201,7 +215,9 @@ double CargoHold::UsedPrecise() const
 
 
 
-// Get the total number of tons of commodities.
+/**
+ * Get the total number of tons of commodities.
+*/
 int CargoHold::CommoditiesSize() const
 {
 	int size = 0;
@@ -212,7 +228,9 @@ int CargoHold::CommoditiesSize() const
 
 
 
-// Get the total mass of outfit cargo, rounded up to the nearest ton.
+/**
+ * Get the total mass of outfit cargo, rounded up to the nearest ton.
+*/
 int CargoHold::OutfitsSize() const
 {
 	return ceil(OutfitsSizePrecise());
@@ -230,8 +248,10 @@ double CargoHold::OutfitsSizePrecise() const
 
 
 
-// Check if any outfits are being carried. Note that some outfits may have mass
-// zero, so this check cannot be done by calling OutfitsSize().
+/**
+ * Check if any outfits are being carried. Note that some outfits may have mass
+ * zero, so this check cannot be done by calling OutfitsSize().
+*/
 bool CargoHold::HasOutfits() const
 {
 	// The code for adding and removing outfits does not clear the entry in the
@@ -245,7 +265,9 @@ bool CargoHold::HasOutfits() const
 
 
 
-// Get the total mass of mission cargo.
+/**
+ * Get the total mass of mission cargo.
+*/
 int CargoHold::MissionCargoSize() const
 {
 	int size = 0;
@@ -256,8 +278,10 @@ int CargoHold::MissionCargoSize() const
 
 
 
-// Check if any mission cargo is being carried. Some mission cargo has no mass,
-// so this cannot be done by calling MissionCargoSize().
+/**
+ * Check if any mission cargo is being carried. Some mission cargo has no mass,
+ * so this cannot be done by calling MissionCargoSize().
+*/
 bool CargoHold::HasMissionCargo() const
 {
 	return !missionCargo.empty();
@@ -265,7 +289,9 @@ bool CargoHold::HasMissionCargo() const
 
 
 
-// Check if there is anything in this cargo hold (including passengers).
+/**
+ * Check if there is anything in this cargo hold (including passengers).
+*/
 bool CargoHold::IsEmpty() const
 {
 	// The outfits map's entries are not erased if they are equal to zero, so
@@ -275,7 +301,9 @@ bool CargoHold::IsEmpty() const
 
 
 
-// Set the number of free bunks for passengers.
+/**
+ * Set the number of free bunks for passengers.
+*/
 void CargoHold::SetBunks(int count)
 {
 	bunks = count;
@@ -283,7 +311,9 @@ void CargoHold::SetBunks(int count)
 
 
 
-// Check how many bunks are free.
+/**
+ * Check how many bunks are free.
+*/
 int CargoHold::BunksFree() const
 {
 	return bunks - Passengers();
@@ -291,7 +321,9 @@ int CargoHold::BunksFree() const
 
 
 
-// Check how many bunks are occupied by passengers.
+/**
+ * Check how many bunks are occupied by passengers.
+*/
 int CargoHold::Passengers() const
 {
 	int count = 0;
@@ -302,7 +334,9 @@ int CargoHold::Passengers() const
 
 
 
-// Normal cargo:
+/**
+ * Normal cargo:
+*/
 int CargoHold::Get(const string &commodity) const
 {
 	map<string, int>::const_iterator it = commodities.find(commodity);
@@ -311,7 +345,9 @@ int CargoHold::Get(const string &commodity) const
 
 
 
-// Spare outfits (including plunder and mined materials):
+/**
+ * Spare outfits (including plunder and mined materials):
+*/
 int CargoHold::Get(const Outfit *outfit) const
 {
 	map<const Outfit *, int>::const_iterator it = outfits.find(outfit);
@@ -320,7 +356,9 @@ int CargoHold::Get(const Outfit *outfit) const
 
 
 
-// Mission cargo:
+/**
+ * Mission cargo:
+*/
 int CargoHold::Get(const Mission *mission) const
 {
 	map<const Mission *, int>::const_iterator it = missionCargo.find(mission);
@@ -329,7 +367,9 @@ int CargoHold::Get(const Mission *mission) const
 
 
 
-// Check how many passengers for the given mission are being carried.
+/**
+ * Check how many passengers for the given mission are being carried.
+*/
 int CargoHold::GetPassengers(const Mission *mission) const
 {
 	map<const Mission *, int>::const_iterator it = passengers.find(mission);
@@ -338,7 +378,9 @@ int CargoHold::GetPassengers(const Mission *mission) const
 
 
 
-// Access the commodities map directly.
+/**
+ * Access the commodities map directly.
+*/
 const map<string, int> &CargoHold::Commodities() const
 {
 	return commodities;
@@ -346,7 +388,9 @@ const map<string, int> &CargoHold::Commodities() const
 
 
 
-// Access the outfits map directly.
+/**
+ * Access the outfits map directly.
+*/
 const map<const Outfit *, int> &CargoHold::Outfits() const
 {
 	return outfits;
@@ -354,7 +398,9 @@ const map<const Outfit *, int> &CargoHold::Outfits() const
 
 
 
-// Access the mission cargo map directly.
+/**
+ * Access the mission cargo map directly.
+*/
 const map<const Mission *, int> &CargoHold::MissionCargo() const
 {
 	return missionCargo;
@@ -362,7 +408,9 @@ const map<const Mission *, int> &CargoHold::MissionCargo() const
 
 
 
-// Access the mission passenger map directly.
+/**
+ * Access the mission passenger map directly.
+*/
 const map<const Mission *, int> &CargoHold::PassengerList() const
 {
 	return passengers;
@@ -370,7 +418,9 @@ const map<const Mission *, int> &CargoHold::PassengerList() const
 
 
 
-// Transfer ordinary commodities from one cargo hold to another.
+/**
+ * Transfer ordinary commodities from one cargo hold to another.
+*/
 int CargoHold::Transfer(const string &commodity, int amount, CargoHold &to)
 {
 	if(!amount)
@@ -389,7 +439,9 @@ int CargoHold::Transfer(const string &commodity, int amount, CargoHold &to)
 
 
 
-// Transfer outfits from one cargo hold to another.
+/**
+ * Transfer outfits from one cargo hold to another.
+*/
 int CargoHold::Transfer(const Outfit *outfit, int amount, CargoHold &to)
 {
 	if(!amount)
@@ -408,7 +460,9 @@ int CargoHold::Transfer(const Outfit *outfit, int amount, CargoHold &to)
 
 
 
-// Transfer mission cargo from one cargo hold to another.
+/**
+ * Transfer mission cargo from one cargo hold to another.
+*/
 int CargoHold::Transfer(const Mission *mission, int amount, CargoHold &to)
 {
 	// A negative amount means a transfer in the opposite direction.
@@ -435,7 +489,9 @@ int CargoHold::Transfer(const Mission *mission, int amount, CargoHold &to)
 
 
 
-// Transfer mission passengers from one cargo hold to another.
+/**
+ * Transfer mission passengers from one cargo hold to another.
+*/
 int CargoHold::TransferPassengers(const Mission *mission, int amount, CargoHold &to)
 {
 	// A negative amount means a transfer in the opposite direction.
@@ -457,8 +513,10 @@ int CargoHold::TransferPassengers(const Mission *mission, int amount, CargoHold 
 
 
 
-// Transfer as much as the given cargo hold has capacity for. The priority is
-// first mission cargo, then spare outfits, then ordinary commodities.
+/**
+ * Transfer as much as the given cargo hold has capacity for. The priority is
+ * first mission cargo, then spare outfits, then ordinary commodities.
+*/
 void CargoHold::TransferAll(CargoHold &to, bool transferPassengers)
 {
 	if(transferPassengers)
@@ -485,7 +543,9 @@ void CargoHold::TransferAll(CargoHold &to, bool transferPassengers)
 
 
 
-// Add the given amount of the given commodity.
+/**
+ * Add the given amount of the given commodity.
+*/
 int CargoHold::Add(const string &commodity, int amount)
 {
 	if(amount < 0)
@@ -500,7 +560,9 @@ int CargoHold::Add(const string &commodity, int amount)
 
 
 
-// Add the given number of copies of the given outfit.
+/**
+ * Add the given number of copies of the given outfit.
+*/
 int CargoHold::Add(const Outfit *outfit, int amount)
 {
 	if(amount < 0)
@@ -516,7 +578,9 @@ int CargoHold::Add(const Outfit *outfit, int amount)
 
 
 
-// Remove the given amount of the given commodity.
+/**
+ * Remove the given amount of the given commodity.
+*/
 int CargoHold::Remove(const string &commodity, int amount)
 {
 	if(amount < 0)
@@ -529,7 +593,9 @@ int CargoHold::Remove(const string &commodity, int amount)
 
 
 
-// Remove the given number of copies of the given outfit.
+/**
+ * Remove the given number of copies of the given outfit.
+*/
 int CargoHold::Remove(const Outfit *outfit, int amount)
 {
 	if(amount < 0)
@@ -542,7 +608,9 @@ int CargoHold::Remove(const Outfit *outfit, int amount)
 
 
 
-// Add all the cargo and passengers associated with the given mission.
+/**
+ * Add all the cargo and passengers associated with the given mission.
+*/
 void CargoHold::AddMissionCargo(const Mission *mission)
 {
 	// If the mission defines a cargo string, create an entry for it even if the
@@ -556,7 +624,9 @@ void CargoHold::AddMissionCargo(const Mission *mission)
 
 
 
-// Remove all the cargo and passengers (if any) associated with the given mission.
+/**
+ * Remove all the cargo and passengers (if any) associated with the given mission.
+*/
 void CargoHold::RemoveMissionCargo(const Mission *mission)
 {
 	missionCargo.erase(mission);
@@ -565,7 +635,9 @@ void CargoHold::RemoveMissionCargo(const Mission *mission)
 
 
 
-// Get the total value of all this cargo, in the given system.
+/**
+ * Get the total value of all this cargo, in the given system.
+*/
 int64_t CargoHold::Value(const System *system) const
 {
 	int64_t value = 0;
@@ -580,10 +652,12 @@ int64_t CargoHold::Value(const System *system) const
 
 
 
-// If anything you are carrying is illegal, return the maximum fine you can
-// be charged for any illegal outfits plus the sum of the fines for all
-// missions. If the returned value is negative, you are carrying something so
-// bad that it warrants a death sentence.
+/**
+ * If anything you are carrying is illegal, return the maximum fine you can
+ * be charged for any illegal outfits plus the sum of the fines for all
+ * missions. If the returned value is negative, you are carrying something so
+ * bad that it warrants a death sentence.
+*/
 int CargoHold::IllegalCargoFine(const Government *government) const
 {
 	int totalFine = 0;
@@ -631,7 +705,9 @@ int CargoHold::IllegalCargoFine(const Government *government) const
 
 
 
-// Returns the amount tons of illegal cargo.
+/**
+ * Returns the amount tons of illegal cargo.
+*/
 int CargoHold::IllegalCargoAmount() const
 {
 	int count = 0;

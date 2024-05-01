@@ -44,8 +44,10 @@ namespace {
 
 
 
-// Command enumeration, including the descriptive strings that are used for the
-// commands both in the preferences panel and in the saved key settings.
+/**
+ * Command enumeration, including the descriptive strings that are used for the
+ * commands both in the preferences panel and in the saved key settings.
+*/
 const Command Command::NONE(0, "");
 const Command Command::MENU(ONE << 0, "Show main menu");
 const Command Command::FORWARD(ONE << 1, "Forward thrust");
@@ -86,8 +88,10 @@ const Command Command::SHIFT(ONE << 35, "");
 
 
 
-// In the given text, replace any instances of command names (in angle brackets)
-// with key names (in quotes).
+/**
+ * In the given text, replace any instances of command names (in angle brackets)
+ * with key names (in quotes).
+*/
 string Command::ReplaceNamesWithKeys(const string &text)
 {
 	map<string, string> subs;
@@ -99,7 +103,9 @@ string Command::ReplaceNamesWithKeys(const string &text)
 
 
 
-// Create a command representing whatever is mapped to the given key code.
+/**
+ * Create a command representing whatever is mapped to the given key code.
+*/
 Command::Command(int keycode)
 {
 	auto it = commandForKeycode.find(keycode);
@@ -109,7 +115,9 @@ Command::Command(int keycode)
 
 
 
-// Read the current keyboard state.
+/**
+ * Read the current keyboard state.
+*/
 void Command::ReadKeyboard()
 {
 	Clear();
@@ -129,7 +137,9 @@ void Command::ReadKeyboard()
 
 
 
-// Load the keyboard preferences.
+/**
+ * Load the keyboard preferences.
+*/
 void Command::LoadSettings(const string &path)
 {
 	DataFile file(path);
@@ -165,7 +175,9 @@ void Command::LoadSettings(const string &path)
 
 
 
-// Save the keyboard preferences.
+/**
+ * Save the keyboard preferences.
+*/
 void Command::SaveSettings(const string &path)
 {
 	DataWriter out(path);
@@ -180,7 +192,9 @@ void Command::SaveSettings(const string &path)
 
 
 
-// Set the key that is mapped to the given command.
+/**
+ * Set the key that is mapped to the given command.
+*/
 void Command::SetKey(Command command, int keycode)
 {
 	// Always reset *all* the mappings when one is set. That way, if two commands
@@ -200,8 +214,10 @@ void Command::SetKey(Command command, int keycode)
 
 
 
-// Get the description of this command. If this command is a combination of more
-// than one command, an empty string is returned.
+/**
+ * Get the description of this command. If this command is a combination of more
+ * than one command, an empty string is returned.
+*/
 const string &Command::Description() const
 {
 	static const string empty;
@@ -211,8 +227,10 @@ const string &Command::Description() const
 
 
 
-// Get the name of the key that is mapped to this command. If this command is
-// a combination of more than one command, an empty string is returned.
+/**
+ * Get the name of the key that is mapped to this command. If this command is
+ * a combination of more than one command, an empty string is returned.
+*/
 const string &Command::KeyName() const
 {
 	static const string empty = "(none)";
@@ -223,7 +241,9 @@ const string &Command::KeyName() const
 
 
 
-// Check if the key has no binding.
+/**
+ * Check if the key has no binding.
+*/
 bool Command::HasBinding() const
 {
 	auto it = keyName.find(*this);
@@ -237,7 +257,9 @@ bool Command::HasBinding() const
 
 
 
-// Check whether this is the only command mapped to the key it is mapped to.
+/**
+ * Check whether this is the only command mapped to the key it is mapped to.
+*/
 bool Command::HasConflict() const
 {
 	auto it = keycodeForCommand.find(*this);
@@ -250,7 +272,9 @@ bool Command::HasConflict() const
 
 
 
-// Load this command from an input file (for testing or scripted missions).
+/**
+ * Load this command from an input file (for testing or scripted missions).
+*/
 void Command::Load(const DataNode &node)
 {
 	for(int i = 1; i < node.Size(); ++i)
@@ -301,7 +325,9 @@ void Command::Load(const DataNode &node)
 
 
 
-// Reset this to an empty command.
+/**
+ * Reset this to an empty command.
+*/
 void Command::Clear()
 {
 	*this = Command();
@@ -309,7 +335,9 @@ void Command::Clear()
 
 
 
-// Clear any commands that are set in the given command.
+/**
+ * Clear any commands that are set in the given command.
+*/
 void Command::Clear(Command command)
 {
 	state &= ~command.state;
@@ -317,7 +345,9 @@ void Command::Clear(Command command)
 
 
 
-// Set any commands that are set in the given command.
+/**
+ * Set any commands that are set in the given command.
+*/
 void Command::Set(Command command)
 {
 	state |= command.state;
@@ -325,7 +355,9 @@ void Command::Set(Command command)
 
 
 
-// Check if any of the given command's bits that are set, are also set here.
+/**
+ * Check if any of the given command's bits that are set, are also set here.
+*/
 bool Command::Has(Command command) const
 {
 	return (state & command.state);
@@ -333,7 +365,9 @@ bool Command::Has(Command command) const
 
 
 
-// Get the commands that are set in this and in the given command.
+/**
+ * Get the commands that are set in this and in the given command.
+*/
 Command Command::And(Command command) const
 {
 	return Command(state & command.state);
@@ -341,7 +375,9 @@ Command Command::And(Command command) const
 
 
 
-// Get the commands that are set in this and not in the given command.
+/**
+ * Get the commands that are set in this and not in the given command.
+*/
 Command Command::AndNot(Command command) const
 {
 	return Command(state & ~command.state);
@@ -349,7 +385,9 @@ Command Command::AndNot(Command command) const
 
 
 
-// Set the turn direction and amount to a value between -1 and 1.
+/**
+ * Set the turn direction and amount to a value between -1 and 1.
+*/
 void Command::SetTurn(double amount)
 {
 	turn = max(-1., min(1., amount));
@@ -357,7 +395,9 @@ void Command::SetTurn(double amount)
 
 
 
-// Get the turn amount.
+/**
+ * Get the turn amount.
+*/
 double Command::Turn() const
 {
 	return turn;
@@ -365,7 +405,9 @@ double Command::Turn() const
 
 
 
-// Check if any bits are set in this command (including a nonzero turn).
+/**
+ * Check if any bits are set in this command (including a nonzero turn).
+*/
 Command::operator bool() const
 {
 	return !!*this;
@@ -373,7 +415,9 @@ Command::operator bool() const
 
 
 
-// Check whether this command is entirely empty.
+/**
+ * Check whether this command is entirely empty.
+*/
 bool Command::operator!() const
 {
 	return !state && !turn;
@@ -381,7 +425,9 @@ bool Command::operator!() const
 
 
 
-// For sorting commands (e.g. so a command can be the key in a map):
+/**
+ * For sorting commands (e.g. so a command can be the key in a map):
+*/
 bool Command::operator<(const Command &command) const
 {
 	return (state < command.state);
@@ -389,7 +435,9 @@ bool Command::operator<(const Command &command) const
 
 
 
-// Get the commands that are set in either of these commands.
+/**
+ * Get the commands that are set in either of these commands.
+*/
 Command Command::operator|(const Command &command) const
 {
 	Command result = *this;
@@ -399,8 +447,10 @@ Command Command::operator|(const Command &command) const
 
 
 
-// Combine everything in the given command with this command. If the given
-// command has a nonzero turn set, it overrides this command's turn value.
+/**
+ * Combine everything in the given command with this command. If the given
+ * command has a nonzero turn set, it overrides this command's turn value.
+*/
 Command &Command::operator|=(const Command &command)
 {
 	state |= command.state;
@@ -411,7 +461,9 @@ Command &Command::operator|=(const Command &command)
 
 
 
-// Private constructor.
+/**
+ * Private constructor.
+*/
 Command::Command(uint64_t state)
 	: state(state)
 {
@@ -419,8 +471,10 @@ Command::Command(uint64_t state)
 
 
 
-// Private constructor that also stores the given description in the lookup
-// table. (This is used for the enumeration at the top of this file.)
+/**
+ * Private constructor that also stores the given description in the lookup
+ * table. (This is used for the enumeration at the top of this file.)
+*/
 Command::Command(uint64_t state, const string &text)
 	: state(state)
 {

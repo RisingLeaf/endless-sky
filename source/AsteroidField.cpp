@@ -39,7 +39,9 @@ namespace {
 
 
 
-// Constructor, to set up the collision set parameters.
+/**
+ * Constructor, to set up the collision set parameters.
+*/
 AsteroidField::AsteroidField()
 	: asteroidCollisions(CELL_SIZE, CELL_COUNT, CollisionType::ASTEROID),
 	minableCollisions(CELL_SIZE, CELL_COUNT, CollisionType::MINABLE)
@@ -48,7 +50,9 @@ AsteroidField::AsteroidField()
 
 
 
-// Clear the list of asteroids.
+/**
+ * Clear the list of asteroids.
+*/
 void AsteroidField::Clear()
 {
 	asteroids.clear();
@@ -57,7 +61,9 @@ void AsteroidField::Clear()
 
 
 
-// Add a new asteroid to the list, using the sprite with the given name.
+/**
+ * Add a new asteroid to the list, using the sprite with the given name.
+*/
 void AsteroidField::Add(const string &name, int count, double energy)
 {
 	const Sprite *sprite = SpriteSet::Get("asteroid/" + name + "/spin");
@@ -83,7 +89,9 @@ void AsteroidField::Add(const Minable *minable, int count, double energy, const 
 
 
 
-// Move all the asteroids forward one step.
+/**
+ * Move all the asteroids forward one step.
+*/
 void AsteroidField::Step(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam, int step)
 {
 	asteroidCollisions.Clear(step);
@@ -113,7 +121,9 @@ void AsteroidField::Step(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flo
 
 
 
-// Draw the asteroids, centered on the given location.
+/**
+ * Draw the asteroids, centered on the given location.
+*/
 void AsteroidField::Draw(DrawList &draw, const Point &center, double zoom) const
 {
 	for(const Asteroid &asteroid : asteroids)
@@ -124,7 +134,9 @@ void AsteroidField::Draw(DrawList &draw, const Point &center, double zoom) const
 
 
 
-// Check if the given projectile collides with any asteroids. This excludes minables.
+/**
+ * Check if the given projectile collides with any asteroids. This excludes minables.
+*/
 const vector<Collision> &AsteroidField::CollideAsteroids(const Projectile &projectile) const
 {
 	result.clear();
@@ -159,7 +171,9 @@ const vector<Collision> &AsteroidField::CollideAsteroids(const Projectile &proje
 
 
 
-// Check if the given projectile collides with any minables.
+/**
+ * Check if the given projectile collides with any minables.
+*/
 const vector<Collision> &AsteroidField::CollideMinables(const Projectile &projectile) const
 {
 	return minableCollisions.Line(projectile);
@@ -167,7 +181,9 @@ const vector<Collision> &AsteroidField::CollideMinables(const Projectile &projec
 
 
 
-// Get the list of minable asteroids.
+/**
+ * Get the list of minable asteroids.
+*/
 const list<shared_ptr<Minable>> &AsteroidField::Minables() const
 {
 	return minables;
@@ -175,7 +191,9 @@ const list<shared_ptr<Minable>> &AsteroidField::Minables() const
 
 
 
-// Construct an asteroid with the given sprite and "energy level."
+/**
+ * Construct an asteroid with the given sprite and "energy level."
+*/
 AsteroidField::Asteroid::Asteroid(const Sprite *sprite, double energy)
 {
 	// Energy level determines how fast the asteroid rotates.
@@ -203,7 +221,9 @@ AsteroidField::Asteroid::Asteroid(const Sprite *sprite, double energy)
 
 
 
-// Move the asteroid forward one time step.
+/**
+ * Move the asteroid forward one time step.
+*/
 void AsteroidField::Asteroid::Step()
 {
 	angle += spin;
@@ -223,7 +243,9 @@ void AsteroidField::Asteroid::Step()
 
 
 
-// Draw any instances of this asteroid that are on screen.
+/**
+ * Draw any instances of this asteroid that are on screen.
+*/
 void AsteroidField::Asteroid::Draw(DrawList &draw, const Point &center, double zoom) const
 {
 	// Any object within this range must be drawn.

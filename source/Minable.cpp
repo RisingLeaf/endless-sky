@@ -59,7 +59,9 @@ Minable::Payload::Payload(const DataNode &node)
 
 
 
-// Load a definition of a minable object.
+/**
+ * Load a definition of a minable object.
+*/
 void Minable::Load(const DataNode &node)
 {
 	// Set the name of this minable, so we know it has been loaded.
@@ -104,7 +106,9 @@ void Minable::Load(const DataNode &node)
 
 
 
-// Calculate the expected payload value of this Minable after all outfits have been fully loaded.
+/**
+ * Calculate the expected payload value of this Minable after all outfits have been fully loaded.
+*/
 void Minable::FinishLoading()
 {
 	for(const auto &it : payload)
@@ -134,8 +138,10 @@ const string &Minable::Noun() const
 
 
 
-// Place a minable object with up to the given energy level, on a random
-// orbit and a random position along that orbit.
+/**
+ * Place a minable object with up to the given energy level, on a random
+ * orbit and a random position along that orbit.
+*/
 void Minable::Place(double energy, double beltRadius)
 {
 	// Note: there's no closed-form equation for orbital position as a function
@@ -195,9 +201,11 @@ void Minable::Place(double energy, double beltRadius)
 
 
 
-// Move the object forward one step. If it has been reduced to zero hull, it
-// will "explode" instead of moving, creating flotsam and explosion effects.
-// In that case it will return false, meaning it should be deleted.
+/**
+ * Move the object forward one step. If it has been reduced to zero hull, it
+ * will "explode" instead of moving, creating flotsam and explosion effects.
+ * In that case it will return false, meaning it should be deleted.
+*/
 bool Minable::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 {
 	if(hull < 0)
@@ -253,7 +261,9 @@ bool Minable::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 
 
 
-// Damage this object (because a projectile collided with it).
+/**
+ * Damage this object (because a projectile collided with it).
+*/
 void Minable::TakeDamage(const Projectile &projectile)
 {
 	hull -= projectile.GetWeapon().MinableDamage() + projectile.GetWeapon().RelativeMinableDamage() * maxHull;
@@ -269,7 +279,9 @@ double Minable::Hull() const
 
 
 
-// Determine what flotsam this asteroid will create.
+/**
+ * Determine what flotsam this asteroid will create.
+*/
 const vector<Minable::Payload> &Minable::GetPayload() const
 {
 	return payload;
@@ -277,7 +289,9 @@ const vector<Minable::Payload> &Minable::GetPayload() const
 
 
 
-// Get the expected value of the flotsams this minable will create when destroyed.
+/**
+ * Get the expected value of the flotsams this minable will create when destroyed.
+*/
 const int64_t &Minable::GetValue() const
 {
 	return value;

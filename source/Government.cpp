@@ -79,7 +79,9 @@ namespace {
 
 
 
-// Default constructor.
+/**
+ * Default constructor.
+*/
 Government::Government()
 {
 	// Default penalties:
@@ -98,7 +100,9 @@ Government::Government()
 
 
 
-// Load a government's definition from a file.
+/**
+ * Load a government's definition from a file.
+*/
 void Government::Load(const DataNode &node)
 {
 	if(node.Size() >= 2)
@@ -414,7 +418,9 @@ void Government::Load(const DataNode &node)
 
 
 
-// Get the display name of this government.
+/**
+ * Get the display name of this government.
+*/
 const string &Government::GetName() const
 {
 	return displayName;
@@ -422,7 +428,9 @@ const string &Government::GetName() const
 
 
 
-// Set / Get the name used for this government in the data files.
+/**
+ * Set / Get the name used for this government in the data files.
+*/
 void Government::SetName(const string &trueName)
 {
 	this->name = trueName;
@@ -437,7 +445,9 @@ const string &Government::GetTrueName() const
 
 
 
-// Get the color swizzle to use for ships of this government.
+/**
+ * Get the color swizzle to use for ships of this government.
+*/
 int Government::GetSwizzle() const
 {
 	return swizzle;
@@ -445,7 +455,9 @@ int Government::GetSwizzle() const
 
 
 
-// Get the color to use for displaying this government on the map.
+/**
+ * Get the color to use for displaying this government on the map.
+*/
 const Color &Government::GetColor() const
 {
 	return *color;
@@ -453,8 +465,10 @@ const Color &Government::GetColor() const
 
 
 
-// Get the government's initial disposition toward other governments or
-// toward the player.
+/**
+ * Get the government's initial disposition toward other governments or
+ * toward the player.
+*/
 double Government::AttitudeToward(const Government *other) const
 {
 	if(!other)
@@ -478,9 +492,11 @@ double Government::InitialPlayerReputation() const
 
 
 
-// Get the amount that your reputation changes for the given offense against the given government.
-// The given value should be a combination of one or more ShipEvent values.
-// Returns 0 if the Government is null.
+/**
+ * Get the amount that your reputation changes for the given offense against the given government.
+ * The given value should be a combination of one or more ShipEvent values.
+ * Returns 0 if the Government is null.
+*/
 double Government::PenaltyFor(int eventType, const Government *other) const
 {
 	if(!other)
@@ -504,8 +520,10 @@ double Government::PenaltyFor(int eventType, const Government *other) const
 
 
 
-// In order to successfully bribe this government you must pay them this
-// fraction of your fleet's value. (Zero means they cannot be bribed.)
+/**
+ * In order to successfully bribe this government you must pay them this
+ * fraction of your fleet's value. (Zero means they cannot be bribed.)
+*/
 double Government::GetBribeFraction() const
 {
 	return bribe;
@@ -527,8 +545,10 @@ bool Government::Trusts(const Government *government) const
 
 
 
-// Returns true if this government has no enforcement restrictions, or if the
-// indicated system matches at least one enforcement zone.
+/**
+ * Returns true if this government has no enforcement restrictions, or if the
+ * indicated system matches at least one enforcement zone.
+*/
 bool Government::CanEnforce(const System *system) const
 {
 	for(const LocationFilter &filter : enforcementZones)
@@ -539,8 +559,10 @@ bool Government::CanEnforce(const System *system) const
 
 
 
-// Returns true if this government has no enforcement restrictions, or if the
-// indicated planet matches at least one enforcement zone.
+/**
+ * Returns true if this government has no enforcement restrictions, or if the
+ * indicated planet matches at least one enforcement zone.
+*/
 bool Government::CanEnforce(const Planet *planet) const
 {
 	for(const LocationFilter &filter : enforcementZones)
@@ -558,8 +580,10 @@ const Conversation *Government::DeathSentence() const
 
 
 
-// Get a hail message (which depends on whether this is an enemy government
-// and if the ship is disabled).
+/**
+ * Get a hail message (which depends on whether this is an enemy government
+ * and if the ship is disabled).
+*/
 string Government::GetHail(bool isDisabled) const
 {
 	const Phrase *phrase = nullptr;
@@ -574,7 +598,9 @@ string Government::GetHail(bool isDisabled) const
 
 
 
-// Find out if this government speaks a different language.
+/**
+ * Find out if this government speaks a different language.
+*/
 const string &Government::Language() const
 {
 	return language;
@@ -582,7 +608,9 @@ const string &Government::Language() const
 
 
 
-// Find out if this government should send custom hails even if the player does not know its language.
+/**
+ * Find out if this government should send custom hails even if the player does not know its language.
+*/
 bool Government::SendUntranslatedHails() const
 {
 	return sendUntranslatedHails;
@@ -590,9 +618,11 @@ bool Government::SendUntranslatedHails() const
 
 
 
-// Pirate raids in this government's systems use these fleet definitions. If
-// it is empty, there are no pirate raids.
-// The second attribute denotes the minimal and maximal attraction required for the fleet to appear.
+/**
+ * Pirate raids in this government's systems use these fleet definitions. If
+ * it is empty, there are no pirate raids.
+ * The second attribute denotes the minimal and maximal attraction required for the fleet to appear.
+*/
 const vector<RaidFleet> &Government::RaidFleets() const
 {
 	return raidFleets;
@@ -600,8 +630,10 @@ const vector<RaidFleet> &Government::RaidFleets() const
 
 
 
-// Check if, according to the politics stored by GameData, this government is
-// an enemy of the given government right now.
+/**
+ * Check if, according to the politics stored by GameData, this government is
+ * an enemy of the given government right now.
+*/
 bool Government::IsEnemy(const Government *other) const
 {
 	return GameData::GetPolitics().IsEnemy(this, other);
@@ -609,7 +641,9 @@ bool Government::IsEnemy(const Government *other) const
 
 
 
-// Check if this government is an enemy of the player.
+/**
+ * Check if this government is an enemy of the player.
+*/
 bool Government::IsEnemy() const
 {
 	return GameData::GetPolitics().IsEnemy(this, GameData::PlayerGovernment());
@@ -617,7 +651,9 @@ bool Government::IsEnemy() const
 
 
 
-// Check if this is the player government.
+/**
+ * Check if this is the player government.
+*/
 bool Government::IsPlayer() const
 {
 	return (this == GameData::PlayerGovernment());
@@ -625,10 +661,12 @@ bool Government::IsPlayer() const
 
 
 
-// Commit the given "offense" against this government (which may not
-// actually consider it to be an offense). This may result in temporary
-// hostilities (if the even type is PROVOKE), or a permanent change to your
-// reputation.
+/**
+ * Commit the given "offense" against this government (which may not
+ * actually consider it to be an offense). This may result in temporary
+ * hostilities (if the even type is PROVOKE), or a permanent change to your
+ * reputation.
+*/
 void Government::Offend(int eventType, int count) const
 {
 	return GameData::GetPolitics().Offend(this, eventType, count);
@@ -636,7 +674,9 @@ void Government::Offend(int eventType, int count) const
 
 
 
-// Bribe this government to be friendly to you for one day.
+/**
+ * Bribe this government to be friendly to you for one day.
+*/
 void Government::Bribe() const
 {
 	GameData::GetPolitics().Bribe(this);
@@ -644,8 +684,10 @@ void Government::Bribe() const
 
 
 
-// Check to see if the player has done anything they should be fined for.
-// Each government can only fine you once per day.
+/**
+ * Check to see if the player has done anything they should be fined for.
+ * Each government can only fine you once per day.
+*/
 string Government::Fine(PlayerInfo &player, int scan, const Ship *target, double security) const
 {
 	return GameData::GetPolitics().Fine(player, this, scan, target, security);
@@ -710,7 +752,9 @@ bool Government::FinesContents(const Ship *ship) const
 
 
 
-// Get or set the player's reputation with this government.
+/**
+ * Get or set the player's reputation with this government.
+*/
 double Government::Reputation() const
 {
 	return GameData::GetPolitics().Reputation(this);

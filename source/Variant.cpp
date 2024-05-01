@@ -50,7 +50,9 @@ void Variant::Load(const DataNode &node)
 
 
 
-// Determine if this variant template uses well-defined data.
+/**
+ * Determine if this variant template uses well-defined data.
+*/
 bool Variant::IsValid() const
 {
 	// At least one valid ship is enough to make the variant valid.
@@ -77,7 +79,9 @@ const vector<const Ship *> &Variant::Ships() const
 
 
 
-// The strength of a variant is the sum of the strength of its ships.
+/**
+ * The strength of a variant is the sum of the strength of its ships.
+*/
 int64_t Variant::Strength() const
 {
 	int64_t strength = 0;

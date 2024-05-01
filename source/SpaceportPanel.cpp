@@ -108,8 +108,10 @@ void SpaceportPanel::Draw()
 
 
 
-// Pick a random news object that applies to the player's planets and conditions.
-// If there is no applicable news, this returns null.
+/**
+ * Pick a random news object that applies to the player's planets and conditions.
+ * If there is no applicable news, this returns null.
+*/
 const News *SpaceportPanel::PickNews() const
 {
 	if(!port.HasNews())

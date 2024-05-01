@@ -63,10 +63,12 @@ TaskQueue::~TaskQueue()
 
 
 
-// Queue a function to execute in parallel, with an another optional function that
-// will get executed on the main thread after the first function finishes.
-// Returns a future representing the future result of the async call. Ignores
-// any main thread task that still need to be executed!
+/**
+ * Queue a function to execute in parallel, with an another optional function that
+ * will get executed on the main thread after the first function finishes.
+ * Returns a future representing the future result of the async call. Ignores
+ * any main thread task that still need to be executed!
+*/
 std::shared_future<void> TaskQueue::Run(function<void()> asyncTask, function<void()> syncTask)
 {
 	std::shared_future<void> result;
@@ -87,7 +89,9 @@ std::shared_future<void> TaskQueue::Run(function<void()> asyncTask, function<voi
 
 
 
-// Process any tasks to be scheduled to be executed on the main thread.
+/**
+ * Process any tasks to be scheduled to be executed on the main thread.
+*/
 void TaskQueue::ProcessSyncTasks()
 {
 	unique_lock<mutex> lock(syncMutex);
@@ -105,7 +109,9 @@ void TaskQueue::ProcessSyncTasks()
 
 
 
-// Waits for all of this queue's task to finish. Ignores any sync tasks to be processed.
+/**
+ * Waits for all of this queue's task to finish. Ignores any sync tasks to be processed.
+*/
 void TaskQueue::Wait()
 {
 	while(!IsDone())
@@ -114,7 +120,9 @@ void TaskQueue::Wait()
 
 
 
-// Whether there are any outstanding async tasks left in this queue.
+/**
+ * Whether there are any outstanding async tasks left in this queue.
+*/
 bool TaskQueue::IsDone() const
 {
 	lock_guard<mutex> lock(asyncMutex);
@@ -123,7 +131,9 @@ bool TaskQueue::IsDone() const
 
 
 
-// Thread entry point.
+/**
+ * Thread entry point.
+*/
 void TaskQueue::ThreadLoop() noexcept
 {
 	while(true)

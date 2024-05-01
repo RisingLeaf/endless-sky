@@ -49,9 +49,11 @@ namespace {
 
 
 
-// Since converting a date to a string is the most common operation, store the
-// date in a way that allows easy extraction of the day, month, and year. Allow
-// 5 bits for the day and 4 for the month. This also allows easy comparison.
+/**
+ * Since converting a date to a string is the most common operation, store the
+ * date in a way that allows easy extraction of the day, month, and year. Allow
+ * 5 bits for the day and 4 for the month. This also allows easy comparison.
+*/
 Date::Date(int day, int month, int year)
 	: date(day + (month << 5) + (year << 9))
 {
@@ -59,7 +61,9 @@ Date::Date(int day, int month, int year)
 
 
 
-// Convert a date to a string.
+/**
+ * Convert a date to a string.
+*/
 const string &Date::ToString() const
 {
 	Preferences::DateFormat dateFormat = Preferences::GetDateFormat();
@@ -97,7 +101,9 @@ const string &Date::ToString() const
 
 
 
-// Convert a date to the format in which it would be stated in conversation.
+/**
+ * Convert a date to the format in which it would be stated in conversation.
+*/
 string Date::LongString() const
 {
 	if(!date)
@@ -145,7 +151,9 @@ string Date::LongString() const
 
 
 
-// Check if this date has been initialized.
+/**
+ * Check if this date has been initialized.
+*/
 Date::operator bool() const
 {
 	return !!*this;
@@ -153,7 +161,9 @@ Date::operator bool() const
 
 
 
-// Check if this date has not been initialized.
+/**
+ * Check if this date has not been initialized.
+*/
 bool Date::operator!() const
 {
 	return !date;
@@ -161,7 +171,9 @@ bool Date::operator!() const
 
 
 
-// Increment this date (prefix).
+/**
+ * Increment this date (prefix).
+*/
 Date &Date::operator++()
 {
 	*this = *this + 1;
@@ -170,7 +182,9 @@ Date &Date::operator++()
 
 
 
-// Increment this date (postfix).
+/**
+ * Increment this date (postfix).
+*/
 Date Date::operator++(int)
 {
 	auto before = *this;
@@ -180,7 +194,9 @@ Date Date::operator++(int)
 
 
 
-// Add the given number of days to this date.
+/**
+ * Add the given number of days to this date.
+*/
 Date Date::operator+(int days) const
 {
 	// If this date is not initialized, adding to it does nothing.
@@ -225,7 +241,9 @@ Date Date::operator+(int days) const
 
 
 
-// Get the number of days between the two given dates.
+/**
+ * Get the number of days between the two given dates.
+*/
 int Date::operator-(const Date &other) const
 {
 	return DaysSinceEpoch() - other.DaysSinceEpoch();
@@ -233,7 +251,9 @@ int Date::operator-(const Date &other) const
 
 
 
-// Date comparison.
+/**
+ * Date comparison.
+*/
 bool Date::operator<(const Date &other) const
 {
 	return date < other.date;
@@ -276,8 +296,10 @@ bool Date::operator!=(const Date &other) const
 
 
 
-// Get the number of days that have elapsed since the "epoch". This is used only
-// for finding the number of days in between two dates.
+/**
+ * Get the number of days that have elapsed since the "epoch". This is used only
+ * for finding the number of days in between two dates.
+*/
 int Date::DaysSinceEpoch() const
 {
 	if(date && !daysSinceEpoch)
@@ -335,7 +357,9 @@ int Date::DaysUntilYearEnd() const
 
 
 
-// Get the current day of the month.
+/**
+ * Get the current day of the month.
+*/
 int Date::Day() const
 {
 	return (date & 31);
@@ -343,7 +367,9 @@ int Date::Day() const
 
 
 
-// Get the current month (January = 1, rather than being zero-indexed).
+/**
+ * Get the current month (January = 1, rather than being zero-indexed).
+*/
 int Date::Month() const
 {
 	return ((date >> 5) & 15);
@@ -351,7 +377,9 @@ int Date::Month() const
 
 
 
-// Get the current year.
+/**
+ * Get the current year.
+*/
 int Date::Year() const
 {
 	return (date >> 9);

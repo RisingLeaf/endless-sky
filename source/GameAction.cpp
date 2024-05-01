@@ -121,7 +121,9 @@ namespace {
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 GameAction::GameAction(const DataNode &node)
 {
 	Load(node);
@@ -137,7 +139,9 @@ void GameAction::Load(const DataNode &node)
 
 
 
-// Load a single child at a time, used for streamlining MissionAction::Load.
+/**
+ * Load a single child at a time, used for streamlining MissionAction::Load.
+*/
 void GameAction::LoadSingle(const DataNode &child)
 {
 	isEmpty = false;
@@ -245,8 +249,10 @@ void GameAction::Save(DataWriter &out) const
 
 
 
-// Check this template or instantiated GameAction to see if any used content
-// is not fully defined (e.g. plugin removal, typos in names, etc.).
+/**
+ * Check this template or instantiated GameAction to see if any used content
+ * is not fully defined (e.g. plugin removal, typos in names, etc.).
+*/
 string GameAction::Validate() const
 {
 	// Events which get activated by this action must be valid.
@@ -307,7 +313,9 @@ const vector<ShipManager> &GameAction::Ships() const noexcept
 
 
 
-// Perform the specified tasks.
+/**
+ * Perform the specified tasks.
+*/
 void GameAction::Do(PlayerInfo &player, UI *ui, const Mission *caller) const
 {
 	if(!logText.empty())

@@ -55,7 +55,9 @@ namespace {
 
 
 
-// What fraction of its cost a fully depreciated item has left:
+/**
+ * What fraction of its cost a fully depreciated item has left:
+*/
 double Depreciation::Full()
 {
 	return Min();
@@ -63,7 +65,9 @@ double Depreciation::Full()
 
 
 
-// Load depreciation records.
+/**
+ * Load depreciation records.
+*/
 void Depreciation::Load(const DataNode &node)
 {
 	// Check if this is fleet or stock depreciation.
@@ -91,7 +95,9 @@ void Depreciation::Load(const DataNode &node)
 
 
 
-// Save depreciation records.
+/**
+ * Save depreciation records.
+*/
 void Depreciation::Save(DataWriter &out, int day) const
 {
 	out.Write(NAME[isStock]);
@@ -137,7 +143,9 @@ void Depreciation::Save(DataWriter &out, int day) const
 
 
 
-// Check if any records have been loaded.
+/**
+ * Check if any records have been loaded.
+*/
 bool Depreciation::IsLoaded() const
 {
 	return isLoaded;
@@ -145,7 +153,9 @@ bool Depreciation::IsLoaded() const
 
 
 
-// If no records have been loaded, initialize with an entire fleet.
+/**
+ * If no records have been loaded, initialize with an entire fleet.
+*/
 void Depreciation::Init(const vector<shared_ptr<Ship>> &fleet, int day)
 {
 	// If this is called, this is a player's fleet, not a planet's stock.
@@ -163,7 +173,9 @@ void Depreciation::Init(const vector<shared_ptr<Ship>> &fleet, int day)
 
 
 
-// Add a ship, and all its outfits, to the depreciation record.
+/**
+ * Add a ship, and all its outfits, to the depreciation record.
+*/
 void Depreciation::Buy(const Ship &ship, int day, Depreciation *source, bool chassisOnly)
 {
 	// First, add records for all outfits the ship is carrying.
@@ -198,7 +210,9 @@ void Depreciation::Buy(const Ship &ship, int day, Depreciation *source, bool cha
 
 
 
-// Add a single outfit to the depreciation record.
+/**
+ * Add a single outfit to the depreciation record.
+*/
 void Depreciation::Buy(const Outfit *outfit, int day, Depreciation *source)
 {
 	if(outfit->Get("installable") < 0.)
@@ -228,7 +242,9 @@ void Depreciation::Buy(const Outfit *outfit, int day, Depreciation *source)
 
 
 
-// Get the value of an entire fleet.
+/**
+ * Get the value of an entire fleet.
+*/
 int64_t Depreciation::Value(const vector<shared_ptr<Ship>> &fleet, int day, bool chassisOnly) const
 {
 	map<const Ship *, int> shipCount;
@@ -254,7 +270,9 @@ int64_t Depreciation::Value(const vector<shared_ptr<Ship>> &fleet, int day, bool
 
 
 
-// Get the value of a ship, along with all its outfits.
+/**
+ * Get the value of a ship, along with all its outfits.
+*/
 int64_t Depreciation::Value(const Ship &ship, int day) const
 {
 	int64_t value = Value(&ship, day);
@@ -265,7 +283,9 @@ int64_t Depreciation::Value(const Ship &ship, int day) const
 
 
 
-// Get the value just of the chassis of a ship.
+/**
+ * Get the value just of the chassis of a ship.
+*/
 int64_t Depreciation::Value(const Ship *ship, int day, int count) const
 {
 	// Check whether a record exists for this ship. If not, its value is full
@@ -280,7 +300,9 @@ int64_t Depreciation::Value(const Ship *ship, int day, int count) const
 
 
 
-// Get the value of an outfit.
+/**
+ * Get the value of an outfit.
+*/
 int64_t Depreciation::Value(const Outfit *outfit, int day, int count) const
 {
 	if(outfit->Get("installable") < 0.)
@@ -297,8 +319,10 @@ int64_t Depreciation::Value(const Outfit *outfit, int day, int count) const
 
 
 
-// "Sell" an item, removing it from the given record and returning the base
-// day for its depreciation.
+/**
+ * "Sell" an item, removing it from the given record and returning the base
+ * day for its depreciation.
+*/
 int Depreciation::Sell(map<int, int> &record) const
 {
 	// If we're a planet, we start by selling the oldest, cheapest thing.
@@ -316,7 +340,9 @@ int Depreciation::Sell(map<int, int> &record) const
 
 
 
-// Calculate depreciation for some number of items.
+/**
+ * Calculate depreciation for some number of items.
+*/
 double Depreciation::Depreciate(const map<int, int> &record, int day, int count) const
 {
 	if(record.empty())
@@ -359,7 +385,9 @@ double Depreciation::Depreciate(const map<int, int> &record, int day, int count)
 
 
 
-// Calculate the value fraction for an item of the given age.
+/**
+ * Calculate the value fraction for an item of the given age.
+*/
 double Depreciation::Depreciate(int age) const
 {
 	if(age <= GracePeriod())
@@ -375,8 +403,10 @@ double Depreciation::Depreciate(int age) const
 
 
 
-// Depreciation of an item for which no record exists. If buying, items
-// default to no depreciation. When selling, they default to full.
+/**
+ * Depreciation of an item for which no record exists. If buying, items
+ * default to no depreciation. When selling, they default to full.
+*/
 double Depreciation::DefaultDepreciation() const
 {
 	return (isStock ? 1. : Min());

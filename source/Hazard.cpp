@@ -73,7 +73,9 @@ void Hazard::Load(const DataNode &node)
 
 
 
-// Whether this hazard has a valid definition.
+/**
+ * Whether this hazard has a valid definition.
+*/
 bool Hazard::IsValid() const
 {
 	return !name.empty();
@@ -81,7 +83,9 @@ bool Hazard::IsValid() const
 
 
 
-// The name of the hazard in the data files.
+/**
+ * The name of the hazard in the data files.
+*/
 const string &Hazard::Name() const
 {
 	return name;
@@ -89,7 +93,9 @@ const string &Hazard::Name() const
 
 
 
-// Does the strength of this hazard deviate over time?
+/**
+ * Does the strength of this hazard deviate over time?
+*/
 bool Hazard::Deviates() const
 {
 	return deviates;
@@ -97,7 +103,9 @@ bool Hazard::Deviates() const
 
 
 
-// How often this hazard deals its damage while active.
+/**
+ * How often this hazard deals its damage while active.
+*/
 int Hazard::Period() const
 {
 	return period;
@@ -105,7 +113,9 @@ int Hazard::Period() const
 
 
 
-// Generates a random integer between the minimum and maximum duration of this hazard.
+/**
+ * Generates a random integer between the minimum and maximum duration of this hazard.
+*/
 int Hazard::RandomDuration() const
 {
 	return minDuration + (maxDuration <= minDuration ? 0 : Random::Int(maxDuration - minDuration));
@@ -114,7 +124,9 @@ int Hazard::RandomDuration() const
 
 
 
-// Generates a random double between the minimum and maximum strength of this hazard.
+/**
+ * Generates a random double between the minimum and maximum strength of this hazard.
+*/
 double Hazard::RandomStrength() const
 {
 	return minStrength + (maxStrength <= minStrength ? 0. : (maxStrength - minStrength) * Random::Real());
@@ -129,7 +141,9 @@ bool Hazard::SystemWide() const
 
 
 
-// The minimum and maximum distances from the origin in which this hazard has an effect.
+/**
+ * The minimum and maximum distances from the origin in which this hazard has an effect.
+*/
 double Hazard::MinRange() const
 {
 	return minRange;
@@ -144,7 +158,9 @@ double Hazard::MaxRange() const
 
 
 
-// Visuals to be created while this hazard is active.
+/**
+ * Visuals to be created while this hazard is active.
+*/
 const map<const Effect *, float> &Hazard::EnvironmentalEffects() const
 {
 	return environmentalEffects;

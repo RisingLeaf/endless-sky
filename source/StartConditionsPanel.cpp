@@ -235,7 +235,9 @@ bool StartConditionsPanel::Scroll(double /* dx */, double dy)
 
 
 
-// Transition from the completed "new pilot" conversation into the actual game.
+/**
+ * Transition from the completed "new pilot" conversation into the actual game.
+*/
 void StartConditionsPanel::OnConversationEnd(int)
 {
 	gamePanels.Reset();
@@ -258,7 +260,9 @@ void StartConditionsPanel::OnConversationEnd(int)
 
 
 
-// Scroll the selected starting condition into view, if necessary.
+/**
+ * Scroll the selected starting condition into view, if necessary.
+*/
 void StartConditionsPanel::ScrollToSelected()
 {
 	// If there are fewer starts than there are displayable starts, never scroll.
@@ -292,7 +296,9 @@ void StartConditionsPanel::ScrollToSelected()
 
 
 
-// Update the UI to reflect the given starting scenario.
+/**
+ * Update the UI to reflect the given starting scenario.
+*/
 void StartConditionsPanel::Select(StartConditionsList::iterator it)
 {
 	// Clear the displayed information.

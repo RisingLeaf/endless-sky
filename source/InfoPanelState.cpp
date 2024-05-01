@@ -161,7 +161,9 @@ bool InfoPanelState::ReorderShipsTo(int toIndex)
 
 
 
-// If the move accesses invalid indices, no moves are done.
+/**
+ * If the move accesses invalid indices, no moves are done.
+*/
 bool InfoPanelState::ReorderShips(const set<int> &fromIndices, int toIndex)
 {
 	if(fromIndices.empty() || static_cast<unsigned>(toIndex) >= ships.size())

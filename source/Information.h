@@ -28,8 +28,10 @@ class Sprite;
 
 
 
-// Class representing information to be displayed in a user interface, independent
-// of how that information is laid out or shown.
+/**
+ * Class representing information to be displayed in a user interface, independent
+ * of how that information is laid out or shown.
+*/
 class Information {
 public:
 	void SetRegion(const Rectangle &rect);

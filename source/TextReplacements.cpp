@@ -25,7 +25,9 @@ using namespace std;
 
 
 
-// Load a substitutions node.
+/**
+ * Load a substitutions node.
+*/
 void TextReplacements::Load(const DataNode &node)
 {
 	// Check for reserved keys. Only some hardcoded replacement keys are
@@ -70,7 +72,9 @@ void TextReplacements::Load(const DataNode &node)
 
 
 
-// Clear this TextReplacement's substitutions and insert the substitutions of other.
+/**
+ * Clear this TextReplacement's substitutions and insert the substitutions of other.
+*/
 void TextReplacements::Revert(TextReplacements &other)
 {
 	substitutions.clear();
@@ -79,9 +83,11 @@ void TextReplacements::Revert(TextReplacements &other)
 
 
 
-// Add new text replacements to the given map after evaluating all possible replacements.
-// This text replacement will overwrite the value of any existing keys in the given map
-// if the map and this TextReplacements share a key.
+/**
+ * Add new text replacements to the given map after evaluating all possible replacements.
+ * This text replacement will overwrite the value of any existing keys in the given map
+ * if the map and this TextReplacements share a key.
+*/
 void TextReplacements::Substitutions(map<string, string> &subs, const ConditionsStore &conditions) const
 {
 	for(const auto &sub : substitutions)

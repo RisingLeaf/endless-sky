@@ -57,7 +57,9 @@ namespace {
 
 
 
-// Reset to the initial political state defined in the game data.
+/**
+ * Reset to the initial political state defined in the game data.
+*/
 void Politics::Reset()
 {
 	reputationWith.clear();
@@ -105,10 +107,12 @@ bool Politics::IsEnemy(const Government *first, const Government *second) const
 
 
 
-// Commit the given "offense" against the given government (which may not
-// actually consider it to be an offense). This may result in temporary
-// hostilities (if the even type is PROVOKE), or a permanent change to your
-// reputation.
+/**
+ * Commit the given "offense" against the given government (which may not
+ * actually consider it to be an offense). This may result in temporary
+ * hostilities (if the even type is PROVOKE), or a permanent change to your
+ * reputation.
+*/
 void Politics::Offend(const Government *gov, int eventType, int count)
 {
 	if(!gov)
@@ -151,7 +155,9 @@ void Politics::Offend(const Government *gov, int eventType, int count)
 
 
 
-// Bribe the given government to be friendly to you for one day.
+/**
+ * Bribe the given government to be friendly to you for one day.
+*/
 void Politics::Bribe(const Government *gov)
 {
 	bribed.insert(gov);
@@ -161,7 +167,9 @@ void Politics::Bribe(const Government *gov)
 
 
 
-// Check if the given ship can land on the given planet.
+/**
+ * Check if the given ship can land on the given planet.
+*/
 bool Politics::CanLand(const Ship &ship, const Planet *planet) const
 {
 	if(!planet || !planet->GetSystem())
@@ -211,7 +219,9 @@ bool Politics::CanUseServices(const Planet *planet) const
 
 
 
-// Bribe a planet to let the player's ships land there.
+/**
+ * Bribe a planet to let the player's ships land there.
+*/
 void Politics::BribePlanet(const Planet *planet, bool fullAccess)
 {
 	bribedPlanets[planet] = fullAccess;
@@ -236,7 +246,9 @@ bool Politics::HasDominated(const Planet *planet) const
 
 
 
-// Check to see if the player has done anything they should be fined for.
+/**
+ * Check to see if the player has done anything they should be fined for.
+*/
 string Politics::Fine(PlayerInfo &player, const Government *gov, int scan, const Ship *target, double security)
 {
 	// Do nothing if you have already been fined today, or if you evade
@@ -343,7 +355,9 @@ string Politics::Fine(PlayerInfo &player, const Government *gov, int scan, const
 
 
 
-// Get or set your reputation with the given government.
+/**
+ * Get or set your reputation with the given government.
+*/
 double Politics::Reputation(const Government *gov) const
 {
 	auto it = reputationWith.find(gov);
@@ -368,7 +382,9 @@ void Politics::SetReputation(const Government *gov, double value)
 
 
 
-// Reset any temporary provocation (typically because a day has passed).
+/**
+ * Reset any temporary provocation (typically because a day has passed).
+*/
 void Politics::ResetDaily()
 {
 	provoked.clear();

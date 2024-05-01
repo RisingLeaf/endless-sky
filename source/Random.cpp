@@ -23,7 +23,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 using namespace std;
 
-// Right now thread_local storage is only supported under Linux.
+/**
+ * Right now thread_local storage is only supported under Linux.
+*/
 namespace {
 #ifndef __linux__
 	mutex workaroundMutex;
@@ -41,8 +43,10 @@ namespace {
 
 
 
-// Seed the generator (e.g. to make it produce exactly the same random
-// numbers it produced previously).
+/**
+ * Seed the generator (e.g. to make it produce exactly the same random
+ * numbers it produced previously).
+*/
 void Random::Seed(uint64_t seed)
 {
 #ifndef __linux__
@@ -84,8 +88,10 @@ double Random::Real()
 
 
 
-// Return the expected number of failures before k successes, when the
-// probability of success is p. The mean value will be k / (1 - p).
+/**
+ * Return the expected number of failures before k successes, when the
+ * probability of success is p. The mean value will be k / (1 - p).
+*/
 uint32_t Random::Polya(uint32_t k, double p)
 {
 	negative_binomial_distribution<uint32_t> polya(k, p);
@@ -97,7 +103,9 @@ uint32_t Random::Polya(uint32_t k, double p)
 
 
 
-// Get a number from a binomial distribution (i.e. integer bell curve).
+/**
+ * Get a number from a binomial distribution (i.e. integer bell curve).
+*/
 uint32_t Random::Binomial(uint32_t t, double p)
 {
 	binomial_distribution<uint32_t> binomial(t, p);
@@ -109,7 +117,9 @@ uint32_t Random::Binomial(uint32_t t, double p)
 
 
 
-// Get a normally distributed number with standard or specified mean and stddev.
+/**
+ * Get a normally distributed number with standard or specified mean and stddev.
+*/
 double Random::Normal(double mean, double sigma)
 {
 #ifndef __linux__

@@ -17,7 +17,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 
 
-// Greyscale color constructor.
+/**
+ * Greyscale color constructor.
+*/
 Color::Color(float i, float a)
 	: color{i, i, i, a}
 {
@@ -25,7 +27,9 @@ Color::Color(float i, float a)
 
 
 
-// Full color constructor.
+/**
+ * Full color constructor.
+*/
 Color::Color(float r, float g, float b, float a)
 	: color{r, g, b, a}
 {
@@ -50,7 +54,9 @@ bool Color::operator!=(const Color &other) const
 
 
 
-// Set all four color components to the given values.
+/**
+ * Set all four color components to the given values.
+*/
 void Color::Load(double r, double g, double b, double a)
 {
 	color[0] = static_cast<float>(r);
@@ -63,7 +69,9 @@ void Color::Load(double r, double g, double b, double a)
 
 
 
-// Check if Load() has been called for this color.
+/**
+ * Check if Load() has been called for this color.
+*/
 bool Color::IsLoaded() const
 {
 	return isLoaded;
@@ -71,7 +79,9 @@ bool Color::IsLoaded() const
 
 
 
-// Get a float vector representing this color, for use by OpenGL.
+/**
+ * Get a float vector representing this color, for use by OpenGL.
+*/
 const float *Color::Get() const
 {
 	return color;
@@ -79,7 +89,9 @@ const float *Color::Get() const
 
 
 
-// Get an opaque version of this color.
+/**
+ * Get an opaque version of this color.
+*/
 Color Color::Opaque() const
 {
 	Color opaque = *this;
@@ -89,7 +101,9 @@ Color Color::Opaque() const
 
 
 
-// Assuming this color is opaque, get a transparent version of it.
+/**
+ * Assuming this color is opaque, get a transparent version of it.
+*/
 Color Color::Transparent(float alpha) const
 {
 	Color result;
@@ -102,7 +116,9 @@ Color Color::Transparent(float alpha) const
 
 
 
-// Assuming this color is opaque, get an additive version of it.
+/**
+ * Assuming this color is opaque, get an additive version of it.
+*/
 Color Color::Additive(float alpha) const
 {
 	Color result = Transparent(alpha);

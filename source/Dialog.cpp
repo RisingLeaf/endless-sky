@@ -97,8 +97,10 @@ Dialog::Dialog(function<void()> okFunction, const string &message, Truncate trun
 
 
 
-// Dialog that has no callback (information only). In this form, there is
-// only an "ok" button, not a "cancel" button.
+/**
+ * Dialog that has no callback (information only). In this form, there is
+ * only an "ok" button, not a "cancel" button.
+*/
 Dialog::Dialog(const string &text, Truncate truncate, bool allowsFastForward)
 	: allowsFastForward(allowsFastForward)
 {
@@ -107,7 +109,9 @@ Dialog::Dialog(const string &text, Truncate truncate, bool allowsFastForward)
 
 
 
-// Mission accept / decline dialog.
+/**
+ * Mission accept / decline dialog.
+*/
 Dialog::Dialog(const string &text, PlayerInfo &player, const System *system, Truncate truncate, bool allowsFastForward)
 	: intFun(bind(&PlayerInfo::MissionCallback, &player, placeholders::_1)),
 	allowsFastForward(allowsFastForward),
@@ -118,7 +122,9 @@ Dialog::Dialog(const string &text, PlayerInfo &player, const System *system, Tru
 
 
 
-// Draw this panel.
+/**
+ * Draw this panel.
+*/
 void Dialog::Draw()
 {
 	DrawBackdrop();
@@ -195,7 +201,9 @@ void Dialog::Draw()
 
 
 
-// Format and add the text from the given node to the given string.
+/**
+ * Format and add the text from the given node to the given string.
+*/
 void Dialog::ParseTextNode(const DataNode &node, size_t startingIndex, string &text)
 {
 	for(int i = startingIndex; i < node.Size(); ++i)
@@ -319,7 +327,9 @@ bool Dialog::Click(int x, int y, int clicks)
 
 
 
-// Common code from all three constructors:
+/**
+ * Common code from all three constructors:
+*/
 void Dialog::Init(const string &message, Truncate truncate, bool canCancel, bool isMission)
 {
 	SetInterruptible(isMission);

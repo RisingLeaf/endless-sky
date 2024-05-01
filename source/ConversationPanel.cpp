@@ -59,7 +59,9 @@ namespace {
 
 
 
-// Constructor.
+/**
+ * Constructor.
+*/
 ConversationPanel::ConversationPanel(PlayerInfo &player, const Conversation &conversation,
 	const Mission *caller, const System *system, const shared_ptr<Ship> &ship, bool useTransactions)
 	: player(player), caller(caller), useTransactions(useTransactions), conversation(conversation),
@@ -95,7 +97,9 @@ void ConversationPanel::SetCallback(function<void(int)> fun)
 
 
 
-// Draw this panel.
+/**
+ * Draw this panel.
+*/
 void ConversationPanel::Draw()
 {
 	// Dim out everything outside this panel.
@@ -221,7 +225,9 @@ void ConversationPanel::Draw()
 
 
 
-// Handle key presses.
+/**
+ * Handle key presses.
+*/
 bool ConversationPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
 {
 	// Map popup happens when you press the map key, unless the name text entry
@@ -310,7 +316,9 @@ bool ConversationPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comm
 
 
 
-// Allow scrolling by click and drag.
+/**
+ * Allow scrolling by click and drag.
+*/
 bool ConversationPanel::Drag(double dx, double dy)
 {
 	scroll = min(0., max(maxScroll, scroll + dy));
@@ -320,7 +328,9 @@ bool ConversationPanel::Drag(double dx, double dy)
 
 
 
-// Handle the scroll wheel.
+/**
+ * Handle the scroll wheel.
+*/
 bool ConversationPanel::Scroll(double dx, double dy)
 {
 	return Drag(0., dy * Preferences::ScrollSpeed());
@@ -328,7 +338,9 @@ bool ConversationPanel::Scroll(double dx, double dy)
 
 
 
-// Handle selecting choices by hovering with the mouse.
+/**
+ * Handle selecting choices by hovering with the mouse.
+*/
 bool ConversationPanel::Hover(int x, int y)
 {
 	hoverPoint = Point(x, y);
@@ -338,7 +350,9 @@ bool ConversationPanel::Hover(int x, int y)
 
 
 
-// The player just selected the given choice.
+/**
+ * The player just selected the given choice.
+*/
 void ConversationPanel::Goto(int index, int selectedChoice)
 {
 	const ConditionsStore &conditions = player.Conditions();
@@ -424,7 +438,9 @@ void ConversationPanel::Goto(int index, int selectedChoice)
 
 
 
-// Exit this panel and do whatever needs to happen next.
+/**
+ * Exit this panel and do whatever needs to happen next.
+*/
 void ConversationPanel::Exit()
 {
 	// Finish the PlayerInfo transaction so any changes get saved again.
@@ -458,7 +474,9 @@ void ConversationPanel::Exit()
 
 
 
-// The player just clicked one of the two name entry text fields.
+/**
+ * The player just clicked one of the two name entry text fields.
+*/
 void ConversationPanel::ClickName(int side)
 {
 	choice = side;
@@ -466,16 +484,20 @@ void ConversationPanel::ClickName(int side)
 
 
 
-// The player just clicked on a conversation choice.
+/**
+ * The player just clicked on a conversation choice.
+*/
 void ConversationPanel::ClickChoice(int index)
 {
 	Goto(conversation.NextNodeForChoice(node, MapChoice(index)), index);
 }
 
 
-// Given an index into the list of displayed choices (i.e. not including
-// conditionally-skipped choices), return its "raw index" in the conversation
-// (i.e. including conditionally-skipped choices)
+/**
+ * Given an index into the list of displayed choices (i.e. not including
+ * conditionally-skipped choices), return its "raw index" in the conversation
+ * (i.e. including conditionally-skipped choices)
+*/
 int ConversationPanel::MapChoice(int n) const
 {
 	if(n < 0 || n >= static_cast<int>(choices.size()))
@@ -486,7 +508,9 @@ int ConversationPanel::MapChoice(int n) const
 
 
 
-// Paragraph constructor.
+/**
+ * Paragraph constructor.
+*/
 ConversationPanel::Paragraph::Paragraph(const string &text, const Sprite *scene, bool isFirst)
 	: scene(scene), isFirst(isFirst)
 {
@@ -499,7 +523,9 @@ ConversationPanel::Paragraph::Paragraph(const string &text, const Sprite *scene,
 
 
 
-// Get the height of this paragraph (including any "scene" image).
+/**
+ * Get the height of this paragraph (including any "scene" image).
+*/
 int ConversationPanel::Paragraph::Height() const
 {
 	int height = wrap.Height();
@@ -510,7 +536,9 @@ int ConversationPanel::Paragraph::Height() const
 
 
 
-// Get the center point of this paragraph.
+/**
+ * Get the center point of this paragraph.
+*/
 Point ConversationPanel::Paragraph::Center() const
 {
 	return Point(.5 * WIDTH, .5 * (Height() - wrap.ParagraphBreak()));
@@ -518,8 +546,10 @@ Point ConversationPanel::Paragraph::Center() const
 
 
 
-// Draw this paragraph, and return the point that the next paragraph below it
-// should be drawn at.
+/**
+ * Draw this paragraph, and return the point that the next paragraph below it
+ * should be drawn at.
+*/
 Point ConversationPanel::Paragraph::Draw(Point point, const Color &color) const
 {
 	if(scene)

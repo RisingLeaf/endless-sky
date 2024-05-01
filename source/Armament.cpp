@@ -29,7 +29,9 @@ using namespace std;
 
 
 
-// Add a gun hardpoint (fixed-direction weapon).
+/**
+ * Add a gun hardpoint (fixed-direction weapon).
+*/
 void Armament::AddGunPort(const Point &point, const Angle &angle, bool isParallel, bool isUnder, const Outfit *outfit)
 {
 	hardpoints.emplace_back(point, angle, false, isParallel, isUnder, outfit);
@@ -37,7 +39,9 @@ void Armament::AddGunPort(const Point &point, const Angle &angle, bool isParalle
 
 
 
-// Add a turret hardpoint (omnidirectional weapon).
+/**
+ * Add a turret hardpoint (omnidirectional weapon).
+*/
 void Armament::AddTurret(const Point &point, bool isUnder, const Outfit *outfit)
 {
 	hardpoints.emplace_back(point, Angle(0.), true, false, isUnder, outfit);
@@ -45,9 +49,11 @@ void Armament::AddTurret(const Point &point, bool isUnder, const Outfit *outfit)
 
 
 
-// This must be called after all the outfit data is loaded. If you add more
-// of a given weapon than there are slots for it, the extras will not fire.
-// But, the "gun ports" attribute should keep that from happening.
+/**
+ * This must be called after all the outfit data is loaded. If you add more
+ * of a given weapon than there are slots for it, the extras will not fire.
+ * But, the "gun ports" attribute should keep that from happening.
+*/
 int Armament::Add(const Outfit *outfit, int count)
 {
 	// Make sure this really is a weapon.
@@ -115,8 +121,10 @@ int Armament::Add(const Outfit *outfit, int count)
 
 
 
-// Call this once all the outfits have been loaded to make sure they are all
-// set up properly (even the ones that were pre-assigned to a hardpoint).
+/**
+ * Call this once all the outfits have been loaded to make sure they are all
+ * set up properly (even the ones that were pre-assigned to a hardpoint).
+*/
 void Armament::FinishLoading()
 {
 	for(Hardpoint &hardpoint : hardpoints)
@@ -128,7 +136,9 @@ void Armament::FinishLoading()
 
 
 
-// Reload all weapons (because a day passed in-game).
+/**
+ * Reload all weapons (because a day passed in-game).
+*/
 void Armament::ReloadAll()
 {
 	streamReload.clear();
@@ -146,7 +156,9 @@ void Armament::ReloadAll()
 
 
 
-// Uninstall all weapons (because the weapon outfits have potentially changed).
+/**
+ * Uninstall all weapons (because the weapon outfits have potentially changed).
+*/
 void Armament::UninstallAll()
 {
 	for(Hardpoint &hardpoint : hardpoints)
@@ -155,7 +167,9 @@ void Armament::UninstallAll()
 
 
 
-// Swap the weapons in the given two hardpoints.
+/**
+ * Swap the weapons in the given two hardpoints.
+*/
 void Armament::Swap(unsigned first, unsigned second)
 {
 	// Make sure both of the given indices are in range, and that both slots are
@@ -175,7 +189,9 @@ void Armament::Swap(unsigned first, unsigned second)
 
 
 
-// Access the array of weapon hardpoints.
+/**
+ * Access the array of weapon hardpoints.
+*/
 const vector<Hardpoint> &Armament::Get() const
 {
 	return hardpoints;
@@ -183,7 +199,9 @@ const vector<Hardpoint> &Armament::Get() const
 
 
 
-// Determine how many fixed gun hardpoints are on this ship.
+/**
+ * Determine how many fixed gun hardpoints are on this ship.
+*/
 int Armament::GunCount() const
 {
 	return hardpoints.size() - TurretCount();
@@ -191,7 +209,9 @@ int Armament::GunCount() const
 
 
 
-// Determine how many turret hardpoints are on this ship.
+/**
+ * Determine how many turret hardpoints are on this ship.
+*/
 int Armament::TurretCount() const
 {
 	int count = 0;
@@ -202,8 +222,10 @@ int Armament::TurretCount() const
 
 
 
-// Determine the installed weaponry's reusable ammunition. That is, all ammo outfits that are not also
-// weapons (as then they would be installed on hardpoints, like the "Nuclear Missile" and other one-shots).
+/**
+ * Determine the installed weaponry's reusable ammunition. That is, all ammo outfits that are not also
+ * weapons (as then they would be installed on hardpoints, like the "Nuclear Missile" and other one-shots).
+*/
 set<const Outfit *> Armament::RestockableAmmo() const
 {
 	auto restockable = set<const Outfit *>{};
@@ -222,7 +244,9 @@ set<const Outfit *> Armament::RestockableAmmo() const
 
 
 
-// Adjust the aim of the turrets.
+/**
+ * Adjust the aim of the turrets.
+*/
 void Armament::Aim(const FireCommand &command)
 {
 	for(unsigned i = 0; i < hardpoints.size(); ++i)
@@ -231,8 +255,10 @@ void Armament::Aim(const FireCommand &command)
 
 
 
-// Fire the given weapon, if it is ready. If it did not fire because it is
-// not ready, return false.
+/**
+ * Fire the given weapon, if it is ready. If it did not fire because it is
+ * not ready, return false.
+*/
 void Armament::Fire(unsigned index, Ship &ship, vector<Projectile> &projectiles, vector<Visual> &visuals, bool jammed)
 {
 	// Don't check if the hardpoint jammed here, as the weapon may not even
@@ -281,7 +307,9 @@ bool Armament::FireTractorBeam(unsigned index, Ship &ship, const Flotsam &flotsa
 
 
 
-// Update the reload counters.
+/**
+ * Update the reload counters.
+*/
 void Armament::Step(const Ship &ship)
 {
 	for(Hardpoint &hardpoint : hardpoints)

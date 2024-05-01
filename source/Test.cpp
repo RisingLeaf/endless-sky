@@ -386,7 +386,9 @@ Test::Status Test::GetStatus() const
 
 
 
-// Check the game status and perform the next test action.
+/**
+ * Check the game status and perform the next test action.
+*/
 void Test::Step(TestContext &context, PlayerInfo &player, Command &commandToGive) const
 {
 	// Only run tests once all data has been loaded.
@@ -519,7 +521,9 @@ const string &Test::StatusText() const
 
 
 
-// Get the names of the conditions relevant for this test.
+/**
+ * Get the names of the conditions relevant for this test.
+*/
 std::set<std::string> Test::RelevantConditions() const
 {
 	set<string> conditionNames;
@@ -554,7 +558,9 @@ std::set<std::string> Test::RelevantConditions() const
 
 
 
-// Fail the test using the given message as reason.
+/**
+ * Fail the test using the given message as reason.
+*/
 void Test::Fail(const TestContext &context, const PlayerInfo &player, const string &testFailReason) const
 {
 	string message = "Test failed";

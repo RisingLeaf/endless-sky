@@ -118,8 +118,10 @@ namespace {
 
 
 
-// Completely clear all loaded information, to prepare for loading a file or
-// creating a new pilot.
+/**
+ * Completely clear all loaded information, to prepare for loading a file or
+ * creating a new pilot.
+*/
 void PlayerInfo::Clear()
 {
 	*this = PlayerInfo();
@@ -136,7 +138,9 @@ void PlayerInfo::Clear()
 
 
 
-// Check if a player has been loaded.
+/**
+ * Check if a player has been loaded.
+*/
 bool PlayerInfo::IsLoaded() const
 {
 	return !firstName.empty();
@@ -144,7 +148,9 @@ bool PlayerInfo::IsLoaded() const
 
 
 
-// Make a new player.
+/**
+ * Make a new player.
+*/
 void PlayerInfo::New(const StartConditions &start)
 {
 	// Clear any previously loaded data.
@@ -187,7 +193,9 @@ void PlayerInfo::New(const StartConditions &start)
 
 
 
-// Load player information from a saved game file.
+/**
+ * Load player information from a saved game file.
+*/
 void PlayerInfo::Load(const string &path)
 {
 	// Make sure any previously loaded data is cleared.
@@ -459,7 +467,9 @@ void PlayerInfo::Load(const string &path)
 
 
 
-// Load the most recently saved player (if any). Returns false when no save was loaded.
+/**
+ * Load the most recently saved player (if any). Returns false when no save was loaded.
+*/
 bool PlayerInfo::LoadRecent()
 {
 	string recentPath = Files::Read(Files::Config() + "recent.txt");
@@ -479,7 +489,9 @@ bool PlayerInfo::LoadRecent()
 
 
 
-// Save this player. The file name is based on the player's name.
+/**
+ * Save this player. The file name is based on the player's name.
+*/
 void PlayerInfo::Save() const
 {
 	// Don't save dead players or players that are not fully created.
@@ -520,9 +532,11 @@ void PlayerInfo::Save() const
 
 
 
-// Get the base file name for the player, without the ".txt" extension. This
-// will usually be "<first> <last>", but may be different if multiple players
-// exist with the same name, in which case a number is appended.
+/**
+ * Get the base file name for the player, without the ".txt" extension. This
+ * will usually be "<first> <last>", but may be different if multiple players
+ * exist with the same name, in which case a number is appended.
+*/
 string PlayerInfo::Identifier() const
 {
 	string name = Files::Name(filePath);
@@ -551,7 +565,9 @@ void PlayerInfo::FinishTransaction()
 
 
 
-// Apply the given set of changes to the game data.
+/**
+ * Apply the given set of changes to the game data.
+*/
 void PlayerInfo::AddChanges(list<DataNode> &changes)
 {
 	bool changedSystems = false;
@@ -583,7 +599,9 @@ void PlayerInfo::AddChanges(list<DataNode> &changes)
 
 
 
-// Add an event that will happen at the given date.
+/**
+ * Add an event that will happen at the given date.
+*/
 void PlayerInfo::AddEvent(const GameEvent &event, const Date &date)
 {
 	gameEvents.push_back(event);
@@ -592,7 +610,9 @@ void PlayerInfo::AddEvent(const GameEvent &event, const Date &date)
 
 
 
-// Mark this player as dead, and handle the changes to the player's fleet.
+/**
+ * Mark this player as dead, and handle the changes to the player's fleet.
+*/
 void PlayerInfo::Die(int response, const shared_ptr<Ship> &capturer)
 {
 	isDead = true;
@@ -639,7 +659,9 @@ void PlayerInfo::Die(int response, const shared_ptr<Ship> &capturer)
 
 
 
-// Query whether this player is dead.
+/**
+ * Query whether this player is dead.
+*/
 bool PlayerInfo::IsDead() const
 {
 	return isDead;
@@ -647,7 +669,9 @@ bool PlayerInfo::IsDead() const
 
 
 
-// Get the player's first name.
+/**
+ * Get the player's first name.
+*/
 const string &PlayerInfo::FirstName() const
 {
 	return firstName;
@@ -655,7 +679,9 @@ const string &PlayerInfo::FirstName() const
 
 
 
-// Get the player's last name.
+/**
+ * Get the player's last name.
+*/
 const string &PlayerInfo::LastName() const
 {
 	return lastName;
@@ -663,7 +689,9 @@ const string &PlayerInfo::LastName() const
 
 
 
-// Set the player's name. This will also set the saved game file name.
+/**
+ * Set the player's name. This will also set the saved game file name.
+*/
 void PlayerInfo::SetName(const string &first, const string &last)
 {
 	firstName = first;
@@ -692,7 +720,9 @@ void PlayerInfo::SetName(const string &first, const string &last)
 
 
 
-// Get the current date (game world, not real world).
+/**
+ * Get the current date (game world, not real world).
+*/
 const Date &PlayerInfo::GetDate() const
 {
 	return date;
@@ -700,7 +730,9 @@ const Date &PlayerInfo::GetDate() const
 
 
 
-// Set the date to the next day, and perform all daily actions.
+/**
+ * Set the date to the next day, and perform all daily actions.
+*/
 void PlayerInfo::IncrementDate()
 {
 	++date;
@@ -801,7 +833,9 @@ SystemEntry PlayerInfo::GetSystemEntry() const
 
 
 
-// Set the player's current start system, and mark that system as visited.
+/**
+ * Set the player's current start system, and mark that system as visited.
+*/
 void PlayerInfo::SetSystem(const System &system)
 {
 	this->previousSystem = this->system;
@@ -811,7 +845,9 @@ void PlayerInfo::SetSystem(const System &system)
 
 
 
-// Get the player's current star system.
+/**
+ * Get the player's current star system.
+*/
 const System *PlayerInfo::GetSystem() const
 {
 	return system;
@@ -826,7 +862,9 @@ const System *PlayerInfo::GetPreviousSystem() const
 
 
 
-// Set the planet the player is landed on.
+/**
+ * Set the planet the player is landed on.
+*/
 void PlayerInfo::SetPlanet(const Planet *planet)
 {
 	this->planet = planet;
@@ -834,7 +872,9 @@ void PlayerInfo::SetPlanet(const Planet *planet)
 
 
 
-// Get the planet the player is landed on.
+/**
+ * Get the planet the player is landed on.
+*/
 const Planet *PlayerInfo::GetPlanet() const
 {
 	return planet;
@@ -842,8 +882,10 @@ const Planet *PlayerInfo::GetPlanet() const
 
 
 
-// If the player is landed, return the stellar object they are on. Some planets
-// (e.g. ringworlds) may include multiple stellar objects in the same system.
+/**
+ * If the player is landed, return the stellar object they are on. Some planets
+ * (e.g. ringworlds) may include multiple stellar objects in the same system.
+*/
 const StellarObject *PlayerInfo::GetStellarObject() const
 {
 	if(!system || !planet)
@@ -869,7 +911,9 @@ const StellarObject *PlayerInfo::GetStellarObject() const
 
 
 
-// Check if the player must take off immediately.
+/**
+ * Check if the player must take off immediately.
+*/
 bool PlayerInfo::ShouldLaunch() const
 {
 	return shouldLaunch;
@@ -877,7 +921,9 @@ bool PlayerInfo::ShouldLaunch() const
 
 
 
-// Access the player's account information.
+/**
+ * Access the player's account information.
+*/
 const Account &PlayerInfo::Accounts() const
 {
 	return accounts;
@@ -885,7 +931,9 @@ const Account &PlayerInfo::Accounts() const
 
 
 
-// Access the player's account information (and allow modifying it).
+/**
+ * Access the player's account information (and allow modifying it).
+*/
 Account &PlayerInfo::Accounts()
 {
 	return accounts;
@@ -893,7 +941,9 @@ Account &PlayerInfo::Accounts()
 
 
 
-// Calculate how much the player pays in daily salaries.
+/**
+ * Calculate how much the player pays in daily salaries.
+*/
 int64_t PlayerInfo::Salaries() const
 {
 	// Don't count extra crew on anything but the flagship.
@@ -915,7 +965,9 @@ int64_t PlayerInfo::Salaries() const
 
 
 
-// Calculate the daily maintenance cost and generated income for all ships and in cargo outfits.
+/**
+ * Calculate the daily maintenance cost and generated income for all ships and in cargo outfits.
+*/
 PlayerInfo::FleetBalance PlayerInfo::MaintenanceAndReturns() const
 {
 	FleetBalance b;
@@ -980,8 +1032,10 @@ const set<string> &PlayerInfo::Licenses() const
 
 
 
-// Get a pointer to the ship that the player controls. This is usually the first
-// ship in the list.
+/**
+ * Get a pointer to the ship that the player controls. This is usually the first
+ * ship in the list.
+*/
 const Ship *PlayerInfo::Flagship() const
 {
 	return const_cast<PlayerInfo *>(this)->FlagshipPtr().get();
@@ -989,8 +1043,10 @@ const Ship *PlayerInfo::Flagship() const
 
 
 
-// Get a pointer to the ship that the player controls. This is usually the first
-// ship in the list.
+/**
+ * Get a pointer to the ship that the player controls. This is usually the first
+ * ship in the list.
+*/
 Ship *PlayerInfo::Flagship()
 {
 	return FlagshipPtr().get();
@@ -998,7 +1054,9 @@ Ship *PlayerInfo::Flagship()
 
 
 
-// Determine which ship is the flagship and return the shared pointer to it.
+/**
+ * Determine which ship is the flagship and return the shared pointer to it.
+*/
 const shared_ptr<Ship> &PlayerInfo::FlagshipPtr()
 {
 	if(!flagship)
@@ -1029,7 +1087,9 @@ const shared_ptr<Ship> &PlayerInfo::FlagshipPtr()
 
 
 
-// Set the flagship (on departure or during flight).
+/**
+ * Set the flagship (on departure or during flight).
+*/
 void PlayerInfo::SetFlagship(Ship &other)
 {
 	// Remove active data in the old flagship.
@@ -1062,7 +1122,9 @@ void PlayerInfo::SetFlagship(Ship &other)
 
 
 
-// Access the full list of ships that the player owns.
+/**
+ * Access the full list of ships that the player owns.
+*/
 const vector<shared_ptr<Ship>> &PlayerInfo::Ships() const
 {
 	return ships;
@@ -1070,9 +1132,11 @@ const vector<shared_ptr<Ship>> &PlayerInfo::Ships() const
 
 
 
-// Inspect the flightworthiness of the player's active fleet, individually and
-// as a whole, to determine which ships cannot travel with the group.
-// Returns a mapping of ships to the reason their flight check failed.
+/**
+ * Inspect the flightworthiness of the player's active fleet, individually and
+ * as a whole, to determine which ships cannot travel with the group.
+ * Returns a mapping of ships to the reason their flight check failed.
+*/
 map<const shared_ptr<Ship>, vector<string>> PlayerInfo::FlightCheck() const
 {
 	// Count of all bay types in the active fleet.
@@ -1146,7 +1210,9 @@ map<const shared_ptr<Ship>, vector<string>> PlayerInfo::FlightCheck() const
 
 
 
-// Add a captured ship to your fleet.
+/**
+ * Add a captured ship to your fleet.
+*/
 void PlayerInfo::AddShip(const shared_ptr<Ship> &ship)
 {
 	ships.push_back(ship);
@@ -1158,7 +1224,9 @@ void PlayerInfo::AddShip(const shared_ptr<Ship> &ship)
 
 
 
-// Adds a ship of the given model with the given name to the player's fleet.
+/**
+ * Adds a ship of the given model with the given name to the player's fleet.
+*/
 void PlayerInfo::BuyShip(const Ship *model, const string &name)
 {
 	if(!model)
@@ -1184,7 +1252,9 @@ void PlayerInfo::BuyShip(const Ship *model, const string &name)
 
 
 
-// Because this ship is being gifted, it costs nothing and starts fully depreciated.
+/**
+ * Because this ship is being gifted, it costs nothing and starts fully depreciated.
+*/
 const Ship *PlayerInfo::GiftShip(const Ship *model, const string &name, const string &id)
 {
 	if(!model)
@@ -1203,7 +1273,9 @@ const Ship *PlayerInfo::GiftShip(const Ship *model, const string &name, const st
 
 
 
-// Sell the given ship (if it belongs to the player).
+/**
+ * Sell the given ship (if it belongs to the player).
+*/
 void PlayerInfo::SellShip(const Ship *selected, bool storeOutfits)
 {
 	for(auto it = ships.begin(); it != ships.end(); ++it)
@@ -1243,8 +1315,10 @@ void PlayerInfo::SellShip(const Ship *selected, bool storeOutfits)
 
 
 
-// Take the ship from the player, if a model is specified this will permanently remove outfits in said model,
-// instead of allowing the player to buy them back by putting them in the stock.
+/**
+ * Take the ship from the player, if a model is specified this will permanently remove outfits in said model,
+ * instead of allowing the player to buy them back by putting them in the stock.
+*/
 void PlayerInfo::TakeShip(const Ship *shipToTake, const Ship *model, bool takeOutfits)
 {
 	for(auto it = ships.begin(); it != ships.end(); ++it)
@@ -1290,8 +1364,10 @@ vector<shared_ptr<Ship>>::iterator PlayerInfo::DisownShip(const Ship *selected)
 
 
 
-// Park or unpark the given ship. A parked ship remains on a planet instead of
-// flying with the player, and requires no daily crew payments.
+/**
+ * Park or unpark the given ship. A parked ship remains on a planet instead of
+ * flying with the player, and requires no daily crew payments.
+*/
 void PlayerInfo::ParkShip(const Ship *selected, bool isParked)
 {
 	for(auto &ship : ships)
@@ -1307,7 +1383,9 @@ void PlayerInfo::ParkShip(const Ship *selected, bool isParked)
 
 
 
-// Rename the given ship.
+/**
+ * Rename the given ship.
+*/
 void PlayerInfo::RenameShip(const Ship *selected, const string &name)
 {
 	for(auto &ship : ships)
@@ -1320,7 +1398,9 @@ void PlayerInfo::RenameShip(const Ship *selected, const string &name)
 
 
 
-// Change the order of the given ship in the list.
+/**
+ * Change the order of the given ship in the list.
+*/
 void PlayerInfo::ReorderShip(int fromIndex, int toIndex)
 {
 	// Make sure the indices are valid.
@@ -1354,8 +1434,10 @@ void PlayerInfo::SetShipOrder(const vector<shared_ptr<Ship>> &newOrder)
 
 
 
-// Find out how attractive the player's fleet is to pirates. Aside from a
-// heavy freighter, no single ship should attract extra pirate attention.
+/**
+ * Find out how attractive the player's fleet is to pirates. Aside from a
+ * heavy freighter, no single ship should attract extra pirate attention.
+*/
 pair<double, double> PlayerInfo::RaidFleetFactors() const
 {
 	double attraction = 0.;
@@ -1413,7 +1495,9 @@ double PlayerInfo::RaidFleetAttraction(const RaidFleet &raid, const System *syst
 
 
 
-// Get cargo information.
+/**
+ * Get cargo information.
+*/
 CargoHold &PlayerInfo::Cargo()
 {
 	return cargo;
@@ -1421,7 +1505,9 @@ CargoHold &PlayerInfo::Cargo()
 
 
 
-// Get cargo information.
+/**
+ * Get cargo information.
+*/
 const CargoHold &PlayerInfo::Cargo() const
 {
 	return cargo;
@@ -1429,7 +1515,9 @@ const CargoHold &PlayerInfo::Cargo() const
 
 
 
-// Get items stored on the player's current planet.
+/**
+ * Get items stored on the player's current planet.
+*/
 CargoHold &PlayerInfo::Storage()
 {
 	assert(planet && "can't get planetary storage in-flight");
@@ -1438,7 +1526,9 @@ CargoHold &PlayerInfo::Storage()
 
 
 
-// Get planetary storage information for all planets (for map and overviews).
+/**
+ * Get planetary storage information for all planets (for map and overviews).
+*/
 const std::map<const Planet *, CargoHold> &PlayerInfo::PlanetaryStorage() const
 {
 	return planetaryStorage;
@@ -1446,7 +1536,9 @@ const std::map<const Planet *, CargoHold> &PlayerInfo::PlanetaryStorage() const
 
 
 
-// Adjust the cost basis for the given commodity.
+/**
+ * Adjust the cost basis for the given commodity.
+*/
 void PlayerInfo::AdjustBasis(const string &commodity, int64_t adjustment)
 {
 	costBasis[commodity] += adjustment;
@@ -1454,8 +1546,10 @@ void PlayerInfo::AdjustBasis(const string &commodity, int64_t adjustment)
 
 
 
-// Get the cost basis for some number of tons of the given commodity. Each ton
-// of the commodity that you own is assumed to have the same basis.
+/**
+ * Get the cost basis for some number of tons of the given commodity. Each ton
+ * of the commodity that you own is assumed to have the same basis.
+*/
 int64_t PlayerInfo::GetBasis(const string &commodity, int tons) const
 {
 	// Handle cost basis even when not landed on a planet.
@@ -1472,8 +1566,10 @@ int64_t PlayerInfo::GetBasis(const string &commodity, int tons) const
 
 
 
-// Switch cargo from being stored in ships to being stored here. Also recharge
-// ships, check for mission completion, and apply fines for contraband.
+/**
+ * Switch cargo from being stored in ships to being stored here. Also recharge
+ * ships, check for mission completion, and apply fines for contraband.
+*/
 void PlayerInfo::Land(UI *ui)
 {
 	// This can only be done while landed.
@@ -1615,8 +1711,10 @@ void PlayerInfo::Land(UI *ui)
 
 
 
-// Load the cargo back into your ships. This may require selling excess, in
-// which case a message will be returned.
+/**
+ * Load the cargo back into your ships. This may require selling excess, in
+ * which case a message will be returned.
+*/
 bool PlayerInfo::TakeOff(UI *ui, const bool distributeCargo)
 {
 	// This can only be done while landed.
@@ -1884,7 +1982,9 @@ double PlayerInfo::GetPlayTime() const noexcept
 
 
 
-// Get the player's logbook.
+/**
+ * Get the player's logbook.
+*/
 const multimap<Date, string> &PlayerInfo::Logbook() const
 {
 	return logbook;
@@ -1923,8 +2023,10 @@ bool PlayerInfo::HasLogs() const
 
 
 
-// Call this after missions update, or if leaving the outfitter, shipyard, or
-// hiring panel. Updates the information on how much space is available.
+/**
+ * Call this after missions update, or if leaving the outfitter, shipyard, or
+ * hiring panel. Updates the information on how much space is available.
+*/
 void PlayerInfo::UpdateCargoCapacities()
 {
 	int size = 0;
@@ -1943,7 +2045,9 @@ void PlayerInfo::UpdateCargoCapacities()
 
 
 
-// Get the list of active missions.
+/**
+ * Get the list of active missions.
+*/
 const list<Mission> &PlayerInfo::Missions() const
 {
 	return missions;
@@ -1951,7 +2055,9 @@ const list<Mission> &PlayerInfo::Missions() const
 
 
 
-// Get the list of ordinary jobs that are available on the job board.
+/**
+ * Get the list of ordinary jobs that are available on the job board.
+*/
 const list<Mission> &PlayerInfo::AvailableJobs() const
 {
 	return availableJobs;
@@ -2019,7 +2125,9 @@ void PlayerInfo::ToggleSortSeparatePossible()
 
 
 
-// Return a pointer to the mission that was most recently accepted while in-flight.
+/**
+ * Return a pointer to the mission that was most recently accepted while in-flight.
+*/
 const Mission *PlayerInfo::ActiveBoardingMission() const
 {
 	return activeBoardingMission;
@@ -2027,7 +2135,9 @@ const Mission *PlayerInfo::ActiveBoardingMission() const
 
 
 
-// Update mission NPCs with the player's current conditions.
+/**
+ * Update mission NPCs with the player's current conditions.
+*/
 void PlayerInfo::UpdateMissionNPCs()
 {
 	for(Mission &mission : missions)
@@ -2036,7 +2146,9 @@ void PlayerInfo::UpdateMissionNPCs()
 
 
 
-// Accept the given job.
+/**
+ * Accept the given job.
+*/
 void PlayerInfo::AcceptJob(const Mission &mission, UI *ui)
 {
 	for(auto it = availableJobs.begin(); it != availableJobs.end(); ++it)
@@ -2054,9 +2166,11 @@ void PlayerInfo::AcceptJob(const Mission &mission, UI *ui)
 
 
 
-// Look at the list of available missions and see if any of them can be offered
-// right now, in the given location (landing or spaceport). If there are no
-// missions that can be accepted, return a null pointer.
+/**
+ * Look at the list of available missions and see if any of them can be offered
+ * right now, in the given location (landing or spaceport). If there are no
+ * missions that can be accepted, return a null pointer.
+*/
 Mission *PlayerInfo::MissionToOffer(Mission::Location location)
 {
 	if(ships.empty())
@@ -2075,8 +2189,10 @@ Mission *PlayerInfo::MissionToOffer(Mission::Location location)
 
 
 
-// Check if any of the game's missions can be offered from this ship, given its
-// relationship with the player. If none offer, return nullptr.
+/**
+ * Check if any of the game's missions can be offered from this ship, given its
+ * relationship with the player. If none offer, return nullptr.
+*/
 Mission *PlayerInfo::BoardingMission(const shared_ptr<Ship> &ship)
 {
 	// Do not create missions from existing mission NPC's, or the player's ships.
@@ -2126,7 +2242,9 @@ bool PlayerInfo::CaptureOverriden(const shared_ptr<Ship> &ship) const
 
 
 
-// Engine calls this after placing the boarding mission's NPCs.
+/**
+ * Engine calls this after placing the boarding mission's NPCs.
+*/
 void PlayerInfo::ClearActiveBoardingMission()
 {
 	activeBoardingMission = nullptr;
@@ -2134,9 +2252,11 @@ void PlayerInfo::ClearActiveBoardingMission()
 
 
 
-// If one of your missions cannot be offered because you do not have enough
-// space for it, and it specifies a message to be shown in that situation,
-// show that message.
+/**
+ * If one of your missions cannot be offered because you do not have enough
+ * space for it, and it specifies a message to be shown in that situation,
+ * show that message.
+*/
 void PlayerInfo::HandleBlockedMissions(Mission::Location location, UI *ui)
 {
 	list<Mission> &missionList = availableMissions.empty() ? boardingMissions : availableMissions;
@@ -2157,9 +2277,11 @@ void PlayerInfo::HandleBlockedMissions(Mission::Location location, UI *ui)
 
 
 
-// Callback for accepting or declining whatever mission has been offered.
-// Responses which would kill the player are handled before the on offer
-// conversation ended.
+/**
+ * Callback for accepting or declining whatever mission has been offered.
+ * Responses which would kill the player are handled before the on offer
+ * conversation ended.
+*/
 void PlayerInfo::MissionCallback(int response)
 {
 	list<Mission> &missionList = availableMissions.empty() ? boardingMissions : availableMissions;
@@ -2211,8 +2333,10 @@ void PlayerInfo::MissionCallback(int response)
 
 
 
-// Basic callback, allowing conversations to force the player to depart from a
-// planet without requiring a mission to offer.
+/**
+ * Basic callback, allowing conversations to force the player to depart from a
+ * planet without requiring a mission to offer.
+*/
 void PlayerInfo::BasicCallback(int response)
 {
 	// If landed, this conversation may require the player to immediately depart.
@@ -2221,8 +2345,10 @@ void PlayerInfo::BasicCallback(int response)
 
 
 
-// Mark a mission for removal, either because it was completed, or it failed,
-// or because the player aborted it.
+/**
+ * Mark a mission for removal, either because it was completed, or it failed,
+ * or because the player aborted it.
+*/
 void PlayerInfo::RemoveMission(Mission::Trigger trigger, const Mission &mission, UI *ui)
 {
 	for(auto it = missions.begin(); it != missions.end(); ++it)
@@ -2244,7 +2370,9 @@ void PlayerInfo::RemoveMission(Mission::Trigger trigger, const Mission &mission,
 
 
 
-// Mark a mission as failed, but do not remove it from the mission list yet.
+/**
+ * Mark a mission as failed, but do not remove it from the mission list yet.
+*/
 void PlayerInfo::FailMission(const Mission &mission)
 {
 	for(auto &it : missions)
@@ -2257,7 +2385,9 @@ void PlayerInfo::FailMission(const Mission &mission)
 
 
 
-// Update mission status based on an event.
+/**
+ * Update mission status based on an event.
+*/
 void PlayerInfo::HandleEvent(const ShipEvent &event, UI *ui)
 {
 	// Combat rating increases when you disable an enemy ship.
@@ -2279,7 +2409,9 @@ void PlayerInfo::HandleEvent(const ShipEvent &event, UI *ui)
 
 
 
-// Get mutable access to the player's list of conditions.
+/**
+ * Get mutable access to the player's list of conditions.
+*/
 ConditionsStore &PlayerInfo::Conditions()
 {
 	return conditions;
@@ -2287,7 +2419,9 @@ ConditionsStore &PlayerInfo::Conditions()
 
 
 
-// Access the player's list of conditions.
+/**
+ * Access the player's list of conditions.
+*/
 const ConditionsStore &PlayerInfo::Conditions() const
 {
 	return conditions;
@@ -2295,7 +2429,9 @@ const ConditionsStore &PlayerInfo::Conditions() const
 
 
 
-// Uuid for the gifted ships, with the ship class follow by the names they had when they were gifted to the player.
+/**
+ * Uuid for the gifted ships, with the ship class follow by the names they had when they were gifted to the player.
+*/
 const map<string, EsUuid> &PlayerInfo::GiftedShips() const
 {
 	return giftedShips;
@@ -2352,7 +2488,9 @@ bool PlayerInfo::SetTribute(const string &planetTrueName, int64_t payment)
 
 
 
-// Get a list of all tribute that the player receives.
+/**
+ * Get a list of all tribute that the player receives.
+*/
 const map<const Planet *, int64_t> &PlayerInfo::GetTribute() const
 {
 	return tributeReceived;
@@ -2360,7 +2498,9 @@ const map<const Planet *, int64_t> &PlayerInfo::GetTribute() const
 
 
 
-// Get the total sum of the tribute the player receives.
+/**
+ * Get the total sum of the tribute the player receives.
+*/
 int64_t PlayerInfo::GetTributeTotal() const
 {
 	return accumulate(
@@ -2376,8 +2516,10 @@ int64_t PlayerInfo::GetTributeTotal() const
 
 
 
-// Check if the player knows the location of the given system (whether or not
-// they have actually visited it).
+/**
+ * Check if the player knows the location of the given system (whether or not
+ * they have actually visited it).
+*/
 bool PlayerInfo::HasSeen(const System &system) const
 {
 	if(&system == this->system)
@@ -2422,7 +2564,9 @@ bool PlayerInfo::HasSeen(const System &system) const
 
 
 
-// Check if the player can view the contents of the given system.
+/**
+ * Check if the player can view the contents of the given system.
+*/
 bool PlayerInfo::CanView(const System &system) const
 {
 	// A player can always view the contents of the system they are in. Otherwise,
@@ -2432,7 +2576,9 @@ bool PlayerInfo::CanView(const System &system) const
 
 
 
-// Check if the player has visited the given system.
+/**
+ * Check if the player has visited the given system.
+*/
 bool PlayerInfo::HasVisited(const System &system) const
 {
 	return visitedSystems.count(&system);
@@ -2440,7 +2586,9 @@ bool PlayerInfo::HasVisited(const System &system) const
 
 
 
-// Check if the player has visited the given planet.
+/**
+ * Check if the player has visited the given planet.
+*/
 bool PlayerInfo::HasVisited(const Planet &planet) const
 {
 	return visitedPlanets.count(&planet);
@@ -2448,8 +2596,10 @@ bool PlayerInfo::HasVisited(const Planet &planet) const
 
 
 
-// Check if the player knows the name of a system, either from visiting there or
-// because a job or active mission includes the name of that system.
+/**
+ * Check if the player knows the name of a system, either from visiting there or
+ * because a job or active mission includes the name of that system.
+*/
 bool PlayerInfo::KnowsName(const System &system) const
 {
 	if(CanView(system))
@@ -2467,7 +2617,9 @@ bool PlayerInfo::KnowsName(const System &system) const
 }
 
 
-// Mark the given system as visited, and mark all its neighbors as seen.
+/**
+ * Mark the given system as visited, and mark all its neighbors as seen.
+*/
 void PlayerInfo::Visit(const System &system)
 {
 	visitedSystems.insert(&system);
@@ -2479,7 +2631,9 @@ void PlayerInfo::Visit(const System &system)
 
 
 
-// Mark the given planet as visited.
+/**
+ * Mark the given planet as visited.
+*/
 void PlayerInfo::Visit(const Planet &planet)
 {
 	visitedPlanets.insert(&planet);
@@ -2487,7 +2641,9 @@ void PlayerInfo::Visit(const Planet &planet)
 
 
 
-// Mark a system as unvisited, even if visited previously.
+/**
+ * Mark a system as unvisited, even if visited previously.
+*/
 void PlayerInfo::Unvisit(const System &system)
 {
 	visitedSystems.erase(&system);
@@ -2527,7 +2683,9 @@ void PlayerInfo::Map(int mapSize)
 
 
 
-// Check if the player has a hyperspace route set.
+/**
+ * Check if the player has a hyperspace route set.
+*/
 bool PlayerInfo::HasTravelPlan() const
 {
 	return !travelPlan.empty();
@@ -2535,7 +2693,9 @@ bool PlayerInfo::HasTravelPlan() const
 
 
 
-// Access the player's travel plan.
+/**
+ * Access the player's travel plan.
+*/
 const vector<const System *> &PlayerInfo::TravelPlan() const
 {
 	return travelPlan;
@@ -2550,8 +2710,10 @@ vector<const System *> &PlayerInfo::TravelPlan()
 
 
 
-// This is called when the player enters the system that is their current
-// hyperspace target.
+/**
+ * This is called when the player enters the system that is their current
+ * hyperspace target.
+*/
 void PlayerInfo::PopTravel()
 {
 	if(!travelPlan.empty())
@@ -2563,7 +2725,9 @@ void PlayerInfo::PopTravel()
 
 
 
-// Get the planet to land on at the end of the travel path.
+/**
+ * Get the planet to land on at the end of the travel path.
+*/
 const Planet *PlayerInfo::TravelDestination() const
 {
 	return travelDestination;
@@ -2571,7 +2735,9 @@ const Planet *PlayerInfo::TravelDestination() const
 
 
 
-// Set the planet to land on at the end of the travel path.
+/**
+ * Set the planet to land on at the end of the travel path.
+*/
 void PlayerInfo::SetTravelDestination(const Planet *planet)
 {
 	travelDestination = planet;
@@ -2581,7 +2747,9 @@ void PlayerInfo::SetTravelDestination(const Planet *planet)
 
 
 
-// Check which secondary weapons the player has selected.
+/**
+ * Check which secondary weapons the player has selected.
+*/
 const set<const Outfit *> &PlayerInfo::SelectedSecondaryWeapons() const
 {
 	return selectedWeapons;
@@ -2589,7 +2757,9 @@ const set<const Outfit *> &PlayerInfo::SelectedSecondaryWeapons() const
 
 
 
-// Cycle through all available secondary weapons.
+/**
+ * Cycle through all available secondary weapons.
+*/
 void PlayerInfo::SelectNextSecondary()
 {
 	if(!flagship || flagship->Outfits().empty())
@@ -2664,7 +2834,9 @@ void PlayerInfo::ToggleAnySecondary(const Outfit *outfit)
 
 
 
-// Escorts currently selected for giving orders.
+/**
+ * Escorts currently selected for giving orders.
+*/
 const vector<weak_ptr<Ship>> &PlayerInfo::SelectedShips() const
 {
 	return selectedShips;
@@ -2672,8 +2844,10 @@ const vector<weak_ptr<Ship>> &PlayerInfo::SelectedShips() const
 
 
 
-// Select any player ships in the given box or list. Return true if any were
-// selected, so we know not to search further for a match.
+/**
+ * Select any player ships in the given box or list. Return true if any were
+ * selected, so we know not to search further for a match.
+*/
 bool PlayerInfo::SelectShips(const Rectangle &box, bool hasShift)
 {
 	// If shift is not held down, replace the current selection.
@@ -2825,8 +2999,10 @@ set<Ship *> PlayerInfo::GetGroup(int group)
 
 
 
-// Keep track of any outfits that you have sold since landing. These will be
-// available to buy back until you take off.
+/**
+ * Keep track of any outfits that you have sold since landing. These will be
+ * available to buy back until you take off.
+*/
 const map<const Outfit *, int> &PlayerInfo::GetStock() const
 {
 	return stock;
@@ -2842,7 +3018,9 @@ int PlayerInfo::Stock(const Outfit *outfit) const
 
 
 
-// Transfer outfits from the player to the planet or vice versa.
+/**
+ * Transfer outfits from the player to the planet or vice versa.
+*/
 void PlayerInfo::AddStock(const Outfit *outfit, int count)
 {
 	// If you sell an individual outfit that is not sold here and that you
@@ -2871,7 +3049,9 @@ void PlayerInfo::AddStock(const Outfit *outfit, int count)
 
 
 
-// Get depreciation information.
+/**
+ * Get depreciation information.
+*/
 const Depreciation &PlayerInfo::FleetDepreciation() const
 {
 	return depreciation;
@@ -2908,7 +3088,9 @@ const pair<const System *, Point> &PlayerInfo::GetEscortDestination() const
 
 
 
-// Determine if a system and nonzero position were specified.
+/**
+ * Determine if a system and nonzero position were specified.
+*/
 bool PlayerInfo::HasEscortDestination() const
 {
 	return interstellarEscortDestination.first && interstellarEscortDestination.second;
@@ -2916,7 +3098,9 @@ bool PlayerInfo::HasEscortDestination() const
 
 
 
-// Set (or clear) the stored escort travel destination.
+/**
+ * Set (or clear) the stored escort travel destination.
+*/
 void PlayerInfo::SetEscortDestination(const System *system, Point pos)
 {
 	interstellarEscortDestination.first = system;
@@ -2925,7 +3109,9 @@ void PlayerInfo::SetEscortDestination(const System *system, Point pos)
 
 
 
-// Get what coloring is currently selected in the map.
+/**
+ * Get what coloring is currently selected in the map.
+*/
 int PlayerInfo::MapColoring() const
 {
 	return mapColoring;
@@ -2933,7 +3119,9 @@ int PlayerInfo::MapColoring() const
 
 
 
-// Set what the map is being colored by.
+/**
+ * Set what the map is being colored by.
+*/
 void PlayerInfo::SetMapColoring(int index)
 {
 	mapColoring = index;
@@ -2941,7 +3129,9 @@ void PlayerInfo::SetMapColoring(int index)
 
 
 
-// Get the map zoom level.
+/**
+ * Get the map zoom level.
+*/
 int PlayerInfo::MapZoom() const
 {
 	return mapZoom;
@@ -2949,7 +3139,9 @@ int PlayerInfo::MapZoom() const
 
 
 
-// Set the map zoom level.
+/**
+ * Set the map zoom level.
+*/
 void PlayerInfo::SetMapZoom(int level)
 {
 	mapZoom = level;
@@ -2957,7 +3149,9 @@ void PlayerInfo::SetMapZoom(int level)
 
 
 
-// Get the set of collapsed categories for the named panel.
+/**
+ * Get the set of collapsed categories for the named panel.
+*/
 set<string> &PlayerInfo::Collapsed(const string &name)
 {
 	return collapsed[name];
@@ -2965,7 +3159,9 @@ set<string> &PlayerInfo::Collapsed(const string &name)
 
 
 
-// Apply any "changes" saved in this player info to the global game state.
+/**
+ * Apply any "changes" saved in this player info to the global game state.
+*/
 void PlayerInfo::ApplyChanges()
 {
 	for(const auto &it : reputationChanges)
@@ -3014,8 +3210,10 @@ void PlayerInfo::ApplyChanges()
 
 
 
-// Make change's to the player's planet, system, & ship locations as needed, to ensure the player and
-// their ships are in valid locations, even if the player did something drastic, such as remove a mod.
+/**
+ * Make change's to the player's planet, system, & ship locations as needed, to ensure the player and
+ * their ships are in valid locations, even if the player did something drastic, such as remove a mod.
+*/
 void PlayerInfo::ValidateLoad()
 {
 	// If a system was not specified in the player data, use the flagship's system.
@@ -3118,7 +3316,9 @@ void PlayerInfo::ValidateLoad()
 
 
 
-// Helper to register derived conditions.
+/**
+ * Helper to register derived conditions.
+*/
 void PlayerInfo::RegisterDerivedConditions()
 {
 	// Read-only date functions.
@@ -3920,7 +4120,9 @@ void PlayerInfo::RegisterDerivedConditions()
 
 
 
-// New missions are generated each time you land on a planet.
+/**
+ * New missions are generated each time you land on a planet.
+*/
 void PlayerInfo::CreateMissions()
 {
 	boardingMissions.clear();
@@ -4107,8 +4309,10 @@ void PlayerInfo::SortAvailable()
 
 
 
-// Updates each mission upon landing, to perform landing actions (Stopover,
-// Visit, Complete, Fail), and remove now-complete or now-failed missions.
+/**
+ * Updates each mission upon landing, to perform landing actions (Stopover,
+ * Visit, Complete, Fail), and remove now-complete or now-failed missions.
+*/
 void PlayerInfo::StepMissions(UI *ui)
 {
 	// Check for NPCs that have been destroyed without their destruction
@@ -4565,9 +4769,11 @@ void PlayerInfo::Save(DataWriter &out) const
 
 
 
-// Check (and perform) any fines incurred by planetary security. If the player
-// has dominated the planet, or was given clearance to this planet by a mission,
-// planetary security is avoided. Infiltrating implies evasion of security.
+/**
+ * Check (and perform) any fines incurred by planetary security. If the player
+ * has dominated the planet, or was given clearance to this planet by a mission,
+ * planetary security is avoided. Infiltrating implies evasion of security.
+*/
 void PlayerInfo::Fine(UI *ui)
 {
 	const Planet *planet = GetPlanet();
@@ -4616,7 +4822,9 @@ void PlayerInfo::Fine(UI *ui)
 
 
 
-// Helper function to update the ship selection.
+/**
+ * Helper function to update the ship selection.
+*/
 void PlayerInfo::SelectShip(const shared_ptr<Ship> &ship, bool *first)
 {
 	// Make sure this ship is not already selected.
@@ -4644,7 +4852,9 @@ bool PlayerInfo::DisplayCarrierHelp() const
 
 
 
-// Instantiate the given model and add it to the player's fleet.
+/**
+ * Instantiate the given model and add it to the player's fleet.
+*/
 void PlayerInfo::AddStockShip(const Ship *model, const string &name)
 {
 	ships.push_back(make_shared<Ship>(*model));
@@ -4658,7 +4868,9 @@ void PlayerInfo::AddStockShip(const Ship *model, const string &name)
 
 
 
-// When we remove a ship, forget its stored ID.
+/**
+ * When we remove a ship, forget its stored ID.
+*/
 void PlayerInfo::ForgetGiftedShip(const Ship &oldShip, bool failsMissions)
 {
 	const EsUuid &id = oldShip.UUID();
@@ -4676,7 +4888,9 @@ void PlayerInfo::ForgetGiftedShip(const Ship &oldShip, bool failsMissions)
 
 
 
-// Check that this player's current state can be saved.
+/**
+ * Check that this player's current state can be saved.
+*/
 bool PlayerInfo::CanBeSaved() const
 {
 	return (!isDead && planet && system && !firstName.empty() && !lastName.empty());

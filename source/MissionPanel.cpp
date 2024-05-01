@@ -118,7 +118,9 @@ namespace {
 
 
 
-// Open the missions panel directly.
+/**
+ * Open the missions panel directly.
+*/
 MissionPanel::MissionPanel(PlayerInfo &player)
 	: MapPanel(player),
 	available(player.AvailableJobs()),
@@ -151,7 +153,9 @@ MissionPanel::MissionPanel(PlayerInfo &player)
 
 
 
-// Switch to the missions panel from another map panel.
+/**
+ * Switch to the missions panel from another map panel.
+*/
 MissionPanel::MissionPanel(const MapPanel &panel)
 	: MapPanel(panel),
 	available(player.AvailableJobs()),
@@ -272,7 +276,9 @@ void MissionPanel::Draw()
 
 
 
-// Only override the ones you need; the default action is to return false.
+/**
+ * Only override the ones you need; the default action is to return false.
+*/
 bool MissionPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
 {
 	if(command.Has(Command::HELP))
@@ -559,7 +565,9 @@ bool MissionPanel::Drag(double dx, double dy)
 
 
 
-// Check to see if the mouse is over either of the mission lists.
+/**
+ * Check to see if the mouse is over either of the mission lists.
+*/
 bool MissionPanel::Hover(int x, int y)
 {
 	dragSide = 0;
@@ -674,8 +682,10 @@ void MissionPanel::DrawKey() const
 
 
 
-// Highlight the systems associated with the given mission (i.e. destination and
-// waypoints) by drawing colored rings around them.
+/**
+ * Highlight the systems associated with the given mission (i.e. destination and
+ * waypoints) by drawing colored rings around them.
+*/
 void MissionPanel::DrawMissionSystem(const Mission &mission, const Color &color) const
 {
 	auto toVisit = set<const System *>{mission.Waypoints()};
@@ -708,7 +718,9 @@ void MissionPanel::DrawMissionSystem(const Mission &mission, const Color &color)
 
 
 
-// Draw the background for the lists of available and accepted missions (based on pos).
+/**
+ * Draw the background for the lists of available and accepted missions (based on pos).
+*/
 Point MissionPanel::DrawPanel(Point pos, const string &label, int entries, bool sorter) const
 {
 	const Color &back = *GameData::Colors().Get("map side panel background");

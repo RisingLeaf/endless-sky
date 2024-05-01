@@ -92,7 +92,9 @@ void FormationPattern::SetName(const std::string &name)
 
 
 
-// Get an iterator to iterate over the formation positions in this pattern.
+/**
+ * Get an iterator to iterate over the formation positions in this pattern.
+*/
 FormationPattern::PositionIterator FormationPattern::begin() const
 {
 	return FormationPattern::PositionIterator(*this);

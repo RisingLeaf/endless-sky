@@ -23,7 +23,9 @@ using namespace std;
 
 
 
-// Load a gamerules node.
+/**
+ * Load a gamerules node.
+*/
 void Gamerules::Load(const DataNode &node)
 {
 	for(const DataNode &child : node)

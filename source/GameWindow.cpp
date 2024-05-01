@@ -254,18 +254,24 @@ bool GameWindow::Init(bool headless)
 
 
 
-// Clean up the SDL context, window, and shut down SDL.
+/**
+ * Clean up the SDL context, window, and shut down SDL.
+*/
 void GameWindow::Quit()
 {
 	// Make sure the cursor is visible.
 	SDL_ShowCursor(true);
 
 	// Clean up in the reverse order that everything is launched.
-//#ifndef _WIN32
+/**
+ *#ifndef _WIN32
+*/
 	// Under windows, this cleanup code causes intermittent crashes.
 	if(context)
 		SDL_GL_DeleteContext(context);
-//#endif
+/**
+ *#endif
+*/
 
 	if(mainWindow)
 		SDL_DestroyWindow(mainWindow);
@@ -343,8 +349,10 @@ void GameWindow::AdjustViewport()
 
 
 
-// Attempts to set the requested SDL Window VSync to the given state. Returns false
-// if the operation could not be completed successfully.
+/**
+ * Attempts to set the requested SDL Window VSync to the given state. Returns false
+ * if the operation could not be completed successfully.
+*/
 bool GameWindow::SetVSync(Preferences::VSync state)
 {
 	if(!context)
@@ -382,7 +390,9 @@ bool GameWindow::SetVSync(Preferences::VSync state)
 
 
 
-// Last window width, in windowed mode.
+/**
+ * Last window width, in windowed mode.
+*/
 int GameWindow::Width()
 {
 	return width;
@@ -390,7 +400,9 @@ int GameWindow::Width()
 
 
 
-// Last window height, in windowed mode.
+/**
+ * Last window height, in windowed mode.
+*/
 int GameWindow::Height()
 {
 	return height;

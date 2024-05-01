@@ -120,7 +120,9 @@ namespace {
 
 
 
-// Default settings for player's ships.
+/**
+ * Default settings for player's ships.
+*/
 Personality::Personality() noexcept
 	: flags(1LL << DISABLES), confusionMultiplier(DEFAULT_CONFUSION), aimMultiplier(1.)
 {
@@ -479,8 +481,10 @@ Personality Personality::Defender()
 
 
 
-// Remove target and marked since the defender defeat check doesn't actually care
-// about carried ships.
+/**
+ * Remove target and marked since the defender defeat check doesn't actually care
+ * about carried ships.
+*/
 Personality Personality::DefenderFighter()
 {
 	Personality defender;

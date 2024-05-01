@@ -53,8 +53,10 @@ void Radar::SetCenter(const Point &center)
 
 
 
-// Add an object. If "inner" is 0 it is a dot; otherwise, it is a ring. The
-// given position should be in world units (not shrunk to radar units).
+/**
+ * Add an object. If "inner" is 0 it is a dot; otherwise, it is a ring. The
+ * given position should be in world units (not shrunk to radar units).
+*/
 void Radar::Add(int type, Point position, double outer, double inner)
 {
 	objects.emplace_back(GetColor(type).Opaque(), position - center, outer, inner);
@@ -62,7 +64,9 @@ void Radar::Add(int type, Point position, double outer, double inner)
 
 
 
-// Add a pointer, pointing in the direction of the given vector.
+/**
+ * Add a pointer, pointing in the direction of the given vector.
+*/
 void Radar::AddPointer(int type, const Point &position)
 {
 	pointers.emplace_back(GetColor(type), position.Unit());
@@ -70,7 +74,9 @@ void Radar::AddPointer(int type, const Point &position)
 
 
 
-// Create a "corner" from a vertical and horizontal leg.
+/**
+ * Create a "corner" from a vertical and horizontal leg.
+*/
 void Radar::AddViewportBoundary(const Point &vertex)
 {
 	Point start(vertex.X() - copysign(200., vertex.X()), vertex.Y());
@@ -84,7 +90,9 @@ void Radar::AddViewportBoundary(const Point &vertex)
 
 
 
-// Draw the radar display at the given coordinates.
+/**
+ * Draw the radar display at the given coordinates.
+*/
 void Radar::Draw(const Point &center, double scale, double radius, double pointerRadius) const
 {
 	// Draw any desired line vectors.
@@ -171,7 +179,9 @@ Radar::Pointer::Pointer(const Color &color, const Point &unit)
 
 
 
-// Create a line starting from "base" with length and angle described by "vector."
+/**
+ * Create a line starting from "base" with length and angle described by "vector."
+*/
 Radar::Line::Line(const Color &color, const Point &base, const Point &vector)
 	: color(color), base(base), vector(vector)
 {

@@ -72,7 +72,9 @@ const string &Sprite::Name() const
 
 
 
-// Add the given frames, optionally uploading them. The given buffer will be cleared afterwards.
+/**
+ * Add the given frames, optionally uploading them. The given buffer will be cleared afterwards.
+*/
 void Sprite::AddFrames(ImageBuffer &buffer, bool is2x)
 {
 	// If this is the 1x image, its dimensions determine the sprite's size.
@@ -90,7 +92,9 @@ void Sprite::AddFrames(ImageBuffer &buffer, bool is2x)
 
 
 
-// Upload the given frames. The given buffer will be cleared afterwards.
+/**
+ * Upload the given frames. The given buffer will be cleared afterwards.
+*/
 void Sprite::AddSwizzleMaskFrames(ImageBuffer &buffer, bool is2x)
 {
 	// Do nothing if the buffer is empty.
@@ -102,7 +106,9 @@ void Sprite::AddSwizzleMaskFrames(ImageBuffer &buffer, bool is2x)
 
 
 
-// Free up all textures loaded for this sprite.
+/**
+ * Free up all textures loaded for this sprite.
+*/
 void Sprite::Unload()
 {
 	if(texture[0] || texture[1])
@@ -124,7 +130,9 @@ void Sprite::Unload()
 
 
 
-// Get the width, in pixels, of the 1x image.
+/**
+ * Get the width, in pixels, of the 1x image.
+*/
 float Sprite::Width() const
 {
 	return width;
@@ -132,7 +140,9 @@ float Sprite::Width() const
 
 
 
-// Get the height, in pixels, of the 1x image.
+/**
+ * Get the height, in pixels, of the 1x image.
+*/
 float Sprite::Height() const
 {
 	return height;
@@ -140,7 +150,9 @@ float Sprite::Height() const
 
 
 
-// Get the number of frames in the animation.
+/**
+ * Get the number of frames in the animation.
+*/
 int Sprite::Frames() const
 {
 	return frames;
@@ -148,8 +160,10 @@ int Sprite::Frames() const
 
 
 
-// Get the offset of the center from the top left corner; this is for easy
-// shifting of corner to center coordinates.
+/**
+ * Get the offset of the center from the top left corner; this is for easy
+ * shifting of corner to center coordinates.
+*/
 Point Sprite::Center() const
 {
 	return Point(.5 * width, .5 * height);
@@ -157,7 +171,9 @@ Point Sprite::Center() const
 
 
 
-// Get the texture index, based on whether the screen is high DPI or not.
+/**
+ * Get the texture index, based on whether the screen is high DPI or not.
+*/
 uint32_t Sprite::Texture() const
 {
 	return Texture(Screen::IsHighResolution());
@@ -165,7 +181,9 @@ uint32_t Sprite::Texture() const
 
 
 
-// Get the index of the texture for the given high DPI mode.
+/**
+ * Get the index of the texture for the given high DPI mode.
+*/
 uint32_t Sprite::Texture(bool isHighDPI) const
 {
 	return (isHighDPI && texture[1]) ? texture[1] : texture[0];
@@ -173,7 +191,9 @@ uint32_t Sprite::Texture(bool isHighDPI) const
 
 
 
-// Get the texture index, based on whether the screen is high DPI or not.
+/**
+ * Get the texture index, based on whether the screen is high DPI or not.
+*/
 uint32_t Sprite::SwizzleMask() const
 {
 	return SwizzleMask(Screen::IsHighResolution());
@@ -181,7 +201,9 @@ uint32_t Sprite::SwizzleMask() const
 
 
 
-// Get the index of the texture for the given high DPI mode.
+/**
+ * Get the index of the texture for the given high DPI mode.
+*/
 uint32_t Sprite::SwizzleMask(bool isHighDPI) const
 {
 	return (isHighDPI && swizzleMask[1]) ? swizzleMask[1] : swizzleMask[0];

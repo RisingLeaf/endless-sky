@@ -47,7 +47,9 @@ namespace {
 
 
 
-// Constructor.
+/**
+ * Constructor.
+*/
 BankPanel::BankPanel(PlayerInfo &player)
 	: player(player), qualify(player.Accounts().Prequalify())
 {
@@ -58,7 +60,9 @@ BankPanel::BankPanel(PlayerInfo &player)
 
 
 
-// This is called each frame when the bank is active.
+/**
+ * This is called each frame when the bank is active.
+*/
 void BankPanel::Step()
 {
 	DoHelp("bank");
@@ -66,7 +70,9 @@ void BankPanel::Step()
 
 
 
-// Draw the bank information.
+/**
+ * Draw the bank information.
+*/
 void BankPanel::Draw()
 {
 	// Draw the "Pay All" button.
@@ -265,7 +271,9 @@ void BankPanel::Draw()
 
 
 
-// Handle key presses, or clicks that the interface has mapped to a key press.
+/**
+ * Handle key presses, or clicks that the interface has mapped to a key press.
+*/
 bool BankPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
 {
 	if(command.Has(Command::HELP))
@@ -314,7 +322,9 @@ bool BankPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, boo
 
 
 
-// Handle mouse clicks.
+/**
+ * Handle mouse clicks.
+*/
 bool BankPanel::Click(int x, int y, int clicks)
 {
 	const Interface *bankUi = GameData::Interfaces().Get("bank");
@@ -349,7 +359,9 @@ bool BankPanel::Click(int x, int y, int clicks)
 
 
 
-// Apply an extra payment to a debt. (This is a dialog callback.)
+/**
+ * Apply an extra payment to a debt. (This is a dialog callback.)
+*/
 void BankPanel::PayExtra(const string &str)
 {
 	int64_t amount = static_cast<int64_t>(Format::Parse(str));
@@ -377,7 +389,9 @@ void BankPanel::PayExtra(const string &str)
 
 
 
-// Apply for a new mortgage. (This is a dialog callback.)
+/**
+ * Apply for a new mortgage. (This is a dialog callback.)
+*/
 void BankPanel::NewMortgage(const string &str)
 {
 	int64_t amount = static_cast<int64_t>(Format::Parse(str));

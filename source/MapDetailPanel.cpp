@@ -190,7 +190,9 @@ bool MapDetailPanel::Scroll(double dx, double dy)
 
 
 
-// Only override the ones you need; the default action is to return false.
+/**
+ * Only override the ones you need; the default action is to return false.
+*/
 bool MapDetailPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
 {
 	const double planetCardHeight = MapPlanetCard::Height();
@@ -511,8 +513,10 @@ void MapDetailPanel::GeneratePlanetCards(const System &system)
 
 
 
-// Draw the legend, correlating between a system's color and the value of the
-// selected "commodity," which may be reputation level, outfitter size, etc.
+/**
+ * Draw the legend, correlating between a system's color and the value of the
+ * selected "commodity," which may be reputation level, outfitter size, etc.
+*/
 void MapDetailPanel::DrawKey()
 {
 	const Color &dim = *GameData::Colors().Get("dim");
@@ -668,8 +672,10 @@ void MapDetailPanel::DrawKey()
 
 
 
-// Draw the various information displays: system name & government, planetary
-// details, trade prices, and details about the selected object.
+/**
+ * Draw the various information displays: system name & government, planetary
+ * details, trade prices, and details about the selected object.
+*/
 void MapDetailPanel::DrawInfo()
 {
 	const Color &dim = *GameData::Colors().Get("dim");
@@ -841,7 +847,9 @@ void MapDetailPanel::DrawInfo()
 
 
 
-// Draw the planet orbits in the currently selected system, on the current day.
+/**
+ * Draw the planet orbits in the currently selected system, on the current day.
+*/
 void MapDetailPanel::DrawOrbits()
 {
 	planets.clear();
@@ -970,7 +978,9 @@ void MapDetailPanel::DrawOrbits()
 
 
 
-// Set the commodity coloring, and update the player info as well.
+/**
+ * Set the commodity coloring, and update the player info as well.
+*/
 void MapDetailPanel::SetCommodity(int index)
 {
 	commodity = index;

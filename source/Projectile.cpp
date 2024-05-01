@@ -101,7 +101,9 @@ Projectile::Projectile(const Projectile &parent, const Point &offset, const Angl
 
 
 
-// Ship explosion.
+/**
+ * Ship explosion.
+*/
 Projectile::Projectile(Point position, const Weapon *weapon)
 	: weapon(weapon)
 {
@@ -110,7 +112,9 @@ Projectile::Projectile(Point position, const Weapon *weapon)
 
 
 
-// This returns false if it is time to delete this projectile.
+/**
+ * This returns false if it is time to delete this projectile.
+*/
 void Projectile::Move(vector<Visual> &visuals, vector<Projectile> &projectiles)
 {
 	if(--lifetime <= 0)
@@ -289,8 +293,10 @@ void Projectile::Move(vector<Visual> &visuals, vector<Projectile> &projectiles)
 
 
 
-// This projectile hit something. Create the explosion, if any. This also
-// marks the projectile as needing deletion if it has run out of hits.
+/**
+ * This projectile hit something. Create the explosion, if any. This also
+ * marks the projectile as needing deletion if it has run out of hits.
+*/
 void Projectile::Explode(vector<Visual> &visuals, double intersection, Point hitVelocity)
 {
 	for(const auto &it : weapon->HitEffects())
@@ -306,7 +312,9 @@ void Projectile::Explode(vector<Visual> &visuals, double intersection, Point hit
 
 
 
-// Get the amount of clipping that should be applied when drawing this projectile.
+/**
+ * Get the amount of clipping that should be applied when drawing this projectile.
+*/
 double Projectile::Clip() const
 {
 	return clip;
@@ -314,7 +322,9 @@ double Projectile::Clip() const
 
 
 
-// Get whether the lifetime on this projectile has run out.
+/**
+ * Get whether the lifetime on this projectile has run out.
+*/
 bool Projectile::IsDead() const
 {
 	return lifetime <= 0;
@@ -322,7 +332,9 @@ bool Projectile::IsDead() const
 
 
 
-// This projectile was killed, e.g. by an anti-missile system.
+/**
+ * This projectile was killed, e.g. by an anti-missile system.
+*/
 void Projectile::Kill()
 {
 	lifetime = 0;
@@ -330,8 +342,10 @@ void Projectile::Kill()
 
 
 
-// Find out if this is a missile, and if so, how strong it is (i.e. what
-// chance an anti-missile shot has of destroying it).
+/**
+ * Find out if this is a missile, and if so, how strong it is (i.e. what
+ * chance an anti-missile shot has of destroying it).
+*/
 int Projectile::MissileStrength() const
 {
 	return weapon->MissileStrength();
@@ -339,7 +353,9 @@ int Projectile::MissileStrength() const
 
 
 
-// Get information on the weapon that fired this projectile.
+/**
+ * Get information on the weapon that fired this projectile.
+*/
 const Weapon &Projectile::GetWeapon() const
 {
 	return *weapon;
@@ -347,7 +363,9 @@ const Weapon &Projectile::GetWeapon() const
 
 
 
-// Get information on how this projectile impacted a ship.
+/**
+ * Get information on how this projectile impacted a ship.
+*/
 Projectile::ImpactInfo Projectile::GetInfo(double intersection) const
 {
 	// Account for the distance that this projectile traveled before intersecting
@@ -357,7 +375,9 @@ Projectile::ImpactInfo Projectile::GetInfo(double intersection) const
 
 
 
-// Find out which ship this projectile is targeting.
+/**
+ * Find out which ship this projectile is targeting.
+*/
 const Ship *Projectile::Target() const
 {
 	return cachedTarget;
@@ -379,7 +399,9 @@ shared_ptr<Ship> Projectile::TargetPtr() const
 
 
 
-// Clear the targeting information on this projectile.
+/**
+ * Clear the targeting information on this projectile.
+*/
 void Projectile::BreakTarget()
 {
 	targetShip.reset();
@@ -390,10 +412,12 @@ void Projectile::BreakTarget()
 
 
 
-// TODO: add more conditions in the future. For example maybe proximity to stars
-// and their brightness could could cause IR missiles to lose their locks more
-// often, and dense asteroid fields could do the same for radar and optically
-// guided missiles.
+/**
+ * TODO: add more conditions in the future. For example maybe proximity to stars
+ * and their brightness could could cause IR missiles to lose their locks more
+ * often, and dense asteroid fields could do the same for radar and optically
+ * guided missiles.
+*/
 void Projectile::CheckLock(const Ship &target)
 {
 	double base = hasLock ? 1. : .15;

@@ -156,7 +156,9 @@ namespace {
 	}
 }
 
-// Table columns and their starting x positions, end x positions, alignment and sort comparator.
+/**
+ * Table columns and their starting x positions, end x positions, alignment and sort comparator.
+*/
 const PlayerInfoPanel::SortableColumn PlayerInfoPanel::columns[7] = {
 	SortableColumn("ship", 0, 217, {217, Truncate::MIDDLE}, CompareName),
 	SortableColumn("model", 220, 347, {127, Truncate::BACK}, CompareModelName),
@@ -811,7 +813,9 @@ void PlayerInfoPanel::DrawFleet(const Rectangle &bounds)
 
 
 
-// Sorts the player's fleet given a comparator function (based on column).
+/**
+ * Sorts the player's fleet given a comparator function (based on column).
+*/
 void PlayerInfoPanel::SortShips(InfoPanelState::ShipComparator *shipComparator)
 {
 	// Clicking on a sort column twice reverses the comparison.
@@ -901,7 +905,9 @@ bool PlayerInfoPanel::ScrollAbsolute(int scroll)
 
 
 
-// Adjust the scroll by the given amount. Return true if it changed.
+/**
+ * Adjust the scroll by the given amount. Return true if it changed.
+*/
 bool PlayerInfoPanel::Scroll(int distance)
 {
 	return ScrollAbsolute(panelState.Scroll() + distance);

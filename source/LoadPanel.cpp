@@ -556,7 +556,9 @@ void LoadPanel::UpdateLists()
 
 
 
-// Snapshot name callback.
+/**
+ * Snapshot name callback.
+*/
 void LoadPanel::SnapshotCallback(const string &name)
 {
 	auto it = files.find(selectedPilot);
@@ -582,7 +584,9 @@ void LoadPanel::SnapshotCallback(const string &name)
 
 
 
-// This name is the one to be used, even if it already exists.
+/**
+ * This name is the one to be used, even if it already exists.
+*/
 void LoadPanel::WriteSnapshot(const string &sourceFile, const string &snapshotName)
 {
 	// Copy the autosave to a new, named file.
@@ -599,7 +603,9 @@ void LoadPanel::WriteSnapshot(const string &sourceFile, const string &snapshotNa
 
 
 
-// Load snapshot callback.
+/**
+ * Load snapshot callback.
+*/
 void LoadPanel::LoadCallback()
 {
 	// First, make sure the previous MainPanel has been deleted, so

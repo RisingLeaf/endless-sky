@@ -69,7 +69,9 @@ namespace {
 	}
 }
 
-// The possible outcomes of a conversation:
+/**
+ * The possible outcomes of a conversation:
+*/
 const int Conversation::ACCEPT;
 const int Conversation::DECLINE;
 const int Conversation::DEFER;
@@ -81,7 +83,9 @@ const int Conversation::EXPLODE;
 
 
 
-// Check if this conversation outcome requires the player to leave immediately.
+/**
+ * Check if this conversation outcome requires the player to leave immediately.
+*/
 bool Conversation::RequiresLaunch(int outcome)
 {
 	return outcome == LAUNCH || outcome == FLEE || outcome == DEPART;
@@ -89,7 +93,9 @@ bool Conversation::RequiresLaunch(int outcome)
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 Conversation::Conversation(const DataNode &node)
 {
 	Load(node);
@@ -97,7 +103,9 @@ Conversation::Conversation(const DataNode &node)
 
 
 
-// Load a conversation from file.
+/**
+ * Load a conversation from file.
+*/
 void Conversation::Load(const DataNode &node)
 {
 	// Make sure this really is a conversation specification.
@@ -237,7 +245,9 @@ void Conversation::Load(const DataNode &node)
 
 
 
-// Write a conversation to file.
+/**
+ * Write a conversation to file.
+*/
 void Conversation::Save(DataWriter &out) const
 {
 	out.Write("conversation");
@@ -319,7 +329,9 @@ void Conversation::Save(DataWriter &out) const
 
 
 
-// Check if this conversation contains any data.
+/**
+ * Check if this conversation contains any data.
+*/
 bool Conversation::IsEmpty() const noexcept
 {
 	return nodes.empty();
@@ -327,7 +339,9 @@ bool Conversation::IsEmpty() const noexcept
 
 
 
-// Check if this conversation contains a name prompt, and thus can be used as an "intro" conversation.
+/**
+ * Check if this conversation contains a name prompt, and thus can be used as an "intro" conversation.
+*/
 bool Conversation::IsValidIntro() const noexcept
 {
 	return any_of(nodes.begin(), nodes.end(), [](const Node &node) noexcept -> bool {
@@ -337,7 +351,9 @@ bool Conversation::IsValidIntro() const noexcept
 
 
 
-// Check if the actions in this conversation are valid.
+/**
+ * Check if the actions in this conversation are valid.
+*/
 string Conversation::Validate() const
 {
 	for(const Node &node : nodes)
@@ -354,8 +370,10 @@ string Conversation::Validate() const
 
 
 
-// Do text replacement throughout this conversation, and instantiate any
-// potential actions.
+/**
+ * Do text replacement throughout this conversation, and instantiate any
+ * potential actions.
+*/
 Conversation Conversation::Instantiate(map<string, string> &subs, int jumps, int payload) const
 {
 	Conversation result = *this;
@@ -372,7 +390,9 @@ Conversation Conversation::Instantiate(map<string, string> &subs, int jumps, int
 
 
 
-// Check if the given conversation node is a choice node.
+/**
+ * Check if the given conversation node is a choice node.
+*/
 bool Conversation::IsChoice(int node) const
 {
 	if(!NodeIsValid(node))
@@ -383,7 +403,9 @@ bool Conversation::IsChoice(int node) const
 
 
 
-// Check if the given conversation node is a choice node.
+/**
+ * Check if the given conversation node is a choice node.
+*/
 bool Conversation::HasAnyChoices(const ConditionsStore &vars, int node) const
 {
 	if(!NodeIsValid(node))
@@ -409,7 +431,9 @@ bool Conversation::HasAnyChoices(const ConditionsStore &vars, int node) const
 
 
 
-// If the given node is a choice node, check how many choices it offers.
+/**
+ * If the given node is a choice node, check how many choices it offers.
+*/
 int Conversation::Choices(int node) const
 {
 	if(!NodeIsValid(node))
@@ -420,7 +444,9 @@ int Conversation::Choices(int node) const
 
 
 
-// Check if the given conversation node is a conditional branch.
+/**
+ * Check if the given conversation node is a conditional branch.
+*/
 bool Conversation::IsBranch(int node) const
 {
 	if(!NodeIsValid(node))
@@ -431,7 +457,9 @@ bool Conversation::IsBranch(int node) const
 
 
 
-// Check if the given conversation node performs an action.
+/**
+ * Check if the given conversation node performs an action.
+*/
 bool Conversation::IsAction(int node) const
 {
 	if(!NodeIsValid(node))
@@ -442,7 +470,9 @@ bool Conversation::IsAction(int node) const
 
 
 
-// Get the list of conditions that the given node tests.
+/**
+ * Get the list of conditions that the given node tests.
+*/
 const ConditionSet &Conversation::Conditions(int node) const
 {
 	static ConditionSet empty;
@@ -454,7 +484,9 @@ const ConditionSet &Conversation::Conditions(int node) const
 
 
 
-// Get the action that the given node applies.
+/**
+ * Get the action that the given node applies.
+*/
 const GameAction &Conversation::GetAction(int node) const
 {
 	static GameAction empty;
@@ -466,7 +498,9 @@ const GameAction &Conversation::GetAction(int node) const
 
 
 
-// Get the text of the given element of the given node.
+/**
+ * Get the text of the given element of the given node.
+*/
 const string &Conversation::Text(int node, int element) const
 {
 	static const string empty;
@@ -479,7 +513,9 @@ const string &Conversation::Text(int node, int element) const
 
 
 
-// Get the scene image, if any, associated with the given node.
+/**
+ * Get the scene image, if any, associated with the given node.
+*/
 const Sprite *Conversation::Scene(int node) const
 {
 	if(!NodeIsValid(node))
@@ -490,7 +526,9 @@ const Sprite *Conversation::Scene(int node) const
 
 
 
-// Find out where the conversation goes if the given option is chosen.
+/**
+ * Find out where the conversation goes if the given option is chosen.
+*/
 int Conversation::NextNodeForChoice(int node, int element) const
 {
 	if(!NodeIsValid(node) || !ElementIsValid(node, element))
@@ -501,7 +539,9 @@ int Conversation::NextNodeForChoice(int node, int element) const
 
 
 
-// Go to the next node of the conversation, ignoring any choices.
+/**
+ * Go to the next node of the conversation, ignoring any choices.
+*/
 int Conversation::StepToNextNode(int node) const
 {
 	int next_node = node+1;
@@ -514,7 +554,9 @@ int Conversation::StepToNextNode(int node) const
 
 
 
-// Returns whether the given node should be displayed.
+/**
+ * Returns whether the given node should be displayed.
+*/
 bool Conversation::ShouldDisplayNode(const ConditionsStore &vars, int node, int element) const
 {
 	if(!NodeIsValid(node))
@@ -529,8 +571,10 @@ bool Conversation::ShouldDisplayNode(const ConditionsStore &vars, int node, int 
 
 
 
-// Returns true if the given node index is in the range of valid nodes for this
-// Conversation.
+/**
+ * Returns true if the given node index is in the range of valid nodes for this
+ * Conversation.
+*/
 bool Conversation::NodeIsValid(int node) const
 {
 	if(node < 0)
@@ -540,9 +584,11 @@ bool Conversation::NodeIsValid(int node) const
 
 
 
-// Returns true if the given node index is in the range of valid nodes for this
-// Conversation *and* the given element index is in the range of valid elements
-// for the given node.
+/**
+ * Returns true if the given node index is in the range of valid nodes for this
+ * Conversation *and* the given element index is in the range of valid elements
+ * for the given node.
+*/
 bool Conversation::ElementIsValid(int node, int element) const
 {
 	if(!NodeIsValid(node))
@@ -554,9 +600,11 @@ bool Conversation::ElementIsValid(int node, int element) const
 
 
 
-// Parse the children of the given node to see if then contain any "gotos," or
-// "to shows." If so, link them up properly. Return true if gotos or
-// conditions were found.
+/**
+ * Parse the children of the given node to see if then contain any "gotos," or
+ * "to shows." If so, link them up properly. Return true if gotos or
+ * conditions were found.
+*/
 bool Conversation::LoadDestinations(const DataNode &node)
 {
 	bool hasGoto = false;
@@ -616,7 +664,9 @@ bool Conversation::HasDisplayRestriction(const DataNode &node)
 
 
 
-// Add a label, pointing to whatever node is created next.
+/**
+ * Add a label, pointing to whatever node is created next.
+*/
 void Conversation::AddLabel(const string &label, const DataNode &node)
 {
 	if(labels.count(label))
@@ -640,8 +690,10 @@ void Conversation::AddLabel(const string &label, const DataNode &node)
 
 
 
-// Set up a "goto". Depending on whether the named label has been seen yet
-// or not, it is either resolved immediately or added to the unresolved set.
+/**
+ * Set up a "goto". Depending on whether the named label has been seen yet
+ * or not, it is either resolved immediately or added to the unresolved set.
+*/
 void Conversation::Goto(const string &label, int node, int element)
 {
 	auto it = labels.find(label);
@@ -654,8 +706,10 @@ void Conversation::Goto(const string &label, int node, int element)
 
 
 
-// Add an "empty" node. It will contain one empty line of text, with its
-// goto link set to fall through to the next node.
+/**
+ * Add an "empty" node. It will contain one empty line of text, with its
+ * goto link set to fall through to the next node.
+*/
 void Conversation::AddNode()
 {
 	nodes.emplace_back();

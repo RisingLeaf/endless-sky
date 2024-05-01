@@ -38,7 +38,9 @@ void WrappedText::SetAlignment(Alignment align)
 
 
 
-// Set the truncate mode.
+/**
+ * Set the truncate mode.
+*/
 void WrappedText::SetTruncate(Truncate trunc)
 {
 	truncate = trunc;
@@ -46,7 +48,9 @@ void WrappedText::SetTruncate(Truncate trunc)
 
 
 
-// Set the wrap width. This does not include any margins.
+/**
+ * Set the wrap width. This does not include any margins.
+*/
 int WrappedText::WrapWidth() const
 {
 	return wrapWidth;
@@ -61,9 +65,11 @@ void WrappedText::SetWrapWidth(int width)
 
 
 
-// Set the font to use. This will also set sensible defaults for the tab
-// width, line height, and paragraph break. You must specify the wrap width
-// and the alignment separately.
+/**
+ * Set the font to use. This will also set sensible defaults for the tab
+ * width, line height, and paragraph break. You must specify the wrap width
+ * and the alignment separately.
+*/
 void WrappedText::SetFont(const Font &font)
 {
 	this->font = &font;
@@ -76,7 +82,9 @@ void WrappedText::SetFont(const Font &font)
 
 
 
-// Set the width in pixels of a single '\t' character.
+/**
+ * Set the width in pixels of a single '\t' character.
+*/
 int WrappedText::TabWidth() const
 {
 	return tabWidth;
@@ -91,7 +99,9 @@ void WrappedText::SetTabWidth(int width)
 
 
 
-// Set the height in pixels of one line of text within a paragraph.
+/**
+ * Set the height in pixels of one line of text within a paragraph.
+*/
 int WrappedText::LineHeight() const
 {
 	return lineHeight;
@@ -106,7 +116,9 @@ void WrappedText::SetLineHeight(int height)
 
 
 
-// Set the extra spacing in pixels to be added in between paragraphs.
+/**
+ * Set the extra spacing in pixels to be added in between paragraphs.
+*/
 int WrappedText::ParagraphBreak() const
 {
 	return paragraphBreak;
@@ -121,8 +133,10 @@ void WrappedText::SetParagraphBreak(int height)
 
 
 
-// Get the word positions when wrapping the given text. The coordinates
-// always begin at (0, 0).
+/**
+ * Get the word positions when wrapping the given text. The coordinates
+ * always begin at (0, 0).
+*/
 void WrappedText::Wrap(const string &str)
 {
 	SetText(str.data(), str.length());
@@ -141,7 +155,9 @@ void WrappedText::Wrap(const char *str)
 
 
 
-// Get the height of the wrapped text.
+/**
+ * Get the height of the wrapped text.
+*/
 int WrappedText::Height() const
 {
 	return height;
@@ -149,7 +165,9 @@ int WrappedText::Height() const
 
 
 
-// Return the width of the longest line of the wrapped text.
+/**
+ * Return the width of the longest line of the wrapped text.
+*/
 int WrappedText::LongestLineWidth() const
 {
 	return longestLineWidth;
@@ -157,7 +175,9 @@ int WrappedText::LongestLineWidth() const
 
 
 
-// Draw the text.
+/**
+ * Draw the text.
+*/
 void WrappedText::Draw(const Point &topLeft, const Color &color) const
 {
 	if(words.empty())

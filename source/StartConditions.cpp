@@ -177,7 +177,9 @@ void StartConditions::Load(const DataNode &node)
 
 
 
-// Finish loading the ship definitions.
+/**
+ * Finish loading the ship definitions.
+*/
 void StartConditions::FinishLoading()
 {
 	for(Ship &ship : ships)

@@ -27,8 +27,10 @@ using namespace std;
 
 
 
-// Handle an event. The event is handed to each panel on the stack until one
-// of them handles it. If none do, this returns false.
+/**
+ * Handle an event. The event is handed to each panel on the stack until one
+ * of them handles it. If none do, this returns false.
+*/
 bool UI::Handle(const SDL_Event &event)
 {
 	bool handled = false;
@@ -93,7 +95,9 @@ bool UI::Handle(const SDL_Event &event)
 
 
 
-// Step all the panels forward (advance animations, move objects, etc.).
+/**
+ * Step all the panels forward (advance animations, move objects, etc.).
+*/
 void UI::StepAll()
 {
 	// Handle any queued push or pop commands.
@@ -106,7 +110,9 @@ void UI::StepAll()
 
 
 
-// Draw all the panels.
+/**
+ * Draw all the panels.
+*/
 void UI::DrawAll()
 {
 	// First, clear all the clickable zones. New ones will be added in the
@@ -126,7 +132,9 @@ void UI::DrawAll()
 
 
 
-// Add the given panel to the stack. UI is responsible for deleting it.
+/**
+ * Add the given panel to the stack. UI is responsible for deleting it.
+*/
 void UI::Push(Panel *panel)
 {
 	Push(shared_ptr<Panel>(panel));
@@ -142,9 +150,11 @@ void UI::Push(const shared_ptr<Panel> &panel)
 
 
 
-// Remove the given panel from the stack (if it is in it). The panel will be
-// deleted at the start of the next time Step() is called, so it is safe for
-// a panel to Pop() itself.
+/**
+ * Remove the given panel from the stack (if it is in it). The panel will be
+ * deleted at the start of the next time Step() is called, so it is safe for
+ * a panel to Pop() itself.
+*/
 void UI::Pop(const Panel *panel)
 {
 	toPop.push_back(panel);
@@ -152,7 +162,9 @@ void UI::Pop(const Panel *panel)
 
 
 
-// Remove the given panel and every panel that is higher in the stack.
+/**
+ * Remove the given panel and every panel that is higher in the stack.
+*/
 void UI::PopThrough(const Panel *panel)
 {
 	for(auto it = stack.rbegin(); it != stack.rend(); ++it)
@@ -165,9 +177,11 @@ void UI::PopThrough(const Panel *panel)
 
 
 
-// Check whether the given panel is on top of the existing panels, i.e. is the
-// active one, on this Step. Any panels that have been pushed this Step are not
-// considered.
+/**
+ * Check whether the given panel is on top of the existing panels, i.e. is the
+ * active one, on this Step. Any panels that have been pushed this Step are not
+ * considered.
+*/
 bool UI::IsTop(const Panel *panel) const
 {
 	return (!stack.empty() && stack.back().get() == panel);
@@ -175,8 +189,10 @@ bool UI::IsTop(const Panel *panel) const
 
 
 
-// Get the absolute top panel, even if it is not yet drawn (i.e. was pushed on
-// this Step).
+/**
+ * Get the absolute top panel, even if it is not yet drawn (i.e. was pushed on
+ * this Step).
+*/
 shared_ptr<Panel> UI::Top() const
 {
 	if(!toPush.empty())
@@ -190,7 +206,9 @@ shared_ptr<Panel> UI::Top() const
 
 
 
-// Delete all the panels and clear the "done" flag.
+/**
+ * Delete all the panels and clear the "done" flag.
+*/
 void UI::Reset()
 {
 	stack.clear();
@@ -201,7 +219,9 @@ void UI::Reset()
 
 
 
-// Get the lower-most panel.
+/**
+ * Get the lower-most panel.
+*/
 shared_ptr<Panel> UI::Root() const
 {
 	if(stack.empty())
@@ -217,7 +237,9 @@ shared_ptr<Panel> UI::Root() const
 
 
 
-// If the player enters the game, enable saving the loaded file.
+/**
+ * If the player enters the game, enable saving the loaded file.
+*/
 void UI::CanSave(bool canSave)
 {
 	this->canSave = canSave;
@@ -232,7 +254,9 @@ bool UI::CanSave() const
 
 
 
-// Tell the UI to quit.
+/**
+ * Tell the UI to quit.
+*/
 void UI::Quit()
 {
 	isDone = true;
@@ -240,7 +264,9 @@ void UI::Quit()
 
 
 
-// Check if it is time to quit.
+/**
+ * Check if it is time to quit.
+*/
 bool UI::IsDone() const
 {
 	return isDone;
@@ -248,10 +274,12 @@ bool UI::IsDone() const
 
 
 
-// Check if there are no panels left. No panels left on the gamePanels-
-// stack usually means that it is time for the game to quit, while no
-// panels left on the menuPanels-stack is a normal state for a running
-// game.
+/**
+ * Check if there are no panels left. No panels left on the gamePanels-
+ * stack usually means that it is time for the game to quit, while no
+ * panels left on the menuPanels-stack is a normal state for a running
+ * game.
+*/
 bool UI::IsEmpty() const
 {
 	return stack.empty() && toPush.empty();
@@ -259,7 +287,9 @@ bool UI::IsEmpty() const
 
 
 
-// Get the current mouse position.
+/**
+ * Get the current mouse position.
+*/
 Point UI::GetMouse()
 {
 	int x = 0;
@@ -270,7 +300,9 @@ Point UI::GetMouse()
 
 
 
-// If a push or pop is queued, apply it.
+/**
+ * If a push or pop is queued, apply it.
+*/
 void UI::PushOrPop()
 {
 	// Handle any panels that should be added.

@@ -50,7 +50,9 @@ namespace {
 
 
 
-// Checks whether this plugin is valid, i.e. whether it exists.
+/**
+ * Checks whether this plugin is valid, i.e. whether it exists.
+*/
 bool Plugin::IsValid() const
 {
 	return !name.empty();
@@ -58,7 +60,9 @@ bool Plugin::IsValid() const
 
 
 
-// Attempt to load a plugin at the given path.
+/**
+ * Attempt to load a plugin at the given path.
+*/
 const Plugin *Plugins::Load(const string &path)
 {
 	// Get the name of the folder containing the plugin.
@@ -135,7 +139,9 @@ void Plugins::Save()
 
 
 
-// Whether the path points to a valid plugin.
+/**
+ * Whether the path points to a valid plugin.
+*/
 bool Plugins::IsPlugin(const string &path)
 {
 	// A folder is a valid plugin if it contains one (or more) of the assets folders.
@@ -145,8 +151,10 @@ bool Plugins::IsPlugin(const string &path)
 
 
 
-// Returns true if any plugin enabled or disabled setting has changed since
-// launched via user preferences.
+/**
+ * Returns true if any plugin enabled or disabled setting has changed since
+ * launched via user preferences.
+*/
 bool Plugins::HasChanged()
 {
 	for(const auto &it : plugins)
@@ -157,7 +165,9 @@ bool Plugins::HasChanged()
 
 
 
-// Returns the list of plugins that have been identified by the game.
+/**
+ * Returns the list of plugins that have been identified by the game.
+*/
 const Set<Plugin> &Plugins::Get()
 {
 	return plugins;
@@ -165,7 +175,9 @@ const Set<Plugin> &Plugins::Get()
 
 
 
-// Toggles enabling or disabling a plugin for the next game restart.
+/**
+ * Toggles enabling or disabling a plugin for the next game restart.
+*/
 void Plugins::TogglePlugin(const string &name)
 {
 	auto *plugin = plugins.Get(name);

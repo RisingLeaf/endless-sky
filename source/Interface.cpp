@@ -65,7 +65,9 @@ namespace {
 
 
 
-// Destructor, which frees the memory used by the polymorphic list of elements.
+/**
+ * Destructor, which frees the memory used by the polymorphic list of elements.
+*/
 Interface::~Interface()
 {
 	for(Element *element : elements)
@@ -74,7 +76,9 @@ Interface::~Interface()
 
 
 
-// Load an interface.
+/**
+ * Load an interface.
+*/
 void Interface::Load(const DataNode &node)
 {
 	// Skip unnamed interfaces.
@@ -147,7 +151,9 @@ void Interface::Load(const DataNode &node)
 
 
 
-// Draw this interface.
+/**
+ * Draw this interface.
+*/
 void Interface::Draw(const Information &info, Panel *panel) const
 {
 	for(const Element *element : elements)
@@ -156,7 +162,9 @@ void Interface::Draw(const Information &info, Panel *panel) const
 
 
 
-// Check if a named point exists.
+/**
+ * Check if a named point exists.
+*/
 bool Interface::HasPoint(const string &name) const
 {
 	return points.count(name);
@@ -164,7 +172,9 @@ bool Interface::HasPoint(const string &name) const
 
 
 
-// Get the center of the named point.
+/**
+ * Get the center of the named point.
+*/
 Point Interface::GetPoint(const string &name) const
 {
 	auto it = points.find(name);
@@ -187,7 +197,9 @@ Rectangle Interface::GetBox(const string &name) const
 
 
 
-// Get a named value.
+/**
+ * Get a named value.
+*/
 double Interface::GetValue(const string &name) const
 {
 	auto it = values.find(name);
@@ -196,7 +208,9 @@ double Interface::GetValue(const string &name) const
 
 
 
-// Get a named list.
+/**
+ * Get a named list.
+*/
 const vector<double> &Interface::GetList(const string &name) const
 {
 	static vector<double> EMPTY;
@@ -206,9 +220,13 @@ const vector<double> &Interface::GetList(const string &name) const
 
 
 
-// Members of the AnchoredPoint class:
+/**
+ * Members of the AnchoredPoint class:
+*/
 
-// Get the point's location, given the current screen dimensions.
+/**
+ * Get the point's location, given the current screen dimensions.
+*/
 Point Interface::AnchoredPoint::Get() const
 {
 	return position + .5 * Screen::Dimensions() * anchor;
@@ -232,10 +250,14 @@ void Interface::AnchoredPoint::Set(const Point &position, const Point &anchor)
 
 
 
-// Members of the Element base class:
+/**
+ * Members of the Element base class:
+*/
 
-// Create a new element. The alignment of the interface that contains
-// this element is used to calculate the element's position.
+/**
+ * Create a new element. The alignment of the interface that contains
+ * this element is used to calculate the element's position.
+*/
 void Interface::Element::Load(const DataNode &node, const Point &globalAnchor)
 {
 	// A location can be specified as:
@@ -330,8 +352,10 @@ void Interface::Element::Load(const DataNode &node, const Point &globalAnchor)
 
 
 
-// Draw this element, relative to the given anchor point. If this is a
-// button, it will add a clickable zone to the given panel.
+/**
+ * Draw this element, relative to the given anchor point. If this is a
+ * button, it will add a clickable zone to the given panel.
+*/
 void Interface::Element::Draw(const Information &info, Panel *panel) const
 {
 	if(!info.HasCondition(visibleIf))
@@ -358,8 +382,10 @@ void Interface::Element::Draw(const Information &info, Panel *panel) const
 
 
 
-// Set the conditions that control when this element is visible and active.
-// An empty string means it is always visible or active.
+/**
+ * Set the conditions that control when this element is visible and active.
+ * An empty string means it is always visible or active.
+*/
 void Interface::Element::SetConditions(const string &visible, const string &active)
 {
 	visibleIf = visible;
@@ -368,7 +394,9 @@ void Interface::Element::SetConditions(const string &visible, const string &acti
 
 
 
-// Get the bounding rectangle, relative to the anchor point.
+/**
+ * Get the bounding rectangle, relative to the anchor point.
+*/
 Rectangle Interface::Element::Bounds() const
 {
 	return Rectangle::WithCorners(from.Get(), to.Get());
@@ -383,8 +411,10 @@ Rectangle Interface::Element::Bounds(const Information &info) const
 
 
 
-// Parse the given data line: one that is not recognized by Element
-// itself. This returns false if it does not recognize the line, either.
+/**
+ * Parse the given data line: one that is not recognized by Element
+ * itself. This returns false if it does not recognize the line, either.
+*/
 bool Interface::Element::ParseLine(const DataNode &node)
 {
 	return false;
@@ -392,7 +422,9 @@ bool Interface::Element::ParseLine(const DataNode &node)
 
 
 
-// Report the actual dimensions of the object that will be drawn.
+/**
+ * Report the actual dimensions of the object that will be drawn.
+*/
 Point Interface::Element::NativeDimensions(const Information &info, int state) const
 {
 	return Bounds().Dimensions();
@@ -400,24 +432,32 @@ Point Interface::Element::NativeDimensions(const Information &info, int state) c
 
 
 
-// Draw this element in the given rectangle.
+/**
+ * Draw this element in the given rectangle.
+*/
 void Interface::Element::Draw(const Rectangle &rect, const Information &info, int state) const
 {
 }
 
 
 
-// Add any click handlers needed for this element. This will only be
-// called if the element is visible and active.
+/**
+ * Add any click handlers needed for this element. This will only be
+ * called if the element is visible and active.
+*/
 void Interface::Element::Place(const Rectangle &bounds, Panel *panel) const
 {
 }
 
 
 
-// Members of the ImageElement class:
+/**
+ * Members of the ImageElement class:
+*/
 
-// Constructor.
+/**
+ * Constructor.
+*/
 Interface::ImageElement::ImageElement(const DataNode &node, const Point &globalAnchor)
 {
 	if(node.Size() < 2)
@@ -447,8 +487,10 @@ Interface::ImageElement::ImageElement(const DataNode &node, const Point &globalA
 
 
 
-// Parse the given data line: one that is not recognized by Element
-// itself. This returns false if it does not recognize the line, either.
+/**
+ * Parse the given data line: one that is not recognized by Element
+ * itself. This returns false if it does not recognize the line, either.
+*/
 bool Interface::ImageElement::ParseLine(const DataNode &node)
 {
 	// The "inactive" and "hover" sprite only applies to non-dynamic images.
@@ -467,7 +509,9 @@ bool Interface::ImageElement::ParseLine(const DataNode &node)
 
 
 
-// Report the actual dimensions of the object that will be drawn.
+/**
+ * Report the actual dimensions of the object that will be drawn.
+*/
 Point Interface::ImageElement::NativeDimensions(const Information &info, int state) const
 {
 	const Sprite *sprite = GetSprite(info, state);
@@ -488,7 +532,9 @@ Point Interface::ImageElement::NativeDimensions(const Information &info, int sta
 
 
 
-// Draw this element in the given rectangle.
+/**
+ * Draw this element in the given rectangle.
+*/
 void Interface::ImageElement::Draw(const Rectangle &rect, const Information &info, int state) const
 {
 	const Sprite *sprite = GetSprite(info, state);
@@ -515,9 +561,13 @@ const Sprite *Interface::ImageElement::GetSprite(const Information &info, int st
 
 
 
-// Members of the TextElement class:
+/**
+ * Members of the TextElement class:
+*/
 
-// Constructor.
+/**
+ * Constructor.
+*/
 Interface::TextElement::TextElement(const DataNode &node, const Point &globalAnchor)
 {
 	if(node.Size() < 2)
@@ -562,8 +612,10 @@ Interface::TextElement::TextElement(const DataNode &node, const Point &globalAnc
 
 
 
-// Parse the given data line: one that is not recognized by Element
-// itself. This returns false if it does not recognize the line, either.
+/**
+ * Parse the given data line: one that is not recognized by Element
+ * itself. This returns false if it does not recognize the line, either.
+*/
 bool Interface::TextElement::ParseLine(const DataNode &node)
 {
 	if(node.Token(0) == "size" && node.Size() >= 2)
@@ -595,7 +647,9 @@ bool Interface::TextElement::ParseLine(const DataNode &node)
 
 
 
-// Report the actual dimensions of the object that will be drawn.
+/**
+ * Report the actual dimensions of the object that will be drawn.
+*/
 Point Interface::TextElement::NativeDimensions(const Information &info, int state) const
 {
 	const Font &font = FontSet::Get(fontSize);
@@ -605,7 +659,9 @@ Point Interface::TextElement::NativeDimensions(const Information &info, int stat
 
 
 
-// Draw this element in the given rectangle.
+/**
+ * Draw this element in the given rectangle.
+*/
 void Interface::TextElement::Draw(const Rectangle &rect, const Information &info, int state) const
 {
 	// Avoid crashes for malformed interface elements that are not fully loaded.
@@ -618,8 +674,10 @@ void Interface::TextElement::Draw(const Rectangle &rect, const Information &info
 
 
 
-// Add any click handlers needed for this element. This will only be
-// called if the element is visible and active.
+/**
+ * Add any click handlers needed for this element. This will only be
+ * called if the element is visible and active.
+*/
 void Interface::TextElement::Place(const Rectangle &bounds, Panel *panel) const
 {
 	if(buttonKey && panel)
@@ -635,9 +693,13 @@ string Interface::TextElement::GetString(const Information &info) const
 
 
 
-// Members of the BarElement class:
+/**
+ * Members of the BarElement class:
+*/
 
-// Constructor.
+/**
+ * Constructor.
+*/
 Interface::BarElement::BarElement(const DataNode &node, const Point &globalAnchor)
 {
 	if(node.Size() < 2)
@@ -657,8 +719,10 @@ Interface::BarElement::BarElement(const DataNode &node, const Point &globalAncho
 
 
 
-// Parse the given data line: one that is not recognized by Element
-// itself. This returns false if it does not recognize the line, either.
+/**
+ * Parse the given data line: one that is not recognized by Element
+ * itself. This returns false if it does not recognize the line, either.
+*/
 bool Interface::BarElement::ParseLine(const DataNode &node)
 {
 	if(node.Token(0) == "color" && node.Size() >= 2)
@@ -679,7 +743,9 @@ bool Interface::BarElement::ParseLine(const DataNode &node)
 
 
 
-// Draw this element in the given rectangle.
+/**
+ * Draw this element in the given rectangle.
+*/
 void Interface::BarElement::Draw(const Rectangle &rect, const Information &info, int state) const
 {
 	// Get the current settings for this bar or ring.
@@ -733,9 +799,13 @@ void Interface::BarElement::Draw(const Rectangle &rect, const Information &info,
 
 
 
-// Members of the PointerElement class:
+/**
+ * Members of the PointerElement class:
+*/
 
-// Constructor.
+/**
+ * Constructor.
+*/
 Interface::PointerElement::PointerElement(const DataNode &node, const Point &globalAnchor)
 {
 	Load(node, globalAnchor);
@@ -751,8 +821,10 @@ Interface::PointerElement::PointerElement(const DataNode &node, const Point &glo
 
 
 
-// Parse the given data line: one that is not recognized by Element
-// itself. This returns false if it does not recognize the line, either.
+/**
+ * Parse the given data line: one that is not recognized by Element
+ * itself. This returns false if it does not recognize the line, either.
+*/
 bool Interface::PointerElement::ParseLine(const DataNode &node)
 {
 	if(node.Token(0) == "color" && node.Size() >= 2)
@@ -785,9 +857,13 @@ void Interface::PointerElement::Draw(const Rectangle &rect, const Information &i
 
 
 
-// Members of the LineElement class:
+/**
+ * Members of the LineElement class:
+*/
 
-// Constructor.
+/**
+ * Constructor.
+*/
 Interface::LineElement::LineElement(const DataNode &node, const Point &globalAnchor)
 {
 	// This function will call ParseLine() for any line it does not recognize.
@@ -800,8 +876,10 @@ Interface::LineElement::LineElement(const DataNode &node, const Point &globalAnc
 
 
 
-// Parse the given data line: one that is not recognized by Element
-// itself. This returns false if it does not recognize the line, either.
+/**
+ * Parse the given data line: one that is not recognized by Element
+ * itself. This returns false if it does not recognize the line, either.
+*/
 bool Interface::LineElement::ParseLine(const DataNode &node)
 {
 	if(node.Token(0) == "color" && node.Size() >= 2)
@@ -814,7 +892,9 @@ bool Interface::LineElement::ParseLine(const DataNode &node)
 
 
 
-// Draw this element in the given rectangle.
+/**
+ * Draw this element in the given rectangle.
+*/
 void Interface::LineElement::Draw(const Rectangle &rect, const Information &info, int state) const
 {
 	// Avoid crashes for malformed interface elements that are not fully loaded.

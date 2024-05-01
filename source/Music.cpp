@@ -62,8 +62,10 @@ void Music::Init(const vector<string> &sources)
 
 
 
-// Music constructor, which starts the decoding thread. Initially, the thread
-// has no file to read, so it will sleep until a file is specified.
+/**
+ * Music constructor, which starts the decoding thread. Initially, the thread
+ * has no file to read, so it will sleep until a file is specified.
+*/
 Music::Music()
 	: silence(OUTPUT_CHUNK, 0)
 {
@@ -73,7 +75,9 @@ Music::Music()
 
 
 
-// Destructor, which waits for the thread to stop.
+/**
+ * Destructor, which waits for the thread to stop.
+*/
 Music::~Music()
 {
 	// Tell the decoding thread to stop.
@@ -92,7 +96,9 @@ Music::~Music()
 
 
 
-// Set the source of music. If the path is empty, this music will be silent.
+/**
+ * Set the source of music. If the path is empty, this music will be silent.
+*/
 void Music::SetSource(const string &name)
 {
 	// Find a file that provides this music.
@@ -123,7 +129,9 @@ void Music::SetSource(const string &name)
 
 
 
-// Get the name of the current music source playing.
+/**
+ * Get the name of the current music source playing.
+*/
 const string &Music::GetSource() const
 {
 	return currentSource;
@@ -131,7 +139,9 @@ const string &Music::GetSource() const
 
 
 
-// Get the next audio buffer to play.
+/**
+ * Get the next audio buffer to play.
+*/
 const vector<int16_t> &Music::NextChunk()
 {
 	// Check whether the "next" buffer is ready.
@@ -157,7 +167,9 @@ const vector<int16_t> &Music::NextChunk()
 
 
 
-// Entry point for the decoding thread.
+/**
+ * Entry point for the decoding thread.
+*/
 void Music::Decode()
 {
 	// This vector will store the input from the file.

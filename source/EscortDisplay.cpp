@@ -51,7 +51,9 @@ void EscortDisplay::Add(const Ship &ship, bool isHere, bool systemNameKnown, boo
 
 
 
-// Draw as many escort icons as will fit in the given bounding box.
+/**
+ * Draw as many escort icons as will fit in the given bounding box.
+*/
 void EscortDisplay::Draw(const Rectangle &bounds) const
 {
 	const int width = element->GetValue("width");
@@ -155,8 +157,10 @@ void EscortDisplay::Draw(const Rectangle &bounds) const
 
 
 
-// Check if the given point is a click on an escort icon. If so, return the
-// stack of ships represented by the icon. Otherwise, return an empty stack.
+/**
+ * Check if the given point is a click on an escort icon. If so, return the
+ * stack of ships represented by the icon. Otherwise, return an empty stack.
+*/
 const vector<const Ship *> &EscortDisplay::Click(const Point &point) const
 {
 	for(unsigned i = 0; i < zones.size(); ++i)
@@ -191,7 +195,9 @@ EscortDisplay::Icon::Icon(const Ship &ship, bool isHere, bool systemNameKnown, b
 
 
 
-// Sorting operator. It comes sooner if it costs more.
+/**
+ * Sorting operator. It comes sooner if it costs more.
+*/
 bool EscortDisplay::Icon::operator<(const Icon &other) const
 {
 	return (cost > other.cost);

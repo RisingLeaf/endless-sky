@@ -57,7 +57,9 @@ namespace {
 
 
 
-// Constructor.
+/**
+ * Constructor.
+*/
 BoardingPanel::BoardingPanel(PlayerInfo &player, const shared_ptr<Ship> &victim)
 	: player(player), you(player.FlagshipPtr()), victim(victim),
 	attackOdds(*you, *victim), defenseOdds(*victim, *you)
@@ -117,7 +119,9 @@ BoardingPanel::BoardingPanel(PlayerInfo &player, const shared_ptr<Ship> &victim)
 
 
 
-// Draw the panel.
+/**
+ * Draw the panel.
+*/
 void BoardingPanel::Draw()
 {
 	// Draw a translucent black scrim over everything beneath this panel.
@@ -221,7 +225,9 @@ void BoardingPanel::Draw()
 
 
 
-// Handle key presses or button clicks that were mapped to key presses.
+/**
+ * Handle key presses or button clicks that were mapped to key presses.
+*/
 bool BoardingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
 {
 	if((key == 'd' || key == 'x' || key == SDLK_ESCAPE || (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI)))) && CanExit())
@@ -413,7 +419,9 @@ bool BoardingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command,
 
 
 
-// Handle mouse clicks.
+/**
+ * Handle mouse clicks.
+*/
 bool BoardingPanel::Click(int x, int y, int clicks)
 {
 	// Was the click inside the plunder list?
@@ -430,7 +438,9 @@ bool BoardingPanel::Click(int x, int y, int clicks)
 
 
 
-// Allow dragging of the plunder list.
+/**
+ * Allow dragging of the plunder list.
+*/
 bool BoardingPanel::Drag(double dx, double dy)
 {
 	// The list is 240 pixels tall, and there are 10 pixels padding on the top
@@ -443,7 +453,9 @@ bool BoardingPanel::Drag(double dx, double dy)
 
 
 
-// The scroll wheel can be used to scroll the plunder list.
+/**
+ * The scroll wheel can be used to scroll the plunder list.
+*/
 bool BoardingPanel::Scroll(double dx, double dy)
 {
 	return Drag(0., dy * Preferences::ScrollSpeed());
@@ -451,7 +463,9 @@ bool BoardingPanel::Scroll(double dx, double dy)
 
 
 
-// You can't exit this panel if you're engaged in hand to hand combat.
+/**
+ * You can't exit this panel if you're engaged in hand to hand combat.
+*/
 bool BoardingPanel::CanExit() const
 {
 	return !isCapturing;
@@ -459,7 +473,9 @@ bool BoardingPanel::CanExit() const
 
 
 
-// Check if you can take the given plunder item.
+/**
+ * Check if you can take the given plunder item.
+*/
 bool BoardingPanel::CanTake() const
 {
 	// If you ship or the other ship has been captured:
@@ -477,7 +493,9 @@ bool BoardingPanel::CanTake() const
 
 
 
-// Check if it's possible to initiate hand to hand combat.
+/**
+ * Check if it's possible to initiate hand to hand combat.
+*/
 bool BoardingPanel::CanCapture() const
 {
 	// You can't click the "capture" button if you're already in combat mode.
@@ -497,14 +515,18 @@ bool BoardingPanel::CanCapture() const
 
 
 
-// Check if you are in the process of hand to hand combat.
+/**
+ * Check if you are in the process of hand to hand combat.
+*/
 bool BoardingPanel::CanAttack() const
 {
 	return isCapturing;
 }
 
 
-// Handle the keyboard scrolling and selection in the panel list.
+/**
+ * Handle the keyboard scrolling and selection in the panel list.
+*/
 void BoardingPanel::DoKeyboardNavigation(const SDL_Keycode key)
 {
 	// Scrolling the list of plunder.
@@ -532,9 +554,13 @@ void BoardingPanel::DoKeyboardNavigation(const SDL_Keycode key)
 
 
 
-// Functions for BoardingPanel::Plunder:
+/**
+ * Functions for BoardingPanel::Plunder:
+*/
 
-// Constructor (commodity cargo).
+/**
+ * Constructor (commodity cargo).
+*/
 BoardingPanel::Plunder::Plunder(const string &commodity, int count, int unitValue)
 	: name(commodity), outfit(nullptr), count(count), unitValue(unitValue)
 {
@@ -543,7 +569,9 @@ BoardingPanel::Plunder::Plunder(const string &commodity, int count, int unitValu
 
 
 
-// Constructor (outfit installed in the victim ship or transported as cargo).
+/**
+ * Constructor (outfit installed in the victim ship or transported as cargo).
+*/
 BoardingPanel::Plunder::Plunder(const Outfit *outfit, int count)
 	: name(outfit->DisplayName()), outfit(outfit), count(count),
 	unitValue(outfit->Cost() * (outfit->Get("installable") < 0. ? 1 : Depreciation::Full()))
@@ -553,7 +581,9 @@ BoardingPanel::Plunder::Plunder(const Outfit *outfit, int count)
 
 
 
-// Sort by value per ton of mass.
+/**
+ * Sort by value per ton of mass.
+*/
 bool BoardingPanel::Plunder::operator<(const Plunder &other) const
 {
 	// This may involve infinite values when the mass is zero, but that's okay.
@@ -562,8 +592,10 @@ bool BoardingPanel::Plunder::operator<(const Plunder &other) const
 
 
 
-// Check how many of this item are left un-plundered. Once this is zero,
-// the item can be removed from the list.
+/**
+ * Check how many of this item are left un-plundered. Once this is zero,
+ * the item can be removed from the list.
+*/
 int BoardingPanel::Plunder::Count() const
 {
 	return count;
@@ -571,7 +603,9 @@ int BoardingPanel::Plunder::Count() const
 
 
 
-// Get the value of each unit of this plunder item.
+/**
+ * Get the value of each unit of this plunder item.
+*/
 int64_t BoardingPanel::Plunder::UnitValue() const
 {
 	return unitValue;
@@ -579,7 +613,9 @@ int64_t BoardingPanel::Plunder::UnitValue() const
 
 
 
-// Get the name of this item. If it is a commodity, this is its name.
+/**
+ * Get the name of this item. If it is a commodity, this is its name.
+*/
 const string &BoardingPanel::Plunder::Name() const
 {
 	return name;
@@ -587,8 +623,10 @@ const string &BoardingPanel::Plunder::Name() const
 
 
 
-// Get the mass, in the format "<count> x <unit mass>". If the count is
-// 1, only the unit mass is reported.
+/**
+ * Get the mass, in the format "<count> x <unit mass>". If the count is
+ * 1, only the unit mass is reported.
+*/
 const string &BoardingPanel::Plunder::Size() const
 {
 	return size;
@@ -596,7 +634,9 @@ const string &BoardingPanel::Plunder::Size() const
 
 
 
-// Get the total value (unit value times count) as a string.
+/**
+ * Get the total value (unit value times count) as a string.
+*/
 const string &BoardingPanel::Plunder::Value() const
 {
 	return value;
@@ -604,7 +644,9 @@ const string &BoardingPanel::Plunder::Value() const
 
 
 
-// If this is an outfit, get the outfit. Otherwise, this returns null.
+/**
+ * If this is an outfit, get the outfit. Otherwise, this returns null.
+*/
 const Outfit *BoardingPanel::Plunder::GetOutfit() const
 {
 	return outfit;
@@ -612,8 +654,10 @@ const Outfit *BoardingPanel::Plunder::GetOutfit() const
 
 
 
-// Find out how many of these I can take if I have this amount of cargo
-// space free.
+/**
+ * Find out how many of these I can take if I have this amount of cargo
+ * space free.
+*/
 bool BoardingPanel::Plunder::CanTake(const Ship &ship) const
 {
 	// If there's cargo space for this outfit, you can take it.
@@ -633,7 +677,9 @@ bool BoardingPanel::Plunder::CanTake(const Ship &ship) const
 
 
 
-// Take some or all of this plunder item.
+/**
+ * Take some or all of this plunder item.
+*/
 void BoardingPanel::Plunder::Take(int count)
 {
 	this->count -= count;
@@ -642,7 +688,9 @@ void BoardingPanel::Plunder::Take(int count)
 
 
 
-// Update the text to reflect a change in the item count.
+/**
+ * Update the text to reflect a change in the item count.
+*/
 void BoardingPanel::Plunder::UpdateStrings()
 {
 	double mass = UnitMass();
@@ -656,7 +704,9 @@ void BoardingPanel::Plunder::UpdateStrings()
 
 
 
-// Commodities come in units of one ton.
+/**
+ * Commodities come in units of one ton.
+*/
 double BoardingPanel::Plunder::UnitMass() const
 {
 	return outfit ? outfit->Mass() : 1.;

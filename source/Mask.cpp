@@ -280,7 +280,9 @@ namespace {
 
 
 
-// Construct a mask from the alpha channel of an RGBA-formatted image.
+/**
+ * Construct a mask from the alpha channel of an RGBA-formatted image.
+*/
 void Mask::Create(const ImageBuffer &image, int frame)
 {
 	outlines.clear();
@@ -310,7 +312,9 @@ void Mask::Create(const ImageBuffer &image, int frame)
 
 
 
-// Check whether a mask was successfully generated from the image.
+/**
+ * Check whether a mask was successfully generated from the image.
+*/
 bool Mask::IsLoaded() const
 {
 	return !outlines.empty();
@@ -318,11 +322,13 @@ bool Mask::IsLoaded() const
 
 
 
-// Check if this mask intersects the given line segment (from sA to vA). If
-// it does, return the fraction of the way along the segment where the
-// intersection occurs. The sA should be relative to this object's center.
-// If this object contains the given point, the return value is 0. If there
-// is no collision, the return value is 1.
+/**
+ * Check if this mask intersects the given line segment (from sA to vA). If
+ * it does, return the fraction of the way along the segment where the
+ * intersection occurs. The sA should be relative to this object's center.
+ * If this object contains the given point, the return value is 0. If there
+ * is no collision, the return value is 1.
+*/
 double Mask::Collide(Point sA, Point vA, Angle facing) const
 {
 	// Bail out if we're too far away to possibly be touching.
@@ -353,7 +359,9 @@ double Mask::Collide(Point sA, Point vA, Angle facing) const
 
 
 
-// Check whether the mask contains the given point.
+/**
+ * Check whether the mask contains the given point.
+*/
 bool Mask::Contains(Point point, Angle facing) const
 {
 	if(!IsLoaded() || point.Length() > radius)
@@ -365,8 +373,10 @@ bool Mask::Contains(Point point, Angle facing) const
 
 
 
-// Find out whether this object is touching a ring defined by the given
-// inner and outer ranges.
+/**
+ * Find out whether this object is touching a ring defined by the given
+ * inner and outer ranges.
+*/
 bool Mask::WithinRing(Point point, Angle facing, double inner, double outer) const
 {
 	// Bail out if the object is too far away to possibly be touched.
@@ -398,7 +408,9 @@ bool Mask::WithinRing(Point point, Angle facing, double inner, double outer) con
 
 
 
-// Find out how close the given point is to the mask.
+/**
+ * Find out how close the given point is to the mask.
+*/
 double Mask::Range(Point point, Angle facing) const
 {
 	double range = numeric_limits<double>::infinity();
@@ -426,7 +438,9 @@ double Mask::Radius() const
 
 
 
-// Get the individual outlines that comprise this mask.
+/**
+ * Get the individual outlines that comprise this mask.
+*/
 const vector<vector<Point>> &Mask::Outlines() const
 {
 	return outlines;

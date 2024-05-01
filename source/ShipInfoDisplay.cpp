@@ -44,8 +44,10 @@ ShipInfoDisplay::ShipInfoDisplay(const Ship &ship, const PlayerInfo &player, boo
 
 
 
-// Call this every time the ship changes.
-// Panels that have scrolling abilities are not limited by space, allowing more detailed attributes.
+/**
+ * Call this every time the ship changes.
+ * Panels that have scrolling abilities are not limited by space, allowing more detailed attributes.
+*/
 void ShipInfoDisplay::Update(const Ship &ship, const PlayerInfo &player, bool descriptionCollapsed, bool scrollingPanel)
 {
 	UpdateDescription(ship.Description(), ship.Attributes().Licenses(), true);
@@ -79,7 +81,9 @@ void ShipInfoDisplay::DrawAttributes(const Point &topLeft) const
 
 
 
-// Draw each of the panels.
+/**
+ * Draw each of the panels.
+*/
 void ShipInfoDisplay::DrawAttributes(const Point &topLeft, const bool sale) const
 {
 	// Header.

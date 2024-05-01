@@ -133,7 +133,9 @@ void UniverseObjects::FinishLoading()
 
 
 
-// Apply the given change to the universe.
+/**
+ * Apply the given change to the universe.
+*/
 void UniverseObjects::Change(const DataNode &node)
 {
 	if(node.Token(0) == "fleet" && node.Size() >= 2)
@@ -166,8 +168,10 @@ void UniverseObjects::Change(const DataNode &node)
 
 
 
-// Update the neighbor lists and other information for all the systems.
-// (This must be done any time a GameEvent creates or moves a system.)
+/**
+ * Update the neighbor lists and other information for all the systems.
+ * (This must be done any time a GameEvent creates or moves a system.)
+*/
 void UniverseObjects::UpdateSystems()
 {
 	for(auto &it : systems)
@@ -187,9 +191,11 @@ void UniverseObjects::UpdateSystems()
 
 
 
-// Check for objects that are referred to but never defined. Some elements, like
-// fleets, don't need to be given a name if undefined. Others (like outfits and
-// planets) are written to the player's save and need a name to prevent data loss.
+/**
+ * Check for objects that are referred to but never defined. Some elements, like
+ * fleets, don't need to be given a name if undefined. Others (like outfits and
+ * planets) are written to the player's save and need a name to prevent data loss.
+*/
 void UniverseObjects::CheckReferences()
 {
 	// Log a warning for an "undefined" class object that was never loaded from disk.

@@ -59,8 +59,10 @@ void CategoryList::Load(const DataNode &node)
 
 
 
-// Sort the CategoryList. Categories are sorted by precedence. If multiple categories
-// share the same precedence then they are sorted alphabetically.
+/**
+ * Sort the CategoryList. Categories are sorted by precedence. If multiple categories
+ * share the same precedence then they are sorted alphabetically.
+*/
 void CategoryList::Sort()
 {
 	sort(list.begin(), list.end());
@@ -68,7 +70,9 @@ void CategoryList::Sort()
 
 
 
-// Determine if the CategoryList contains a Category with the given name.
+/**
+ * Determine if the CategoryList contains a Category with the given name.
+*/
 bool CategoryList::Contains(const string &name) const
 {
 	const auto it = find_if(list.begin(), list.end(),

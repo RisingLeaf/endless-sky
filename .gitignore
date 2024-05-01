@@ -72,4 +72,4 @@ CMakeUserPresets.json
 # static code analysis
 /.scannerwork
 
-doxygen/
+esdocs.github.io/

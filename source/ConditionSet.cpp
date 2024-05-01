@@ -235,7 +235,9 @@ namespace {
 
 
 
-// Construct and Load() at the same time.
+/**
+ * Construct and Load() at the same time.
+*/
 ConditionSet::ConditionSet(const DataNode &node)
 {
 	Load(node);
@@ -243,7 +245,9 @@ ConditionSet::ConditionSet(const DataNode &node)
 
 
 
-// Load a set of conditions from the children of this node.
+/**
+ * Load a set of conditions from the children of this node.
+*/
 void ConditionSet::Load(const DataNode &node)
 {
 	isOr = (node.Token(0) == "or");
@@ -253,7 +257,9 @@ void ConditionSet::Load(const DataNode &node)
 
 
 
-// Save a set of conditions.
+/**
+ * Save a set of conditions.
+*/
 void ConditionSet::Save(DataWriter &out) const
 {
 	for(const Expression &expression : expressions)
@@ -272,7 +278,9 @@ void ConditionSet::Save(DataWriter &out) const
 
 
 
-// Check if there are any entries in this set.
+/**
+ * Check if there are any entries in this set.
+*/
 bool ConditionSet::IsEmpty() const
 {
 	return expressions.empty() && children.empty();
@@ -280,7 +288,9 @@ bool ConditionSet::IsEmpty() const
 
 
 
-// Read a single condition from a data node.
+/**
+ * Read a single condition from a data node.
+*/
 void ConditionSet::Add(const DataNode &node)
 {
 	// Special keywords have a node size of 1 (never, and, or), or 2 (unary operators).
@@ -360,7 +370,9 @@ void ConditionSet::Add(const DataNode &node)
 
 
 
-// Add a unary operator line to the list of expressions.
+/**
+ * Add a unary operator line to the list of expressions.
+*/
 bool ConditionSet::Add(const string &firstToken, const string &secondToken)
 {
 	// Each "unary" operator can be mapped to an equivalent binary expression.
@@ -385,7 +397,9 @@ bool ConditionSet::Add(const string &firstToken, const string &secondToken)
 
 
 
-// Add a simple condition expression to the list of expressions.
+/**
+ * Add a simple condition expression to the list of expressions.
+*/
 bool ConditionSet::Add(const string &name, const string &op, const string &value)
 {
 	// If the operator is recognized, map it to a binary function.
@@ -400,7 +414,9 @@ bool ConditionSet::Add(const string &name, const string &op, const string &value
 
 
 
-// Add a complex condition expression to the list of expressions.
+/**
+ * Add a complex condition expression to the list of expressions.
+*/
 bool ConditionSet::Add(const vector<string> &lhs, const string &op, const vector<string> &rhs)
 {
 	BinFun fun = Op(op);
@@ -414,8 +430,10 @@ bool ConditionSet::Add(const vector<string> &lhs, const string &op, const vector
 
 
 
-// Check if the given condition values satisfy this set of conditions. Performs any assignments
-// on a temporary condition map, if this set mixes comparisons and modifications.
+/**
+ * Check if the given condition values satisfy this set of conditions. Performs any assignments
+ * on a temporary condition map, if this set mixes comparisons and modifications.
+*/
 bool ConditionSet::Test(const ConditionsStore &conditions) const
 {
 	// If this ConditionSet contains any expressions with operators that
@@ -429,7 +447,9 @@ bool ConditionSet::Test(const ConditionsStore &conditions) const
 
 
 
-// Modify the given set of conditions.
+/**
+ * Modify the given set of conditions.
+*/
 void ConditionSet::Apply(ConditionsStore &conditions) const
 {
 	ConditionsStore unused;
@@ -443,7 +463,9 @@ void ConditionSet::Apply(ConditionsStore &conditions) const
 
 
 
-// Get the names of the conditions that are relevant for this ConditionSet.
+/**
+ * Get the names of the conditions that are relevant for this ConditionSet.
+*/
 set<string> ConditionSet::RelevantConditions() const
 {
 	set<std::string> result;
@@ -460,7 +482,9 @@ set<string> ConditionSet::RelevantConditions() const
 
 
 
-// Check if this set is satisfied by either the created, temporary conditions, or the given conditions.
+/**
+ * Check if this set is satisfied by either the created, temporary conditions, or the given conditions.
+*/
 bool ConditionSet::TestSet(const ConditionsStore &conditions, const ConditionsStore &created) const
 {
 	// Not all expressions may be testable: some may have been used to form the "created" condition map.
@@ -487,8 +511,10 @@ bool ConditionSet::TestSet(const ConditionsStore &conditions, const ConditionsSt
 
 
 
-// Construct new, temporary conditions based on the assignment expressions in
-// this ConditionSet and the values in the player's conditions map.
+/**
+ * Construct new, temporary conditions based on the assignment expressions in
+ * this ConditionSet and the values in the player's conditions map.
+*/
 void ConditionSet::TestApply(const ConditionsStore &conditions, ConditionsStore &created) const
 {
 	for(const Expression &expression : expressions)
@@ -501,7 +527,9 @@ void ConditionSet::TestApply(const ConditionsStore &conditions, ConditionsStore 
 
 
 
-// Constructor for complex expressions.
+/**
+ * Constructor for complex expressions.
+*/
 ConditionSet::Expression::Expression(const vector<string> &left, const string &op, const vector<string> &right)
 	: op(op), fun(Op(op)), left(left), right(right)
 {
@@ -509,7 +537,9 @@ ConditionSet::Expression::Expression(const vector<string> &left, const string &o
 
 
 
-// Constructor for simple expressions.
+/**
+ * Constructor for simple expressions.
+*/
 ConditionSet::Expression::Expression(const string &left, const string &op, const string &right)
 	: op(op), fun(Op(op)), left(left), right(right)
 {
@@ -529,7 +559,9 @@ void ConditionSet::Expression::Save(DataWriter &out) const
 
 
 
-// Create a loggable string (for PrintTrace).
+/**
+ * Create a loggable string (for PrintTrace).
+*/
 string ConditionSet::Expression::ToString() const
 {
 	return left.ToString() + " \"" + op + "\" " + right.ToString();
@@ -537,7 +569,9 @@ string ConditionSet::Expression::ToString() const
 
 
 
-// Checks if either side of the expression is tokenless.
+/**
+ * Checks if either side of the expression is tokenless.
+*/
 bool ConditionSet::Expression::IsEmpty() const
 {
 	return left.IsEmpty() || right.IsEmpty();
@@ -545,8 +579,10 @@ bool ConditionSet::Expression::IsEmpty() const
 
 
 
-// Returns everything to the left of the main assignment or comparison operator.
-// In an assignment expression, this should be only a single token.
+/**
+ * Returns everything to the left of the main assignment or comparison operator.
+ * In an assignment expression, this should be only a single token.
+*/
 string ConditionSet::Expression::Name() const
 {
 	return left.ToString();
@@ -554,7 +590,9 @@ string ConditionSet::Expression::Name() const
 
 
 
-// Returns true if the operator is a comparison and false otherwise.
+/**
+ * Returns true if the operator is a comparison and false otherwise.
+*/
 bool ConditionSet::Expression::IsTestable() const
 {
 	return IsComparison(op);
@@ -562,7 +600,9 @@ bool ConditionSet::Expression::IsTestable() const
 
 
 
-// Evaluate both the left- and right-hand sides of the expression, then compare the evaluated numeric values.
+/**
+ * Evaluate both the left- and right-hand sides of the expression, then compare the evaluated numeric values.
+*/
 bool ConditionSet::Expression::Test(const ConditionsStore &conditions, const ConditionsStore &created) const
 {
 	int64_t lhs = left.Evaluate(conditions, created);
@@ -572,7 +612,9 @@ bool ConditionSet::Expression::Test(const ConditionsStore &conditions, const Con
 
 
 
-// Assign the computed value to the desired condition.
+/**
+ * Assign the computed value to the desired condition.
+*/
 void ConditionSet::Expression::Apply(ConditionsStore &conditions, ConditionsStore &created) const
 {
 	auto &c = conditions[Name()];
@@ -582,7 +624,9 @@ void ConditionSet::Expression::Apply(ConditionsStore &conditions, ConditionsStor
 
 
 
-// Assign the computed value to the desired temporary condition.
+/**
+ * Assign the computed value to the desired temporary condition.
+*/
 void ConditionSet::Expression::TestApply(const ConditionsStore &conditions, ConditionsStore &created) const
 {
 	auto &c = created[Name()];
@@ -592,7 +636,9 @@ void ConditionSet::Expression::TestApply(const ConditionsStore &conditions, Cond
 
 
 
-// Constructor for one side of a complex expression (supports multiple simple operators and parentheses).
+/**
+ * Constructor for one side of a complex expression (supports multiple simple operators and parentheses).
+*/
 ConditionSet::Expression::SubExpression::SubExpression(const vector<string> &side)
 {
 	if(side.empty())
@@ -604,15 +650,19 @@ ConditionSet::Expression::SubExpression::SubExpression(const vector<string> &sid
 
 
 
-// Simple condition constructor. For legacy support of the 'never' condition,
-// replace the empty string argument with a bare quote.
+/**
+ * Simple condition constructor. For legacy support of the 'never' condition,
+ * replace the empty string argument with a bare quote.
+*/
 ConditionSet::Expression::SubExpression::SubExpression(const string &side)
 {
 	tokens.emplace_back(side.empty() ? "'" : side);
 }
 
 
-// Convert the tokens and operators back to a string, for use in logging.
+/**
+ * Convert the tokens and operators back to a string, for use in logging.
+*/
 const string ConditionSet::Expression::SubExpression::ToString() const
 {
 	string out;
@@ -641,7 +691,9 @@ const string ConditionSet::Expression::SubExpression::ToString() const
 
 
 
-// Interleave the tokens and operators, for use in the save file.
+/**
+ * Interleave the tokens and operators, for use in the save file.
+*/
 const vector<string> ConditionSet::Expression::SubExpression::ToStrings() const
 {
 	auto out = vector<string>();
@@ -660,7 +712,9 @@ const vector<string> ConditionSet::Expression::SubExpression::ToStrings() const
 }
 
 
-// Check if this SubExpression was able to build correctly.
+/**
+ * Check if this SubExpression was able to build correctly.
+*/
 bool ConditionSet::Expression::SubExpression::IsEmpty() const
 {
 	return tokens.empty();
@@ -668,7 +722,9 @@ bool ConditionSet::Expression::SubExpression::IsEmpty() const
 
 
 
-// Evaluate the SubExpression using the given condition maps.
+/**
+ * Evaluate the SubExpression using the given condition maps.
+*/
 int64_t ConditionSet::Expression::SubExpression::Evaluate(const ConditionsStore &conditions,
 	const ConditionsStore &created) const
 {
@@ -693,8 +749,10 @@ int64_t ConditionSet::Expression::SubExpression::Evaluate(const ConditionsStore 
 
 
 
-// Parse the input vector into the tokens and operators vectors. Parentheses are
-// considered simple operators, and also insert an empty string into tokens.
+/**
+ * Parse the input vector into the tokens and operators vectors. Parentheses are
+ * considered simple operators, and also insert an empty string into tokens.
+*/
 void ConditionSet::Expression::SubExpression::ParseSide(const vector<string> &side)
 {
 	static const string EMPTY;
@@ -737,7 +795,9 @@ void ConditionSet::Expression::SubExpression::ParseSide(const vector<string> &si
 
 
 
-// Parse the token and operators vectors to make the sequence vector.
+/**
+ * Parse the token and operators vectors to make the sequence vector.
+*/
 void ConditionSet::Expression::SubExpression::GenerateSequence()
 {
 	// Simple conditions have only a single token and no operators.
@@ -810,7 +870,9 @@ void ConditionSet::Expression::SubExpression::GenerateSequence()
 
 
 
-// Use a valid working index and data pointer vector to create an evaluable Operation.
+/**
+ * Use a valid working index and data pointer vector to create an evaluable Operation.
+*/
 bool ConditionSet::Expression::SubExpression::AddOperation(vector<int> &data, size_t &index, const size_t &opIndex)
 {
 	// Obtain the operand indices. The operator is never a parentheses. The
@@ -843,8 +905,10 @@ bool ConditionSet::Expression::SubExpression::AddOperation(vector<int> &data, si
 
 
 
-// Constructor for an Operation, indicating the binary function and the
-// indices of its operands within the evaluation-time data vector.
+/**
+ * Constructor for an Operation, indicating the binary function and the
+ * indices of its operands within the evaluation-time data vector.
+*/
 ConditionSet::Expression::SubExpression::Operation::Operation(const string &op, size_t &a, size_t &b)
 	: fun(Op(op)), a(a), b(b)
 {

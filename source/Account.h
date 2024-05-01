@@ -106,19 +106,27 @@ private:
 
 private:
 	int64_t credits = 0;
-	// Regular income from salaries paid to the player.
+	/**
+	 * Regular income from salaries paid to the player.
+	*/
 	std::map<std::string, int64_t> salariesIncome;
-	// If back salaries and maintenance cannot be paid, they pile up rather
-	// than being ignored.
+	/**
+	 * If back salaries and maintenance cannot be paid, they pile up rather
+	 * than being ignored.
+	*/
 	int64_t crewSalariesOwed = 0;
 	int64_t maintenanceDue = 0;
-	// Your credit score determines the interest rate on your mortgages.
+	/**
+	 * Your credit score determines the interest rate on your mortgages.
+	*/
 	int creditScore = 400;
 
 	std::vector<Mortgage> mortgages;
 
-	// History of the player's net worth. This is used to calculate your average
-	// daily income, which is used to calculate how big a mortgage you can afford.
+	/**
+	 * History of the player's net worth. This is used to calculate your average
+	 * daily income, which is used to calculate how big a mortgage you can afford.
+	*/
 	std::vector<int64_t> history;
 };
 

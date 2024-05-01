@@ -396,9 +396,11 @@ void Engine::Place()
 
 
 
-// Add NPC ships to the known ships. These may have been freshly instantiated
-// from an accepted assisting/boarding mission, or from existing missions when
-// the player departs a planet.
+/**
+ * Add NPC ships to the known ships. These may have been freshly instantiated
+ * from an accepted assisting/boarding mission, or from existing missions when
+ * the player departs a planet.
+*/
 void Engine::Place(const list<NPC> &npcs, shared_ptr<Ship> flagship)
 {
 	for(const NPC &npc : npcs)
@@ -475,7 +477,9 @@ void Engine::Place(const list<NPC> &npcs, shared_ptr<Ship> flagship)
 
 
 
-// Wait for the previous calculations (if any) to be done.
+/**
+ * Wait for the previous calculations (if any) to be done.
+*/
 void Engine::Wait()
 {
 	queue.Wait();
@@ -484,7 +488,9 @@ void Engine::Wait()
 
 
 
-// Begin the next step of calculations.
+/**
+ * Begin the next step of calculations.
+*/
 void Engine::Step(bool isActive)
 {
 	events.swap(eventQueue);
@@ -983,7 +989,9 @@ void Engine::Step(bool isActive)
 
 
 
-// Begin the next step of calculations.
+/**
+ * Begin the next step of calculations.
+*/
 void Engine::Go()
 {
 	++step;
@@ -993,7 +1001,9 @@ void Engine::Go()
 
 
 
-// Give a command on behalf of the player, used for integration tests.
+/**
+ * Give a command on behalf of the player, used for integration tests.
+*/
 void Engine::GiveCommand(const Command &command)
 {
 	activeCommands.Set(command);
@@ -1001,8 +1011,10 @@ void Engine::GiveCommand(const Command &command)
 
 
 
-// Pass the list of game events to MainPanel for handling by the player, and any
-// UI element generation.
+/**
+ * Pass the list of game events to MainPanel for handling by the player, and any
+ * UI element generation.
+*/
 list<ShipEvent> &Engine::Events()
 {
 	return events;
@@ -1010,7 +1022,9 @@ list<ShipEvent> &Engine::Events()
 
 
 
-// Draw a frame.
+/**
+ * Draw a frame.
+*/
 void Engine::Draw() const
 {
 	GameData::Background().Draw(center, Preferences::Has("Render motion blur") ? centerVelocity : Point(),
@@ -1159,7 +1173,9 @@ void Engine::Draw() const
 
 
 
-// Select the object the player clicked on.
+/**
+ * Select the object the player clicked on.
+*/
 void Engine::Click(const Point &from, const Point &to, bool hasShift, bool hasControl)
 {
 	// First, see if this is a click on an escort icon.
@@ -1216,9 +1232,11 @@ void Engine::SelectGroup(int group, bool hasShift, bool hasControl)
 
 
 
-// Break targeting on all projectiles between the player and the given
-// government; gov projectiles stop targeting the player and player's
-// projectiles stop targeting gov.
+/**
+ * Break targeting on all projectiles between the player and the given
+ * government; gov projectiles stop targeting the player and player's
+ * projectiles stop targeting gov.
+*/
 void Engine::BreakTargeting(const Government *gov)
 {
 	const Government *playerGov = GameData::PlayerGovernment();
@@ -1635,8 +1653,10 @@ void Engine::CalculateStep()
 
 
 
-// Move a ship. Also determine if the ship should generate hyperspace sounds or
-// boarding events, fire weapons, and launch fighters.
+/**
+ * Move a ship. Also determine if the ship should generate hyperspace sounds or
+ * boarding events, fire weapons, and launch fighters.
+*/
 void Engine::MoveShip(const shared_ptr<Ship> &ship)
 {
 	// Various actions a ship could have taken last frame may have impacted the accuracy of cached values.
@@ -1731,7 +1751,9 @@ void Engine::MoveShip(const shared_ptr<Ship> &ship)
 
 
 
-// Populate the ship collision detection set for projectile & flotsam computations.
+/**
+ * Populate the ship collision detection set for projectile & flotsam computations.
+*/
 void Engine::FillCollisionSets()
 {
 	shipCollisions.Clear(step);
@@ -1745,8 +1767,10 @@ void Engine::FillCollisionSets()
 
 
 
-// Spawn NPC (both mission and "regular") ships into the player's universe. Non-
-// mission NPCs are only spawned in or adjacent to the player's system.
+/**
+ * Spawn NPC (both mission and "regular") ships into the player's universe. Non-
+ * mission NPCs are only spawned in or adjacent to the player's system.
+*/
 void Engine::SpawnFleets()
 {
 	// If the player has a pending boarding mission, spawn its NPCs.
@@ -1778,7 +1802,9 @@ void Engine::SpawnFleets()
 
 
 
-// At random intervals, create new special "persons" who enter the current system.
+/**
+ * At random intervals, create new special "persons" who enter the current system.
+*/
 void Engine::SpawnPersons()
 {
 	if(Random::Int(GameData::GetGamerules().PersonSpawnPeriod()) || player.GetSystem()->Links().empty())
@@ -1829,7 +1855,9 @@ void Engine::SpawnPersons()
 
 
 
-// Generate weather from the current system's hazards.
+/**
+ * Generate weather from the current system's hazards.
+*/
 void Engine::GenerateWeather()
 {
 	auto CreateWeather = [this](const RandomEvent<Hazard> &hazard, Point origin)
@@ -1853,7 +1881,9 @@ void Engine::GenerateWeather()
 
 
 
-// At random intervals, have one of the ships in the game send you a hail.
+/**
+ * At random intervals, have one of the ships in the game send you a hail.
+*/
 void Engine::SendHails()
 {
 	if(Random::Int(600) || player.IsDead() || ships.empty())
@@ -1881,8 +1911,10 @@ void Engine::SendHails()
 
 
 
-// Handle any keyboard inputs for the engine. This is done in the main thread
-// after all calculation threads are paused to avoid race conditions.
+/**
+ * Handle any keyboard inputs for the engine. This is done in the main thread
+ * after all calculation threads are paused to avoid race conditions.
+*/
 void Engine::HandleKeyboardInputs()
 {
 	Ship *flagship = player.Flagship();
@@ -1952,8 +1984,10 @@ void Engine::HandleKeyboardInputs()
 
 
 
-// Handle any mouse clicks. This is done in the calculation thread rather than
-// in the main UI thread to avoid race conditions.
+/**
+ * Handle any mouse clicks. This is done in the calculation thread rather than
+ * in the main UI thread to avoid race conditions.
+*/
 void Engine::HandleMouseClicks()
 {
 	// Mouse clicks can't be issued if your flagship is dead.
@@ -2075,7 +2109,9 @@ void Engine::HandleMouseClicks()
 
 
 
-// Determines alternate mouse turning, setting player mouse angle, and right-click firing weapons.
+/**
+ * Determines alternate mouse turning, setting player mouse angle, and right-click firing weapons.
+*/
 void Engine::HandleMouseInput(Command &activeCommands)
 {
 	isMouseHoldEnabled = activeCommands.Has(Command::MOUSE_TURNING_HOLD);
@@ -2104,9 +2140,11 @@ void Engine::HandleMouseInput(Command &activeCommands)
 
 
 
-// Perform collision detection. Note that unlike the preceding functions, this
-// one adds any visuals that are created directly to the main visuals list. If
-// this is multi-threaded in the future, that will need to change.
+/**
+ * Perform collision detection. Note that unlike the preceding functions, this
+ * one adds any visuals that are created directly to the main visuals list. If
+ * this is multi-threaded in the future, that will need to change.
+*/
 void Engine::DoCollisions(Projectile &projectile)
 {
 	// The asteroids can collide with projectiles, the same as any other
@@ -2248,9 +2286,11 @@ void Engine::DoCollisions(Projectile &projectile)
 
 
 
-// Determine whether any active weather events have impacted the ships within
-// the system. As with DoCollisions, this function adds visuals directly to
-// the main visuals list.
+/**
+ * Determine whether any active weather events have impacted the ships within
+ * the system. As with DoCollisions, this function adds visuals directly to
+ * the main visuals list.
+*/
 void Engine::DoWeather(Weather &weather)
 {
 	weather.CalculateStrength();
@@ -2273,7 +2313,9 @@ void Engine::DoWeather(Weather &weather)
 
 
 
-// Check if any ship collected the given flotsam.
+/**
+ * Check if any ship collected the given flotsam.
+*/
 void Engine::DoCollection(Flotsam &flotsam)
 {
 	// Check if any ship can pick up this flotsam. Cloaked ships cannot act.
@@ -2388,8 +2430,10 @@ void Engine::DoCollection(Flotsam &flotsam)
 
 
 
-// Scanning can't happen in the same loop as ship movement because it relies on
-// all the ships already being in their final position for this step.
+/**
+ * Scanning can't happen in the same loop as ship movement because it relies on
+ * all the ships already being in their final position for this step.
+*/
 void Engine::DoScanning(const shared_ptr<Ship> &ship)
 {
 	int scan = ship->Scan(player);
@@ -2403,7 +2447,9 @@ void Engine::DoScanning(const shared_ptr<Ship> &ship)
 
 
 
-// Fill in all the objects in the radar display.
+/**
+ * Fill in all the objects in the radar display.
+*/
 void Engine::FillRadar()
 {
 	const Ship *flagship = player.Flagship();
@@ -2490,8 +2536,10 @@ void Engine::FillRadar()
 
 
 
-// Each ship is drawn as an entire stack of sprites, including hardpoint sprites
-// and engine flares and any fighters it is carrying externally.
+/**
+ * Each ship is drawn as an entire stack of sprites, including hardpoint sprites
+ * and engine flares and any fighters it is carrying externally.
+*/
 void Engine::DrawShipSprites(const Ship &ship)
 {
 	bool hasFighters = ship.PositionFighters();
@@ -2562,8 +2610,10 @@ void Engine::DrawShipSprites(const Ship &ship)
 
 
 
-// If a ship just damaged another ship, update information on who has asked the
-// player for assistance (and ask for assistance if appropriate).
+/**
+ * If a ship just damaged another ship, update information on who has asked the
+ * player for assistance (and ask for assistance if appropriate).
+*/
 void Engine::DoGrudge(const shared_ptr<Ship> &target, const Government *attacker)
 {
 	if(attacker->IsPlayer())

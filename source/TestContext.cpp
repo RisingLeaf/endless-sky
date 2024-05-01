@@ -19,7 +19,9 @@ class Test;
 
 
 
-// Constructor to be used when running an actual test.
+/**
+ * Constructor to be used when running an actual test.
+*/
 TestContext::TestContext(const Test *toRun) : callstack({{toRun, 0}})
 {
 }

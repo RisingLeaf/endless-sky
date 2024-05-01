@@ -34,7 +34,9 @@ const int Flotsam::TONS_PER_BOX = 5;
 
 
 
-// Constructors for flotsam carrying either a commodity or an outfit.
+/**
+ * Constructors for flotsam carrying either a commodity or an outfit.
+*/
 Flotsam::Flotsam(const string &commodity, int count, const Government *sourceGovernment)
 	: commodity(commodity), count(count), sourceGovernment(sourceGovernment)
 {
@@ -56,9 +58,11 @@ Flotsam::Flotsam(const Outfit *outfit, int count, const Government *sourceGovern
 
 
 
-// Place this flotsam, and set the given ship as its source. This is a
-// separate function because a ship may queue up flotsam to dump but take
-// several frames before it finishes dumping it all.
+/**
+ * Place this flotsam, and set the given ship as its source. This is a
+ * separate function because a ship may queue up flotsam to dump but take
+ * several frames before it finishes dumping it all.
+*/
 void Flotsam::Place(const Ship &source)
 {
 	this->source = &source;
@@ -67,8 +71,10 @@ void Flotsam::Place(const Ship &source)
 
 
 
-// Place flotsam coming from something other than a ship. Optionally specify
-// the maximum relative velocity, or the exact relative velocity as a vector.
+/**
+ * Place flotsam coming from something other than a ship. Optionally specify
+ * the maximum relative velocity, or the exact relative velocity as a vector.
+*/
 void Flotsam::Place(const Body &source, double maxVelocity)
 {
 	Place(source, Angle::Random().Unit() * (maxVelocity * Random::Real()));
@@ -94,7 +100,9 @@ void Flotsam::Place(const Body &source, const Point &dv)
 
 
 
-// Move the object one time-step forward.
+/**
+ * Move the object one time-step forward.
+*/
 void Flotsam::Move(vector<Visual> &visuals)
 {
 	position += velocity;
@@ -125,7 +133,9 @@ void Flotsam::SetVelocity(Point velocity)
 
 
 
-// This is the one ship that cannot pick up this flotsam.
+/**
+ * This is the one ship that cannot pick up this flotsam.
+*/
 const Ship *Flotsam::Source() const
 {
 	return source;
@@ -133,8 +143,10 @@ const Ship *Flotsam::Source() const
 
 
 
-// Ships from this Government should not pick up this flotsam because it
-// was explicitly dumped by a member of this government.
+/**
+ * Ships from this Government should not pick up this flotsam because it
+ * was explicitly dumped by a member of this government.
+*/
 const Government *Flotsam::SourceGovernment() const
 {
 	return sourceGovernment;
@@ -142,7 +154,9 @@ const Government *Flotsam::SourceGovernment() const
 
 
 
-// This is what the flotsam contains:
+/**
+ * This is what the flotsam contains:
+*/
 const string &Flotsam::CommodityType() const
 {
 	return commodity;
@@ -164,8 +178,10 @@ int Flotsam::Count() const
 
 
 
-// This is how big one "unit" of the flotsam is (in tons). If a ship has
-// less than this amount of space, it can't pick up anything here.
+/**
+ * This is how big one "unit" of the flotsam is (in tons). If a ship has
+ * less than this amount of space, it can't pick up anything here.
+*/
 double Flotsam::UnitSize() const
 {
 	return outfit ? outfit->Mass() : 1.;
@@ -180,8 +196,10 @@ double Flotsam::Mass() const
 
 
 
-// Transfer contents to the collector ship. The flotsam velocity is
-// stabilized in proportion to the amount being transferred.
+/**
+ * Transfer contents to the collector ship. The flotsam velocity is
+ * stabilized in proportion to the amount being transferred.
+*/
 int Flotsam::TransferTo(Ship *collector)
 {
 	int amount = outfit ?

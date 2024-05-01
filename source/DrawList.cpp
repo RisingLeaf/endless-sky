@@ -27,7 +27,9 @@ using namespace std;
 
 
 
-// Clear the list.
+/**
+ * Clear the list.
+*/
 void DrawList::Clear(int step, double zoom)
 {
 	items.clear();
@@ -46,7 +48,9 @@ void DrawList::SetCenter(const Point &center, const Point &centerVelocity)
 
 
 
-// Add an object based on the Body class.
+/**
+ * Add an object based on the Body class.
+*/
 bool DrawList::Add(const Body &body, double cloak)
 {
 	return Add(body, body.Position(), cloak);
@@ -93,7 +97,9 @@ bool DrawList::AddSwizzled(const Body &body, int swizzle)
 
 
 
-// Draw all the items in this list.
+/**
+ * Draw all the items in this list.
+*/
 void DrawList::Draw() const
 {
 	SpriteShader::Bind();
