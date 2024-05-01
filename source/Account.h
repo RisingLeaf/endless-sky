@@ -1,8 +1,3 @@
-/*********************************************************************
- * @file  Account.h
- * 
- * @brief Implementation of the class Account.
- *********************************************************************/
 /* Account.h
 Copyright (c) 2014 by Michael Zahniser
 
@@ -34,7 +29,7 @@ class DataWriter;
 
 
 /**
- *  Class representing all your assets and liabilities and tracking their change
+ * Class representing all your assets and liabilities and tracking their change
  * over time.
  */
 class Account {
