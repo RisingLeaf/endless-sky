@@ -92,8 +92,10 @@ public:
 	 * Apply the given change to the universe.
 	*/
 	void Change(const DataNode &node);
-	// Update the neighbor lists and other information for all the systems.
-	// (This must be done any time a GameEvent creates or moves a system.)
+	/**
+	 * Update the neighbor lists and other information for all the systems.
+	 * (This must be done any time a GameEvent creates or moves a system.)
+	*/
 	void UpdateSystems(const PlayerInfo *player = nullptr);
 
 	/**

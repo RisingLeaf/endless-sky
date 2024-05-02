@@ -486,9 +486,11 @@ void System::Load(const DataNode &node, Set<Planet> &planets)
 
 
 
-// Update any information about the system that may have changed due to events,
-// or because the game was started, e.g. neighbors, solar wind and power, or
-// if the system is inhabited.
+/**
+ * Update any information about the system that may have changed due to events,
+ * or because the game was started, e.g. neighbors, solar wind and power, or
+ * if the system is inhabited.
+*/
 void System::UpdateSystem(const Set<System> &systems, const set<double> &neighborDistances,
 	const PlayerInfo *player)
 {
@@ -1138,9 +1140,11 @@ void System::LoadObjectHelper(const DataNode &node, StellarObject &object, bool 
 
 
 
-// Once the star map is fully loaded or an event has changed systems
-// or links, figure out which stars are "neighbors" of this one, i.e.
-// close enough to see or to reach via jump drive.
+/**
+ * Once the star map is fully loaded or an event has changed systems
+ * or links, figure out which stars are "neighbors" of this one, i.e.
+ * close enough to see or to reach via jump drive.
+*/
 void System::UpdateNeighbors(const Set<System> &systems, double distance, const PlayerInfo *player)
 {
 	set<const System *> &neighborSet = neighbors[distance];
