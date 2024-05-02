@@ -25,13 +25,15 @@
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "Endless Sky"
 PROJECT_NUMBER         =
-PROJECT_BRIEF          =
-PROJECT_LOGO           =
+PROJECT_BRIEF          = "This is an auto generated documentation for the source code of endless-sky."
+PROJECT_LOGO           = icons/icon_48x48.png
 OUTPUT_DIRECTORY       = esdocs.github.io/generated/
 
 CREATE_SUBDIRS         = YES
 
 INPUT                  = source/ source/comparators source/ship source/text
+INPUT                 += Documentation.md
+USE_MDFILE_AS_MAINPAGE = Documentation.md
 
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
