@@ -32,8 +32,6 @@ OUTPUT_DIRECTORY       = esdocs.github.io/generated/
 CREATE_SUBDIRS         = YES
 
 INPUT                  = source/ source/comparators source/ship source/text
-INPUT                 += Documentation.md
-USE_MDFILE_AS_MAINPAGE = Documentation.md
 
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
