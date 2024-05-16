@@ -17,6 +17,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define GAME_ACTION_H_
 
 #include "ConditionSet.h"
+#include "LocationFilter.h"
 #include "ShipManager.h"
 
 #include <cstdint>
@@ -46,6 +47,16 @@ class UI;
 // added to GameAction should be able to be safely executed while in a
 // Conversation.
 class GameAction {
+private:
+	class RelocateAction {
+	public:
+		bool isDefined = false;
+
+		LocationFilter relocateFilter;
+		bool relocateFlagshipOnly = false;
+	};
+
+
 public:
 	GameAction() = default;
 	// Construct and Load() at the same time.
@@ -94,6 +105,8 @@ private:
 	std::set<std::string> fail;
 	// When this action is performed, the mission that called this action is failed.
 	bool failCaller = false;
+
+	RelocateAction relocateAction;
 
 	ConditionSet conditions;
 };

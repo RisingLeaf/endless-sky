@@ -294,6 +294,8 @@ public:
 	const Planet *TravelDestination() const;
 	void SetTravelDestination(const Planet *planet);
 
+	void Relocate(const Planet *planet, bool flagshipOnly);
+
 	// Toggle which secondary weapon the player has selected.
 	const std::set<const Outfit *> &SelectedSecondaryWeapons() const;
 	void SelectNextSecondary();

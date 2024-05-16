@@ -2581,6 +2581,19 @@ void PlayerInfo::SetTravelDestination(const Planet *planet)
 
 
 
+void PlayerInfo::Relocate(const Planet *destination, bool flagshipOnly)
+{
+	system = destination->GetSystem();
+	planet = destination;
+
+	for(shared_ptr<Ship> ship : ships)
+	{
+		ship->SetPlanet(destination);
+	}
+}
+
+
+
 // Check which secondary weapons the player has selected.
 const set<const Outfit *> &PlayerInfo::SelectedSecondaryWeapons() const
 {
