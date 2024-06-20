@@ -140,17 +140,18 @@ namespace {
 	// Determine if the ship has any usable weapons.
 	bool IsArmed(const Ship &ship)
 	{
-		for(const Hardpoint &hardpoint : ship.Weapons())
-		{
-			const Weapon *weapon = hardpoint.GetOutfit();
-			if(weapon && !hardpoint.IsSpecial())
+		return std::any_of(ship.Weapons().begin(), ship.Weapons().end(), 
+			[&ship](const Hardpoint &hardpoint) -> bool
 			{
-				if(weapon->Ammo() && !ship.OutfitCount(weapon->Ammo()))
-					continue;
-				return true;
-			}
-		}
-		return false;
+				const Weapon *weapon = hardpoint.GetOutfit();
+				if(weapon && !hardpoint.IsSpecial())
+				{
+					if(weapon->Ammo() && !ship.OutfitCount(weapon->Ammo()))
+						return false;;
+					return true;
+				}
+				return false;
+			});
 	}
 
 	void Deploy(const Ship &ship, bool includingDamaged)
@@ -213,10 +214,11 @@ namespace {
 	// Check if the ship contains a carried ship that needs to launch.
 	bool HasDeployments(const Ship &ship)
 	{
-		for(const Ship::Bay &bay : ship.Bays())
-			if(bay.ship && bay.ship->HasDeployOrder())
-				return true;
-		return false;
+		return std::any_of(ship.Bays().begin(), ship.Bays().end(),
+			[](const Ship::Bay &bay) -> bool
+			{
+				return bay.ship && bay.ship->HasDeployOrder();
+			});
 	}
 
 	// Determine if the ship with the given travel plan should refuel in
@@ -333,7 +335,7 @@ AI::AI(const PlayerInfo &player, const List<Ship> &ships,
 // Fleet commands from the player.
 void AI::IssueShipTarget(const shared_ptr<Ship> &target)
 {
-	Orders newOrders;
+	static Orders newOrders;
 	bool isEnemy = target->GetGovernment()->IsEnemy();
 	newOrders.type = (!isEnemy ? Orders::KEEP_STATION
 		: target->IsDisabled() ? Orders::FINISH_OFF : Orders::ATTACK);
@@ -346,7 +348,7 @@ void AI::IssueShipTarget(const shared_ptr<Ship> &target)
 
 void AI::IssueAsteroidTarget(const shared_ptr<Minable> &targetAsteroid)
 {
-	Orders newOrders;
+	static Orders newOrders;
 	newOrders.type = Orders::MINE;
 	newOrders.targetAsteroid = targetAsteroid;
 	IssueOrders(newOrders,
@@ -357,7 +359,7 @@ void AI::IssueAsteroidTarget(const shared_ptr<Minable> &targetAsteroid)
 
 void AI::IssueMoveTarget(const Point &target, const System *moveToSystem)
 {
-	Orders newOrders;
+	static Orders newOrders;
 	newOrders.type = Orders::MOVE_TO;
 	newOrders.point = target;
 	newOrders.targetSystem = moveToSystem;
@@ -378,7 +380,7 @@ void AI::UpdateKeys(PlayerInfo &player, Command &activeCommands)
 	if(activeCommands.Has(AutopilotCancelCommands()))
 	{
 		bool canceled = (autoPilot.Has(Command::JUMP) && !activeCommands.Has(Command::JUMP));
-		canceled |= (autoPilot.Has(Command::STOP) && !activeCommands.Has(Command::STOP));
+		canceled |= (autoPilot.Has(Command::STOP) && !activeCommands.Has(Command::STOP)); 
 		canceled |= (autoPilot.Has(Command::LAND) && !activeCommands.Has(Command::LAND));
 		canceled |= (autoPilot.Has(Command::BOARD) && !activeCommands.Has(Command::BOARD));
 		if(canceled)
@@ -418,7 +420,7 @@ void AI::UpdateKeys(PlayerInfo &player, Command &activeCommands)
 
 	shared_ptr<Ship> target = flagship->GetTargetShip();
 	shared_ptr<Minable> targetAsteroid = flagship->GetTargetAsteroid();
-	Orders newOrders;
+	static Orders newOrders;
 	if(activeCommands.Has(Command::FIGHT) && target && !target->IsYours())
 	{
 		newOrders.type = target->IsDisabled() ? Orders::FINISH_OFF : Orders::ATTACK;
