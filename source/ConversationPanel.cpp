@@ -436,7 +436,7 @@ void ConversationPanel::Exit()
 	// boarding mission's `on offer`, or from completing a mission's NPC
 	// block (e.g. scanning or boarding or killing all required targets).
 	if(node == Conversation::DIE || node == Conversation::EXPLODE)
-		player.Die(node, ship);
+		player.Die(GetUI(), node, ship);
 	else if(ship)
 	{
 		// A forced-launch ending (LAUNCH, FLEE, or DEPART) destroys any NPC.

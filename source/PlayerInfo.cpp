@@ -604,8 +604,67 @@ void PlayerInfo::AddEvent(const GameEvent &event, const Date &date)
 
 
 // Mark this player as dead, and handle the changes to the player's fleet.
-void PlayerInfo::Die(int response, const shared_ptr<Ship> &capturer)
+void PlayerInfo::Die(UI *ui, int response, const shared_ptr<Ship> &capturer)
 {
+	if(flagship && flagship->IsDestroyed() && flagship->Attributes().Get("escape pod"))
+	{
+		int count = flagship->Attributes().Get("escape pod");
+
+		auto FindPlanetInSystem = [](const System *system) -> const Planet * {
+			if(!system->HasShipyard())
+				return nullptr;
+			for(const auto &object : system->Objects())
+				if(object.HasValidPlanet() && object.GetPlanet()->HasShipyard())
+					return object.GetPlanet();
+			return nullptr;
+		};
+		// Find a nearby planet with shipyard.
+		std::set<const System *> checked;
+
+		std::function<const Planet *(const System *, int)> IterateOverSystem;
+		IterateOverSystem = [&IterateOverSystem, &FindPlanetInSystem, &checked]
+			(const System *system, int count) -> const Planet *
+		{
+			const Planet *res = FindPlanetInSystem(system);
+			if(res)
+				return res;
+			if(count > 0)
+				for(const System *neighbour : system->Links())
+				{
+					if(checked.count(neighbour))
+						continue;
+					else
+						checked.insert(neighbour);
+
+					res = IterateOverSystem(neighbour, count - 1);
+					if(res)
+						return res;
+				}
+			return nullptr;
+		};
+
+		planet = IterateOverSystem(system, count);
+		if(planet)
+		{
+			system = planet->GetSystem();
+
+			int64_t escapeInsurance = flagship->Attributes().Get("escape insurance");
+
+			if(escapeInsurance <= 0)
+				ui->Push(new Dialog("Your escape pod landed on " + planet->Name() + "."));
+			else
+			{
+				ui->Push(new Dialog("Your escape pod landed on " + planet->Name()
+					+ ". You got paid " + Format::Credits(escapeInsurance) + " by your insurance."));
+				accounts.AddCredits(escapeInsurance);
+			}
+		}
+		else
+			ui->Push(new Dialog("Your escape pod found no viable planet to land on, you died in space."));
+
+		return;
+	}
+
 	isDead = true;
 	// The player loses access to all their ships if they die on a planet.
 	if(GetPlanet() || !flagship)
@@ -2285,7 +2344,7 @@ void PlayerInfo::HandleEvent(const ShipEvent &event, UI *ui)
 
 	// If the player's flagship was destroyed, the player is dead.
 	if((event.Type() & ShipEvent::DESTROY) && !ships.empty() && event.Target().get() == Flagship())
-		Die();
+		Die(ui);
 }
 
 
@@ -4624,7 +4683,7 @@ void PlayerInfo::Fine(UI *ui)
 				ui->Push(new Dialog(message));
 			}
 			// All ships belonging to the player should be removed.
-			Die();
+			Die(ui);
 		}
 		else
 			ui->Push(new Dialog(message));

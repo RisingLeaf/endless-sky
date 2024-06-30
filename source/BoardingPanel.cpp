@@ -228,7 +228,7 @@ bool BoardingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command,
 	{
 		// When closing the panel, mark the player dead if their ship was captured.
 		if(playerDied)
-			player.Die();
+			player.Die(GetUI());
 		GetUI()->Pop(this);
 	}
 	else if(playerDied)

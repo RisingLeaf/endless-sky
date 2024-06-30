@@ -104,7 +104,7 @@ public:
 	void AddEvent(const GameEvent &event, const Date &date);
 
 	// Mark the player as dead, or check if they have died.
-	void Die(int response = 0, const std::shared_ptr<Ship> &capturer = nullptr);
+	void Die(UI *ui, int response = 0, const std::shared_ptr<Ship> &capturer = nullptr);
 	bool IsDead() const;
 
 	// Get or set the player's name.
