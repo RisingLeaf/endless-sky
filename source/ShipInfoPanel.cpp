@@ -141,37 +141,37 @@ bool ShipInfoPanel::KeyDown(int key, const Command &command, bool /* isNewPress 
 {
 	bool control = GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI);
 	bool shift = GameWindow::ModActive(GameWindow::MOD_SHIFT);
-	if(key == 'd' || key == GLFW_KEY_ESCAPE || (key == 'w' && control))
+	if(key == GLFW_KEY_D || key == GLFW_KEY_ESCAPE || (key == GLFW_KEY_W && control))
 		GetUI()->Pop(this);
 	else if(command.Has(Command::HELP))
 		DoHelp("ship info", true);
-	else if(!player.Ships().empty() && ((key == 'p' && !shift) || key == GLFW_KEY_LEFT || key == GLFW_KEY_UP))
+	else if(!player.Ships().empty() && ((key == GLFW_KEY_P && !shift) || key == GLFW_KEY_LEFT || key == GLFW_KEY_UP))
 	{
 		if(shipIt == panelState.Ships().begin())
 			shipIt = panelState.Ships().end();
 		--shipIt;
 		UpdateInfo();
 	}
-	else if(!panelState.Ships().empty() && (key == 'n' || key == GLFW_KEY_RIGHT || key == GLFW_KEY_DOWN))
+	else if(!panelState.Ships().empty() && (key == GLFW_KEY_N || key == GLFW_KEY_RIGHT || key == GLFW_KEY_DOWN))
 	{
 		++shipIt;
 		if(shipIt == panelState.Ships().end())
 			shipIt = panelState.Ships().begin();
 		UpdateInfo();
 	}
-	else if(key == 'i' || command.Has(Command::INFO) || (control && key == GLFW_KEY_TAB))
+	else if(key == GLFW_KEY_I || command.Has(Command::INFO) || (control && key == GLFW_KEY_TAB))
 	{
 		GetUI()->Pop(this);
 		GetUI()->Push(new PlayerInfoPanel(player, std::move(panelState)));
 	}
-	else if(key == 'R' || (key == 'r' && shift))
+	else if(key == GLFW_KEY_R || (key == GLFW_KEY_R && shift))
 		GetUI()->Push(new Dialog(this, &ShipInfoPanel::Rename, "Change this ship's name?", (*shipIt)->Name()));
-	else if(panelState.CanEdit() && (key == 'P' || (key == 'p' && shift) || key == 'k'))
+	else if(panelState.CanEdit() && (key == GLFW_KEY_P || (key == GLFW_KEY_P && shift) || key == GLFW_KEY_K))
 	{
 		if(shipIt->get() != player.Flagship() || (*shipIt)->IsParked())
 			player.ParkShip(shipIt->get(), !(*shipIt)->IsParked());
 	}
-	else if(panelState.CanEdit() && key == 'D')
+	else if(panelState.CanEdit() && key == GLFW_KEY_D)
 	{
 		if(shipIt->get() != player.Flagship())
 		{
@@ -212,7 +212,7 @@ bool ShipInfoPanel::KeyDown(int key, const Command &command, bool /* isNewPress 
 			GetUI()->Push(new Dialog(this, &ShipInfoPanel::Disown, message));
 		}
 	}
-	else if(key == 'c' && CanDump())
+	else if(key == GLFW_KEY_C && CanDump())
 	{
 		int commodities = (*shipIt)->Cargo().CommoditiesSize();
 		int amount = (*shipIt)->Cargo().Get(selectedCommodity);
@@ -251,9 +251,9 @@ bool ShipInfoPanel::KeyDown(int key, const Command &command, bool /* isNewPress 
 				"Are you sure you want to jettison all of this ship's cargo?"));
 		}
 	}
-	else if(command.Has(Command::MAP) || key == 'm')
+	else if(command.Has(Command::MAP) || key == GLFW_KEY_M)
 		GetUI()->Push(new MissionPanel(player));
-	else if(key == 'l' && player.HasLogs())
+	else if(key == GLFW_KEY_L && player.HasLogs())
 		GetUI()->Push(new LogbookPanel(player));
 	else
 		return false;

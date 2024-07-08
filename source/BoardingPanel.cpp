@@ -227,8 +227,8 @@ void BoardingPanel::Draw()
 // Handle key presses or button clicks that were mapped to key presses.
 bool BoardingPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
-	if((key == 'd' || key == 'x' || key == GLFW_KEY_ESCAPE ||
-		(key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))) && CanExit())
+	if((key == GLFW_KEY_D || key == GLFW_KEY_X || key == GLFW_KEY_ESCAPE ||
+		(key == GLFW_KEY_W && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))) && CanExit())
 	{
 		// When closing the panel, mark the player dead if their ship was captured.
 		if(playerDied)
@@ -237,7 +237,7 @@ bool BoardingPanel::KeyDown(int key, const Command &command, bool isNewPress)
 	}
 	else if(playerDied)
 		return false;
-	else if(key == 't' && CanTake())
+	else if(key == GLFW_KEY_T && CanTake())
 	{
 		CargoHold &cargo = you->Cargo();
 		int count = plunder[selected].Count();
@@ -282,7 +282,7 @@ bool BoardingPanel::KeyDown(int key, const Command &command, bool isNewPress)
 			(key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_PAGE_UP
 			|| key == GLFW_KEY_PAGE_DOWN || key == GLFW_KEY_HOME || key == GLFW_KEY_END))
 		DoKeyboardNavigation(key);
-	else if(key == 'c' && CanCapture())
+	else if(key == GLFW_KEY_C && CanCapture())
 	{
 		// A ship that self-destructs checks once when you board it, and again
 		// when you try to capture it, to see if it will self-destruct. This is
@@ -299,7 +299,7 @@ bool BoardingPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		messages.push_back("The airlock blasts open. Combat has begun!");
 		messages.push_back("(It will end if you both choose to \"defend.\")");
 	}
-	else if((key == 'a' || key == 'd') && CanAttack())
+	else if((key == GLFW_KEY_A || key == GLFW_KEY_D) && CanAttack())
 	{
 		int yourStartCrew = you->Crew();
 		int enemyStartCrew = victim->Crew();
@@ -308,7 +308,7 @@ bool BoardingPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		// if you board them but immediately "defend" they will let you return
 		// to your ship in peace. That is to allow the player to "cancel" if
 		// they did not really mean to try to capture the ship.
-		bool youAttack = (key == 'a' && (yourStartCrew > 1 || !victim->RequiredCrew()));
+		bool youAttack = (key == GLFW_KEY_A && (yourStartCrew > 1 || !victim->RequiredCrew()));
 		bool enemyAttacks = defenseOdds.Odds(enemyStartCrew, yourStartCrew) > .5;
 		if(isFirstCaptureAction && !youAttack)
 			enemyAttacks = false;

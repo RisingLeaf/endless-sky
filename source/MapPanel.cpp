@@ -551,30 +551,30 @@ bool MapPanel::AllowsFastForward() const noexcept
 bool MapPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	const Interface *mapInterface = GameData::Interfaces().Get("map");
-	if(command.Has(Command::MAP) || key == 'd' || key == GLFW_KEY_ESCAPE
-			|| (key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
+	if(command.Has(Command::MAP) || key == GLFW_KEY_D || key == GLFW_KEY_ESCAPE
+			|| (key == GLFW_KEY_W && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 		GetUI()->Pop(this);
-	else if(key == 's' && buttonCondition != "is shipyards")
+	else if(key == GLFW_KEY_S && buttonCondition != "is shipyards")
 	{
 		GetUI()->Pop(this);
 		GetUI()->Push(new MapShipyardPanel(*this));
 	}
-	else if(key == 'o' && buttonCondition != "is outfitters")
+	else if(key == GLFW_KEY_O && buttonCondition != "is outfitters")
 	{
 		GetUI()->Pop(this);
 		GetUI()->Push(new MapOutfitterPanel(*this));
 	}
-	else if(key == 'i' && buttonCondition != "is missions")
+	else if(key == GLFW_KEY_I && buttonCondition != "is missions")
 	{
 		GetUI()->Pop(this);
 		GetUI()->Push(new MissionPanel(*this));
 	}
-	else if(key == 'p' && buttonCondition != "is ports")
+	else if(key == GLFW_KEY_P && buttonCondition != "is ports")
 	{
 		GetUI()->Pop(this);
 		GetUI()->Push(new MapDetailPanel(*this));
 	}
-	else if(key == 'f')
+	else if(key == GLFW_KEY_F)
 	{
 		GetUI()->Push(new Dialog(
 			this, &MapPanel::Find, "Search for:", "", Truncate::NONE, true));

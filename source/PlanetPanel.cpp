@@ -44,6 +44,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include <sstream>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 
@@ -166,47 +167,47 @@ bool PlanetPanel::KeyDown(int key, const Command &command, bool isNewPress)
 	const Ship *flagship = player.Flagship();
 
 	bool hasAccess = planet.CanUseServices();
-	if(key == 'd' && flagship && flagship->CanBeFlagship())
+	if(key == GLFW_KEY_D && flagship && flagship->CanBeFlagship())
 	{
 		requestedLaunch = true;
 		return true;
 	}
-	else if(key == 'l')
+	else if(key == GLFW_KEY_L)
 		selectedPanel = nullptr;
-	else if(key == 't' && hasAccess
+	else if(key == GLFW_KEY_T && hasAccess
 			&& planet.GetPort().HasService(Port::ServicesType::Trading) && system.HasTrade())
 	{
 		selectedPanel = trading.get();
 		GetUI()->Push(trading);
 	}
-	else if(key == 'b' && hasAccess && planet.GetPort().HasService(Port::ServicesType::Bank))
+	else if(key == GLFW_KEY_B && hasAccess && planet.GetPort().HasService(Port::ServicesType::Bank))
 	{
 		selectedPanel = bank.get();
 		GetUI()->Push(bank);
 	}
-	else if(key == 'p' && hasAccess && planet.HasNamedPort())
+	else if(key == GLFW_KEY_P && hasAccess && planet.HasNamedPort())
 	{
 		selectedPanel = spaceport.get();
 		if(isNewPress)
 			spaceport->UpdateNews();
 		GetUI()->Push(spaceport);
 	}
-	else if(key == 's' && hasAccess && planet.HasShipyard())
+	else if(key == GLFW_KEY_S && hasAccess && planet.HasShipyard())
 	{
 		GetUI()->Push(new ShipyardPanel(player));
 		return true;
 	}
-	else if(key == 'o' && hasAccess && planet.HasOutfitter())
+	else if(key == GLFW_KEY_O && hasAccess && planet.HasOutfitter())
 	{
 		GetUI()->Push(new OutfitterPanel(player));
 		return true;
 	}
-	else if(key == 'j' && hasAccess && planet.GetPort().HasService(Port::ServicesType::JobBoard))
+	else if(key == GLFW_KEY_J && hasAccess && planet.GetPort().HasService(Port::ServicesType::JobBoard))
 	{
 		GetUI()->Push(new MissionPanel(player));
 		return true;
 	}
-	else if(key == 'h' && hasAccess && planet.GetPort().HasService(Port::ServicesType::HireCrew))
+	else if(key == GLFW_KEY_H && hasAccess && planet.GetPort().HasService(Port::ServicesType::HireCrew))
 	{
 		selectedPanel = hiring.get();
 		GetUI()->Push(hiring);

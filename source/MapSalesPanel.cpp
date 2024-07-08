@@ -117,7 +117,7 @@ bool MapSalesPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		Select(selected);
 		ScrollTo(selected);
 	}
-	else if(key == 'f')
+	else if(key == GLFW_KEY_F)
 		GetUI()->Push(new Dialog(
 			this, &MapSalesPanel::DoFind, "Search for:"));
 	else

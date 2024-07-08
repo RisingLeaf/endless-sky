@@ -234,7 +234,7 @@ bool ConversationPanel::KeyDown(int key, const Command &command, bool isNewPress
 	if(node < 0)
 	{
 		// If the conversation has ended, the only possible action is to exit.
-		if(isNewPress && (key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER || key == 'd'))
+		if(isNewPress && (key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER || key == GLFW_KEY_D))
 		{
 			Exit();
 			return true;
@@ -270,7 +270,7 @@ bool ConversationPanel::KeyDown(int key, const Command &command, bool isNewPress
 		}
 		else if((key == GLFW_KEY_DELETE || key == GLFW_KEY_BACKSPACE) && !name.empty())
 			name.erase(name.size() - 1);
-		else if(key == '\t' || ((key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER) && otherName.empty()))
+		else if(key == GLFW_KEY_TAB || ((key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER) && otherName.empty()))
 			choice = !choice;
 		else if((key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER) && (firstName.empty() || lastName.empty()))
 			flickerTime = 18;

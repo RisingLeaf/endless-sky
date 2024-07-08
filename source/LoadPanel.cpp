@@ -274,14 +274,14 @@ void LoadPanel::Draw()
 
 bool LoadPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
-	if(key == 'n')
+	if(key == GLFW_KEY_N)
 	{
 		// If no player is loaded, the "Enter Ship" button becomes "New Pilot."
 		// Request that the player chooses a start scenario.
 		// StartConditionsPanel also handles the case where there's no scenarios.
 		GetUI()->Push(new StartConditionsPanel(player, gamePanels, GameData::StartOptions(), this));
 	}
-	else if(key == 'd' && !selectedPilot.empty())
+	else if(key == GLFW_KEY_D && !selectedPilot.empty())
 	{
 		GetUI()->Push(new Dialog(this, &LoadPanel::DeletePilot,
 			"Are you sure you want to delete the selected pilot, \"" + loadedInfo.Name()
@@ -289,7 +289,7 @@ bool LoadPanel::KeyDown(int key, const Command &command, bool isNewPress)
 				+ "Confirm the name of the pilot you want to delete.",
 				[this](const string &pilot) { return pilot == loadedInfo.Name(); }));
 	}
-	else if(key == 'a' && !player.IsDead() && player.IsLoaded())
+	else if(key == GLFW_KEY_A && !player.IsDead() && player.IsLoaded())
 	{
 		auto it = files.find(selectedPilot);
 		if(it == files.end() || it->second.empty() || it->second.front().first.size() < 4)
@@ -301,7 +301,7 @@ bool LoadPanel::KeyDown(int key, const Command &command, bool isNewPress)
 			"Enter a name for this snapshot, or use the most recent save's date:",
 			FileDate(lastSave)));
 	}
-	else if(key == 'R' && !selectedFile.empty())
+	else if(key == GLFW_KEY_R && !selectedFile.empty())
 	{
 		string fileName = selectedFile.substr(selectedFile.rfind('/') + 1);
 		if(!(fileName == selectedPilot + ".txt"))
@@ -309,7 +309,7 @@ bool LoadPanel::KeyDown(int key, const Command &command, bool isNewPress)
 				"Are you sure you want to delete the selected saved game file, \""
 					+ selectedFile + "\"?"));
 	}
-	else if((key == 'l' || key == 'e') && !selectedPilot.empty())
+	else if((key == GLFW_KEY_L || key == GLFW_KEY_E) && !selectedPilot.empty())
 	{
 		// Is the selected file a snapshot or the pilot's main file?
 		string fileName = selectedFile.substr(selectedFile.rfind('/') + 1);
@@ -321,9 +321,9 @@ bool LoadPanel::KeyDown(int key, const Command &command, bool isNewPress)
 				"Any progress will be lost, unless you have saved other snapshots. "
 				"Are you sure you want to do that?"));
 	}
-	else if(key == 'o')
+	else if(key == GLFW_KEY_O)
 		Files::OpenUserSavesFolder();
-	else if(key == 'b' || command.Has(Command::MENU) || (key == 'w' && GameWindow::ModActive(GameWindow::MOD_GUI | GameWindow::MOD_CONTROL)))
+	else if(key == GLFW_KEY_B || command.Has(Command::MENU) || (key == GLFW_KEY_W && GameWindow::ModActive(GameWindow::MOD_GUI | GameWindow::MOD_CONTROL)))
 		GetUI()->Pop(this);
 	else if((key == GLFW_KEY_DOWN || key == GLFW_KEY_UP) && !files.empty())
 	{

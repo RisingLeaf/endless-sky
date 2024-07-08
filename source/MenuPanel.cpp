@@ -161,25 +161,25 @@ void MenuPanel::Draw()
 
 bool MenuPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
-	if(player.IsLoaded() && (key == 'e' || command.Has(Command::MENU)))
+	if(player.IsLoaded() && (key == GLFW_KEY_E || command.Has(Command::MENU)))
 	{
 		gamePanels.CanSave(true);
 		GetUI()->PopThrough(this);
 	}
-	else if(key == 'p')
+	else if(key == GLFW_KEY_P)
 		GetUI()->Push(new PreferencesPanel());
-	else if(key == 'l')
+	else if(key == GLFW_KEY_L)
 		GetUI()->Push(new LoadPanel(player, gamePanels));
-	else if(key == 'n' && (!player.IsLoaded() || player.IsDead()))
+	else if(key == GLFW_KEY_N && (!player.IsLoaded() || player.IsDead()))
 	{
 		// If no player is loaded, the "Enter Ship" button becomes "New Pilot."
 		// Request that the player chooses a start scenario.
 		// StartConditionsPanel also handles the case where there's no scenarios.
 		GetUI()->Push(new StartConditionsPanel(player, gamePanels, GameData::StartOptions(), nullptr));
 	}
-	else if(key == 'q')
+	else if(key == GLFW_KEY_Q)
 		GetUI()->Quit();
-	else if(key == ' ')
+	else if(key == GLFW_KEY_SPACE)
 		scrollingPaused = !scrollingPaused;
 	else if(key == GLFW_KEY_DOWN)
 		scrollSpeed += 1;

@@ -136,7 +136,7 @@ void StartConditionsPanel::Draw()
 
 bool StartConditionsPanel::KeyDown(int key, const Command &command, bool /* isNewPress */)
 {
-	if(key == 'b' || key == GLFW_KEY_ESCAPE || command.Has(Command::MENU) || (key == 'w' &&
+	if(key == GLFW_KEY_B || key == GLFW_KEY_ESCAPE || command.Has(Command::MENU) || (key == GLFW_KEY_W &&
 		GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 		GetUI()->Pop(this);
 	else if(!scenarios.empty() && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_PAGE_UP || key == GLFW_KEY_PAGE_DOWN))
@@ -161,7 +161,7 @@ bool StartConditionsPanel::KeyDown(int key, const Command &command, bool /* isNe
 
 		Select(startIt);
 	}
-	else if(startIt != scenarios.end() && (key == 's' || key == 'n' || key == GLFW_KEY_KP_ENTER || key == GLFW_KEY_ENTER)
+	else if(startIt != scenarios.end() && (key == GLFW_KEY_S || key == GLFW_KEY_N || key == GLFW_KEY_KP_ENTER || key == GLFW_KEY_ENTER)
 		&& info.HasCondition("unlocked start"))
 	{
 		player.New(*startIt);

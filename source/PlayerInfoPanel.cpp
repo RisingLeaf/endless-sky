@@ -280,8 +280,8 @@ bool PlayerInfoPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	bool control = GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI);
 	bool shift = GameWindow::ModActive(GameWindow::MOD_SHIFT);
-	if(key == 'd' || key == GLFW_KEY_ESCAPE || (key == 'w' && control)
-			|| key == 'i' || command.Has(Command::INFO))
+	if(key == GLFW_KEY_D || key == GLFW_KEY_ESCAPE || (key == GLFW_KEY_W && control)
+			|| key == GLFW_KEY_I || command.Has(Command::INFO))
 	{
 		GetUI()->Pop(this);
 	}
@@ -290,7 +290,7 @@ bool PlayerInfoPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		if(panelState.Ships().size() > 1)
 			DoHelp("multiple ships", true);
 	}
-	else if(key == 's' || key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER || (control && key == GLFW_KEY_TAB))
+	else if(key == GLFW_KEY_S || key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER || (control && key == GLFW_KEY_TAB))
 	{
 		if(!panelState.Ships().empty())
 		{
@@ -398,7 +398,7 @@ bool PlayerInfoPanel::KeyDown(int key, const Command &command, bool isNewPress)
 				ScrollAbsolute(selected);
 		}
 	}
-	else if(panelState.CanEdit() && (key == 'k' || (key == 'p' && shift)) && !panelState.AllSelected().empty())
+	else if(panelState.CanEdit() && (key == GLFW_KEY_K || (key == GLFW_KEY_P && shift)) && !panelState.AllSelected().empty())
 	{
 		// Toggle the parked status for all selected ships.
 		bool allParked = true;
@@ -417,7 +417,7 @@ bool PlayerInfoPanel::KeyDown(int key, const Command &command, bool isNewPress)
 				player.ParkShip(&ship, !allParked);
 		}
 	}
-	else if(panelState.CanEdit() && (key == 'a') && !panelState.Ships().empty())
+	else if(panelState.CanEdit() && (key == GLFW_KEY_A) && !panelState.Ships().empty())
 	{
 		// Toggle the parked status for all ships except the flagship.
 		bool allParked = true;
@@ -430,7 +430,7 @@ bool PlayerInfoPanel::KeyDown(int key, const Command &command, bool isNewPress)
 			if(!it->IsDisabled() && (allParked || it.get() != flagship))
 				player.ParkShip(it.get(), !allParked);
 	}
-	else if(panelState.CanEdit() && (key == 'c') && !panelState.Ships().empty())
+	else if(panelState.CanEdit() && (key == GLFW_KEY_C) && !panelState.Ships().empty())
 	{
 		// Toggle the parked status for all ships in system except the flagship.
 		bool allParked = true;
@@ -445,14 +445,14 @@ bool PlayerInfoPanel::KeyDown(int key, const Command &command, bool isNewPress)
 				player.ParkShip(it.get(), !allParked);
 	}
 	// If "Save order" button is pressed.
-	else if(panelState.CanEdit() && panelState.CurrentSort() && key == 'v')
+	else if(panelState.CanEdit() && panelState.CurrentSort() && key == GLFW_KEY_V)
 	{
 		player.SetShipOrder(panelState.Ships());
 		panelState.SetCurrentSort(nullptr);
 	}
-	else if(command.Has(Command::MAP) || key == 'm')
+	else if(command.Has(Command::MAP) || key == GLFW_KEY_M)
 		GetUI()->Push(new MissionPanel(player));
-	else if(key == 'l' && player.HasLogs())
+	else if(key == GLFW_KEY_L && player.HasLogs())
 		GetUI()->Push(new LogbookPanel(player));
 	else if(key >= '0' && key <= '9')
 	{

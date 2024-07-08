@@ -195,9 +195,9 @@ bool PreferencesPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		HandleUp();
 	else if(key == GLFW_KEY_ENTER)
 		HandleConfirm();
-	else if(key == 'b' || command.Has(Command::MENU) || (key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
+	else if(key == GLFW_KEY_B || command.Has(Command::MENU) || (key == GLFW_KEY_W && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 		Exit();
-	else if(key == 'c' || key == 's' || key == 'p')
+	else if(key == GLFW_KEY_C || key == GLFW_KEY_S || key == GLFW_KEY_P)
 	{
 		page = key;
 		hoverItem.clear();
@@ -212,9 +212,9 @@ bool PreferencesPanel::KeyDown(int key, const Command &command, bool isNewPress)
 			RenderPluginDescription(selectedPlugin);
 		}
 	}
-	else if(key == 'o' && page == 'p')
+	else if(key == GLFW_KEY_O && page == 'p')
 		Files::OpenUserPluginFolder();
-	else if((key == 'n' || key == GLFW_KEY_PAGE_UP)
+	else if((key == GLFW_KEY_N || key == GLFW_KEY_PAGE_UP)
 		&& ((page == 'c' && currentControlsPage < CONTROLS_PAGE_COUNT - 1)
 		|| (page == 's' && currentSettingsPage < SETTINGS_PAGE_COUNT - 1)))
 	{
@@ -225,7 +225,7 @@ bool PreferencesPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		selected = 0;
 		selectedItem.clear();
 	}
-	else if((key == 'r' || key == GLFW_KEY_PAGE_DOWN)
+	else if((key == GLFW_KEY_R || key == GLFW_KEY_PAGE_DOWN)
 		&& ((page == 'c' && currentControlsPage > 0) || (page == 's' && currentSettingsPage > 0)))
 	{
 		if(page == 'c')
@@ -235,7 +235,7 @@ bool PreferencesPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		selected = 0;
 		selectedItem.clear();
 	}
-	else if((key == 'x' || key == GLFW_KEY_DELETE) && (page == 'c'))
+	else if((key == GLFW_KEY_X || key == GLFW_KEY_DELETE) && (page == 'c'))
 	{
 		if(zones[latest].Value().KeyName() != Command::MENU.KeyName())
 			Command::SetKey(zones[latest].Value(), 0);

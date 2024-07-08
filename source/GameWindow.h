@@ -89,6 +89,7 @@ public:
 	static bool KeyDown(int key);
 	static bool ModActive(uint64_t mod);
 	static const char *KeyName(int key);
+	static int KeyForName(char key);
 
 	static bool MouseState(double *x, double *y, int button = 0);
 	static void SetMousePos(double x, double y);

@@ -202,7 +202,7 @@ bool Dialog::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	auto it = KEY_MAP.find(key);
 	bool isCloseRequest = key == GLFW_KEY_ESCAPE ||
-		(key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI));
+		(key == GLFW_KEY_W && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI));
 	if((it != KEY_MAP.end() || (key >= ' ' && key <= '~')) && !isMission && (intFun || stringFun) && !isCloseRequest)
 	{
 		int ascii = (it != KEY_MAP.end()) ? it->second : key;
@@ -235,12 +235,12 @@ bool Dialog::KeyDown(int key, const Command &command, bool isNewPress)
 	else if(key == GLFW_KEY_RIGHT)
 		okIsActive = true;
 	else if(key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER || isCloseRequest
-			|| (isMission && (key == 'a' || key == 'd')))
+			|| (isMission && (key == GLFW_KEY_A || key == GLFW_KEY_D)))
 	{
 		// Shortcuts for "accept" and "decline."
-		if(key == 'a' || (!canCancel && isCloseRequest))
+		if(key == GLFW_KEY_A || (!canCancel && isCloseRequest))
 			okIsActive = true;
-		if(key == 'd' || (canCancel && isCloseRequest))
+		if(key == GLFW_KEY_D || (canCancel && isCloseRequest))
 			okIsActive = false;
 		if(boolFun)
 		{
@@ -261,7 +261,7 @@ bool Dialog::KeyDown(int key, const Command &command, bool isNewPress)
 		else
 			GetUI()->PopThrough(this);
 	}
-	else if((key == 'm' || command.Has(Command::MAP)) && system && player)
+	else if((key == GLFW_KEY_M || command.Has(Command::MAP)) && system && player)
 		GetUI()->Push(new MapDetailPanel(*player, system));
 	else
 		return false;

@@ -236,9 +236,9 @@ bool TradingPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		Buy(1);
 	else if(key == GLFW_KEY_MINUS || key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_BACKSPACE || key == GLFW_KEY_DELETE)
 		Buy(-1);
-	else if(key == 'u' || key == 'B' || (key == 'b' && GameWindow::ModActive(GameWindow::MOD_SHIFT)))
+	else if(key == GLFW_KEY_U || key == GLFW_KEY_B || (key == GLFW_KEY_B && GameWindow::ModActive(GameWindow::MOD_SHIFT)))
 		Buy(1000000000);
-	else if(key == 'e' || key == 'S' || (key == 's' && GameWindow::ModActive(GameWindow::MOD_SHIFT)))
+	else if(key == GLFW_KEY_E || key == GLFW_KEY_S || (key == GLFW_KEY_S && GameWindow::ModActive(GameWindow::MOD_SHIFT)))
 	{
 		for(const auto &it : player.Cargo().Commodities())
 		{

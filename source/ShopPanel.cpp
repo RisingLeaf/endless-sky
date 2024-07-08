@@ -286,9 +286,9 @@ void ShopPanel::ToggleCargo()
 // Only override the ones you need; the default action is to return false.
 bool ShopPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
-	bool toStorage = planet && planet->HasOutfitter() && (key == 'r' || key == 'u');
-	if(key == 'l' || key == 'd' || key == GLFW_KEY_ESCAPE
-			|| (key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
+	bool toStorage = planet && planet->HasOutfitter() && (key == GLFW_KEY_R || key == GLFW_KEY_U);
+	if(key == GLFW_KEY_L || key == GLFW_KEY_D || key == GLFW_KEY_ESCAPE
+			|| (key == GLFW_KEY_W && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 	{
 		if(!isOutfitter)
 			player.UpdateCargoCapacities();
@@ -316,12 +316,12 @@ bool ShopPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		else
 			GetUI()->Push(new MapShipyardPanel(player));
 	}
-	else if(key == 'b' || key == 'i' || key == 'c')
+	else if(key == GLFW_KEY_B || key == GLFW_KEY_I || key == GLFW_KEY_C)
 	{
-		const auto result = CanBuy(key == 'i' || key == 'c');
+		const auto result = CanBuy(key == GLFW_KEY_I || key == GLFW_KEY_C);
 		if(result)
 		{
-			Buy(key == 'i' || key == 'c');
+			Buy(key == GLFW_KEY_I || key == GLFW_KEY_C);
 			// Ship-based updates to cargo are handled when leaving.
 			// Ship-based selection changes are asynchronous, and handled by ShipyardPanel.
 			if(isOutfitter)
@@ -333,7 +333,7 @@ bool ShopPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		else if(result.HasMessage())
 			GetUI()->Push(new Dialog(result.Message()));
 	}
-	else if(key == 's' || toStorage)
+	else if(key == GLFW_KEY_S || toStorage)
 	{
 		if(!CanSell(toStorage))
 			FailSell(toStorage);
@@ -431,7 +431,7 @@ bool ShopPanel::KeyDown(int key, const Command &command, bool isNewPress)
 	}
 	else if(key == GLFW_KEY_TAB)
 		activePane = (activePane == ShopPane::Main ? ShopPane::Sidebar : ShopPane::Main);
-	else if(key == 'f')
+	else if(key == GLFW_KEY_F)
 		GetUI()->Push(new Dialog(this, &ShopPanel::DoFind, "Search for:"));
 	else
 		return false;

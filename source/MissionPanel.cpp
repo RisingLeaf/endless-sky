@@ -286,12 +286,12 @@ bool MissionPanel::KeyDown(int key, const Command &command, bool isNewPress)
 		DoHelp("jobs", true);
 		DoHelp("map advanced", true);
 	}
-	else if(key == 'a' && CanAccept())
+	else if(key == GLFW_KEY_A && CanAccept())
 	{
 		Accept(GameWindow::ModActive(GameWindow::MOD_CONTROL));
 		return true;
 	}
-	else if(key == 'A' || (key == 'a' && GameWindow::ModActive(GameWindow::MOD_SHIFT)))
+	else if(key == GLFW_KEY_A || (key == GLFW_KEY_A && GameWindow::ModActive(GameWindow::MOD_SHIFT)))
 	{
 		if(acceptedIt != accepted.end() && acceptedIt->IsVisible())
 			GetUI()->Push(new Dialog(this, &MissionPanel::AbortMission,

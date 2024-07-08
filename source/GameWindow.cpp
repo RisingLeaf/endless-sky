@@ -69,10 +69,23 @@ namespace {
 	{
 		if(GLFW_KEY_TO_MOD.count(key))
 		{
-			if(action == GLFW_RELEASE)
-				currentMods &= ~GLFW_KEY_TO_MOD.at(key);
+			if(key != GLFW_KEY_CAPS_LOCK)
+			{
+				if(action == GLFW_RELEASE)
+					currentMods &= ~GLFW_KEY_TO_MOD.at(key);
+				else
+					currentMods |= GLFW_KEY_TO_MOD.at(key);
+			}
 			else
-				currentMods |= GLFW_KEY_TO_MOD.at(key);
+			{
+				if(action == GLFW_PRESS)
+				{
+					if(currentMods & GameWindow::MOD_CAPS)
+						currentMods &= ~GameWindow::MOD_CAPS;
+					else
+						currentMods |= GameWindow::MOD_CAPS;
+				}
+			}
 		}
 		GameWindow::InputEvent event;
 		event.type = action == GLFW_PRESS ? GameWindow::InputEventType::KEY_DOWN
@@ -153,6 +166,35 @@ namespace {
 		{GLFW_KEY_F10, "F10"},
 		{GLFW_KEY_F11, "F11"},
 		{GLFW_KEY_F12, "F12"},
+	};
+
+	const std::map<char, int> KEY_FOR_NAMES = {
+		{'a', GLFW_KEY_A},
+		{'b', GLFW_KEY_B},
+		{'c', GLFW_KEY_C},
+		{'d', GLFW_KEY_D},
+		{'e', GLFW_KEY_E},
+		{'f', GLFW_KEY_F},
+		{'g', GLFW_KEY_G},
+		{'h', GLFW_KEY_H},
+		{'i', GLFW_KEY_I},
+		{'j', GLFW_KEY_J},
+		{'k', GLFW_KEY_K},
+		{'l', GLFW_KEY_L},
+		{'m', GLFW_KEY_M},
+		{'n', GLFW_KEY_N},
+		{'o', GLFW_KEY_O},
+		{'p', GLFW_KEY_P},
+		{'q', GLFW_KEY_Q},
+		{'r', GLFW_KEY_R},
+		{'s', GLFW_KEY_S},
+		{'t', GLFW_KEY_T},
+		{'u', GLFW_KEY_U},
+		{'v', GLFW_KEY_V},
+		{'w', GLFW_KEY_W},
+		{'x', GLFW_KEY_X},
+		{'y', GLFW_KEY_Y},
+		{'z', GLFW_KEY_Z}
 	};
 }
 
@@ -513,6 +555,15 @@ const char *GameWindow::KeyName(int key)
 	if(EXTRA_KEY_NAMES.count(key))
 		return EXTRA_KEY_NAMES.at(key);
 	return "(?)";
+}
+
+
+
+int GameWindow::KeyForName(char key)
+{
+	if(KEY_FOR_NAMES.count(key))
+		return KEY_FOR_NAMES.at(key);
+	return -1;
 }
 
 

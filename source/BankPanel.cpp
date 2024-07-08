@@ -291,7 +291,7 @@ bool BankPanel::KeyDown(int key, const Command &command, bool isNewPress)
 			"Borrow how many credits?"));
 		DoHelp("bank advanced");
 	}
-	else if(key == 'a')
+	else if(key == GLFW_KEY_A)
 	{
 		// Pay all mortgages, skipping any you cannot afford to pay entirely.
 		unsigned i = 0;

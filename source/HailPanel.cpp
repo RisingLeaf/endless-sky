@@ -288,14 +288,14 @@ void HailPanel::Draw()
 bool HailPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	bool shipIsEnemy = (ship && ship->GetGovernment()->IsEnemy());
-	if(key == 'd' || key == GLFW_KEY_ESCAPE || key == GLFW_KEY_ENTER
-		|| (key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
+	if(key == GLFW_KEY_D || key == GLFW_KEY_ESCAPE || key == GLFW_KEY_ENTER
+		|| (key == GLFW_KEY_W && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 	{
 		if(bribeCallback && bribed)
 			bribeCallback(bribed);
 		GetUI()->Pop(this);
 	}
-	else if(key == 't' && hasLanguage && planet)
+	else if(key == GLFW_KEY_T && hasLanguage && planet)
 	{
 		if(GameData::GetPolitics().HasDominated(planet))
 		{
@@ -314,7 +314,7 @@ bool HailPanel::KeyDown(int key, const Command &command, bool isNewPress)
 			SetMessage(planet->DemandTribute(player));
 		return true;
 	}
-	else if(key == 'h' && hasLanguage && ship && canAssistPlayer)
+	else if(key == GLFW_KEY_H && hasLanguage && ship && canAssistPlayer)
 	{
 		if(shipIsEnemy || ship->IsDisabled())
 			return false;
@@ -340,7 +340,7 @@ bool HailPanel::KeyDown(int key, const Command &command, bool isNewPress)
 				SetMessage("You don't seem to be in need of repairs or fuel assistance.");
 		}
 	}
-	else if((key == 'b' || key == 'o') && hasLanguage)
+	else if((key == GLFW_KEY_B || key == GLFW_KEY_O) && hasLanguage)
 	{
 		// Make sure it actually makes sense to bribe this ship.
 		if((ship && !shipIsEnemy) || (planet && planet->CanLand()))

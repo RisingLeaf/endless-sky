@@ -119,13 +119,13 @@ bool HiringPanel::KeyDown(int key, const Command &command, bool isNewPress)
 	if(!player.Flagship())
 		return false;
 
-	if(key == 'h' || key == GLFW_KEY_EQUAL || key == GLFW_KEY_KP_ADD
+	if(key == GLFW_KEY_H || key == GLFW_KEY_EQUAL || key == GLFW_KEY_KP_ADD
 		|| key == GLFW_KEY_ENTER || key == GLFW_KEY_SPACE)
 	{
 		player.Flagship()->AddCrew(min(maxHire, Modifier()));
 		player.UpdateCargoCapacities();
 	}
-	else if(key == 'f' || key == GLFW_KEY_MINUS || key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_BACKSPACE || key == GLFW_KEY_DELETE)
+	else if(key == GLFW_KEY_F || key == GLFW_KEY_MINUS || key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_BACKSPACE || key == GLFW_KEY_DELETE)
 	{
 		player.Flagship()->AddCrew(-min(maxFire, Modifier()));
 		player.UpdateCargoCapacities();
