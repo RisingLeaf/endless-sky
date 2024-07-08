@@ -77,6 +77,9 @@ void Politics::Reset()
 
 bool Politics::IsEnemy(const Government *first, const Government *second) const
 {
+	if(!first || !second)
+		return false;
+
 	if(first == second)
 		return false;
 
@@ -108,6 +111,9 @@ bool Politics::IsEnemy(const Government *first, const Government *second) const
 // reputation.
 void Politics::Offend(const Government *gov, int eventType, int count)
 {
+	if(!gov)
+		return;
+
 	if(gov->IsPlayer())
 		return;
 
@@ -160,12 +166,11 @@ bool Politics::CanLand(const Ship &ship, const Planet *planet) const
 {
 	if(!planet || !planet->GetSystem())
 		return false;
-	if(!planet->IsInhabited())
-		return true;
 
 	const Government *gov = ship.GetGovernment();
 	if(!gov->IsPlayer())
-		return !IsEnemy(gov, planet->GetGovernment());
+		return !ship.IsRestrictedFrom(*planet) &&
+			(!planet->IsInhabited() || !IsEnemy(gov, planet->GetGovernment()));
 
 	return CanLand(planet);
 }
@@ -247,12 +252,44 @@ string Politics::Fine(PlayerInfo &player, const Government *gov, int scan, const
 			continue;
 		if(ship->GetSystem() != player.GetSystem())
 			continue;
+		const Planet *planet = player.GetPlanet();
+		if(planet && ship->GetPlanet() != planet)
+			continue;
 
 		int failedMissions = 0;
 
+		// Illegal passengers can only be detected by planetary security.
+		if(!scan)
+		{
+			int64_t fine = ship->Cargo().IllegalPassengersFine(gov, player);
+			if((fine > maxFine && maxFine >= 0) || fine < 0)
+			{
+				maxFine = fine;
+				reason = " for carrying illegal passengers.";
+
+				for(const Mission &mission : player.Missions())
+				{
+					if(mission.IsFailed(player))
+						continue;
+
+					string fineMessage = mission.FineMessage();
+					if(!fineMessage.empty())
+					{
+						reason = ".\n\t";
+						reason.append(fineMessage);
+					}
+					// Fail any missions with illegal passengers and "stealth" set.
+					if(mission.Fine() > 0 && mission.Passengers() && mission.FailIfDiscovered())
+					{
+						player.FailMission(mission);
+						++failedMissions;
+					}
+				}
+			}
+		}
 		if((!scan || (scan & ShipEvent::SCAN_CARGO)) && !EvadesCargoScan(*ship))
 		{
-			int64_t fine = ship->Cargo().IllegalCargoFine(gov);
+			int64_t fine = ship->Cargo().IllegalCargoFine(gov, player);
 			if((fine > maxFine && maxFine >= 0) || fine < 0)
 			{
 				maxFine = fine;
@@ -260,18 +297,18 @@ string Politics::Fine(PlayerInfo &player, const Government *gov, int scan, const
 
 				for(const Mission &mission : player.Missions())
 				{
-					if(mission.IsFailed())
+					if(mission.IsFailed(player))
 						continue;
 
-					// Append the illegalCargoMessage from each applicable mission, if available
-					string illegalCargoMessage = mission.IllegalCargoMessage();
-					if(!illegalCargoMessage.empty())
+					// Append the fineMessage from each applicable mission, if available.
+					string fineMessage = mission.FineMessage();
+					if(!fineMessage.empty())
 					{
 						reason = ".\n\t";
-						reason.append(illegalCargoMessage);
+						reason.append(fineMessage);
 					}
-					// Fail any missions with illegal cargo and "Stealth" set
-					if(mission.IllegalCargoFine() > 0 && mission.FailIfDiscovered())
+					// Fail any missions with illegal cargo and "stealth" set.
+					if(mission.Fine() > 0 && mission.CargoSize() && mission.FailIfDiscovered())
 					{
 						player.FailMission(mission);
 						++failedMissions;
@@ -280,6 +317,7 @@ string Politics::Fine(PlayerInfo &player, const Government *gov, int scan, const
 			}
 		}
 		if((!scan || (scan & ShipEvent::SCAN_OUTFITS)) && !EvadesOutfitScan(*ship))
+		{
 			for(const auto &it : ship->Outfits())
 				if(it.second)
 				{
@@ -292,9 +330,20 @@ string Politics::Fine(PlayerInfo &player, const Government *gov, int scan, const
 						reason = " for having illegal outfits installed on your ship.";
 					}
 				}
+
+			int shipFine = gov->Fines(ship.get());
+			if(gov->Condemns(ship.get()))
+				shipFine = -1;
+			if((shipFine > maxFine && maxFine >= 0) || shipFine < 0)
+			{
+				maxFine = shipFine;
+				reason = " for flying an illegal ship.";
+			}
+		}
 		if(failedMissions && maxFine > 0)
 		{
-			reason += "\n\tYou failed " + Format::Number(failedMissions) + ((failedMissions > 1) ? " missions" : " mission")
+			reason += "\n\tYou failed " + Format::Number(failedMissions)
+				+ ((failedMissions > 1) ? " missions" : " mission")
 				+ " after your illegal cargo was discovered.";
 		}
 	}
