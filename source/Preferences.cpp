@@ -20,11 +20,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "DataNode.h"
 #include "DataWriter.h"
 #include "Files.h"
+#include "GameData.h"
 #include "GameWindow.h"
+#include "Interface.h"
 #include "Logger.h"
 #include "Screen.h"
 
 #include <algorithm>
+#include <cstddef>
 #include <map>
 
 using namespace std;
@@ -40,8 +43,7 @@ namespace {
 	const vector<string> DATEFMT_OPTIONS = {"dd/mm/yyyy", "mm/dd/yyyy", "yyyy-mm-dd"};
 	int dateFormatIndex = 0;
 
-	const vector<double> ZOOMS = {.25, .35, .50, .70, 1.00, 1.40, 2.00};
-	int zoomIndex = 4;
+	size_t zoomIndex = 4;
 	constexpr double VOLUME_SCALE = .25;
 
 	// Default to fullscreen.
@@ -51,6 +53,9 @@ namespace {
 	// Enable standard VSync by default.
 	const vector<string> VSYNC_SETTINGS = {"off", "on", "adaptive"};
 	int vsyncIndex = 1;
+
+	const vector<string> CAMERA_ACCELERATION_SETTINGS = {"off", "on", "reversed"};
+	int cameraAccelerationIndex = 1;
 
 	class OverlaySetting {
 	public:
@@ -86,6 +91,9 @@ namespace {
 					state = Preferences::OverlayState::DAMAGED;
 					break;
 				case Preferences::OverlayState::DAMAGED:
+					state = Preferences::OverlayState::ON_HIT;
+					break;
+				case Preferences::OverlayState::ON_HIT:
 					state = Preferences::OverlayState::OFF;
 					break;
 				case Preferences::OverlayState::DISABLED:
@@ -103,7 +111,7 @@ namespace {
 		Preferences::OverlayState state = Preferences::OverlayState::OFF;
 	};
 
-	const vector<string> OverlaySetting::OVERLAY_SETTINGS = {"off", "always on", "damaged", "--"};
+	const vector<string> OverlaySetting::OVERLAY_SETTINGS = {"off", "always on", "damaged", "--", "on hit"};
 
 	map<Preferences::OverlayType, OverlaySetting> statusOverlaySettings = {
 		{Preferences::OverlayType::ALL, Preferences::OverlayState::OFF},
@@ -146,6 +154,7 @@ void Preferences::Load()
 	// values for settings that are off by default.
 	settings["Landing zoom"] = true;
 	settings["Render motion blur"] = true;
+	settings["Cloaked ship outlines"] = true;
 	settings[FRUGAL_ESCORTS] = true;
 	settings[EXPEND_AMMO] = true;
 	settings["Damaged fighters retreat"] = true;
@@ -155,12 +164,12 @@ void Preferences::Load()
 	settings["Show planet labels"] = true;
 	settings["Show asteroid scanner overlay"] = true;
 	settings["Show hyperspace flash"] = true;
-	settings["Extended jump effects"] = true;
 	settings["Draw background haze"] = true;
 	settings["Draw starfield"] = true;
 	settings["Hide unexplored map regions"] = true;
 	settings["Turrets focus fire"] = true;
 	settings["Ship outlines in shops"] = true;
+	settings["Ship outlines in HUD"] = true;
 	settings["Extra fleet status messages"] = true;
 	settings["Target asteroid based on"] = true;
 
@@ -180,9 +189,11 @@ void Preferences::Load()
 		else if(node.Token(0) == "Flotsam collection")
 			flotsamIndex = max<int>(0, min<int>(node.Value(1), FLOTSAM_SETTINGS.size() - 1));
 		else if(node.Token(0) == "view zoom")
-			zoomIndex = max<int>(0, min<int>(node.Value(1), ZOOMS.size() - 1));
+			zoomIndex = max(0., node.Value(1));
 		else if(node.Token(0) == "vsync")
 			vsyncIndex = max<int>(0, min<int>(node.Value(1), VSYNC_SETTINGS.size() - 1));
+		else if(node.Token(0) == "camera acceleration")
+			cameraAccelerationIndex = max<int>(0, min<int>(node.Value(1), CAMERA_ACCELERATION_SETTINGS.size() - 1));
 		else if(node.Token(0) == "Show all status overlays")
 			statusOverlaySettings[OverlayType::ALL].SetState(node.Value(1));
 		else if(node.Token(0) == "Show flagship overlay")
@@ -236,7 +247,7 @@ void Preferences::Load()
 	}
 
 	// For people updating from a version after 0.10.1 (where "Flagship flotsam collection" was added),
-	// but before 0.10.3 (when it was replaaced with "Flotsam Collection").
+	// but before 0.10.3 (when it was replaced with "Flotsam Collection").
 	it = settings.find("Flagship flotsam collection");
 	if(it != settings.end())
 	{
@@ -260,6 +271,7 @@ void Preferences::Save()
 	out.Write("Flotsam collection", flotsamIndex);
 	out.Write("view zoom", zoomIndex);
 	out.Write("vsync", vsyncIndex);
+	out.Write("camera acceleration", cameraAccelerationIndex);
 	out.Write("date format", dateFormatIndex);
 	out.Write("Show all status overlays", statusOverlaySettings[OverlayType::ALL].ToInt());
 	out.Write("Show flagship overlay", statusOverlaySettings[OverlayType::FLAGSHIP].ToInt());
@@ -353,14 +365,18 @@ void Preferences::SetScrollSpeed(int speed)
 // View zoom.
 double Preferences::ViewZoom()
 {
-	return ZOOMS[zoomIndex];
+	const auto &zooms = GameData::Interfaces().Get("main view")->GetList("zooms");
+	if(zoomIndex >= zooms.size())
+		return zooms.empty() ? 1. : zooms.back();
+	return zooms[zoomIndex];
 }
 
 
 
 bool Preferences::ZoomViewIn()
 {
-	if(zoomIndex == static_cast<int>(ZOOMS.size() - 1))
+	const auto &zooms = GameData::Interfaces().Get("main view")->GetList("zooms");
+	if(zooms.empty() || zoomIndex >= zooms.size() - 1)
 		return false;
 
 	++zoomIndex;
@@ -371,8 +387,14 @@ bool Preferences::ZoomViewIn()
 
 bool Preferences::ZoomViewOut()
 {
-	if(zoomIndex == 0)
+	const auto &zooms = GameData::Interfaces().Get("main view")->GetList("zooms");
+	if(!zoomIndex || zooms.size() <= 1)
 		return false;
+
+	// Make sure that we're actually zooming out. This can happen if the zoom index
+	// is out of range.
+	if(zoomIndex >= zooms.size())
+		zoomIndex = zooms.size() - 1;
 
 	--zoomIndex;
 	return true;
@@ -382,21 +404,25 @@ bool Preferences::ZoomViewOut()
 
 double Preferences::MinViewZoom()
 {
-	return ZOOMS[0];
+	const auto &zooms = GameData::Interfaces().Get("main view")->GetList("zooms");
+	return zooms.empty() ? 1. : zooms.front();
 }
 
 
 
 double Preferences::MaxViewZoom()
 {
-	return ZOOMS[ZOOMS.size() - 1];
+	const auto &zooms = GameData::Interfaces().Get("main view")->GetList("zooms");
+	return zooms.empty() ? 1. : zooms.back();
 }
 
 
 
 const vector<double> &Preferences::Zooms()
 {
-	return ZOOMS;
+	static vector<double> DEFAULT_ZOOMS{1.};
+	const auto &zooms = GameData::Interfaces().Get("main view")->GetList("zooms");
+	return zooms.empty() ? DEFAULT_ZOOMS : zooms;
 }
 
 
@@ -505,11 +531,32 @@ const string &Preferences::VSyncSetting()
 
 
 
+void Preferences::ToggleCameraAcceleration()
+{
+	cameraAccelerationIndex = (cameraAccelerationIndex + 1) % CAMERA_ACCELERATION_SETTINGS.size();
+}
+
+
+
+Preferences::CameraAccel Preferences::CameraAcceleration()
+{
+	return static_cast<CameraAccel>(cameraAccelerationIndex);
+}
+
+
+
+const string &Preferences::CameraAccelerationSetting()
+{
+	return CAMERA_ACCELERATION_SETTINGS[cameraAccelerationIndex];
+}
+
+
+
 void Preferences::CycleStatusOverlays(Preferences::OverlayType type)
 {
-	// Calling OverlaySetting::Increment when the state is DAMAGED will cycle to off.
+	// Calling OverlaySetting::Increment when the state is ON_HIT will cycle to off.
 	// But, for the ALL overlay type, allow it to cycle to DISABLED.
-	if(type == OverlayType::ALL && statusOverlaySettings[OverlayType::ALL] == OverlayState::DAMAGED)
+	if(type == OverlayType::ALL && statusOverlaySettings[OverlayType::ALL] == OverlayState::ON_HIT)
 		statusOverlaySettings[OverlayType::ALL] = OverlayState::DISABLED;
 	// If one of the child types was clicked, but the all overlay state is the one currently being used,
 	// set the all overlay state to DISABLED but do not increment any of the child settings.
@@ -583,7 +630,6 @@ const string &Preferences::AutoFireSetting()
 {
 	return AUTO_FIRE_SETTINGS[autoFireIndex];
 }
-
 
 
 

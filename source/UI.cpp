@@ -44,11 +44,11 @@ bool UI::Handle(const GameWindow::InputEvent &event)
 		if(event.type == GameWindow::InputEventType::MOUSE_MOTION)
 		{
 			if(GameWindow::MouseState(nullptr, nullptr))
-				handled = (*it)->Drag(
+				handled = (*it)->DoDrag(
 					event.x,
 					event.y);
 			else
-				handled = (*it)->Hover(
+				handled = (*it)->DoHover(
 					Screen::Left() + event.x * 100 / Screen::Zoom(),
 					Screen::Top() + event.y * 100 / Screen::Zoom());
 		}
@@ -60,23 +60,23 @@ bool UI::Handle(const GameWindow::InputEvent &event)
 			{
 				handled = (*it)->ZoneClick(Point(x, y));
 				if(!handled)
-					handled = (*it)->Click(x, y, 1);
+					handled = (*it)->DoClick(x, y, 1);
 			}
 			else if(event.key == GLFW_MOUSE_BUTTON_RIGHT)
-				handled = (*it)->RClick(x, y);
+				handled = (*it)->DoRClick(x, y);
 		}
 		else if(event.type == GameWindow::InputEventType::MOUSEBUTTON_UP)
 		{
 			int x = Screen::Left() + event.x * 100 / Screen::Zoom();
 			int y = Screen::Top() + event.y * 100 / Screen::Zoom();
-			handled = (*it)->Release(x, y);
+			handled = (*it)->DoRelease(x, y);
 		}
 		else if(event.type == GameWindow::InputEventType::MOUSEWHEEL)
-			handled = (*it)->Scroll(event.x, event.y);
+			handled = (*it)->DoScroll(event.x, event.y);
 		else if(event.type == GameWindow::InputEventType::KEY_DOWN)
 		{
 			Command command(event.key);
-			handled = (*it)->KeyDown(event.key, event.mods, command, true);
+			handled = (*it)->DoKeyDown(event.key, event.mods, command, true);
 		}
 
 		// If this panel does not want anything below it to receive events, do
@@ -121,7 +121,7 @@ void UI::DrawAll()
 			break;
 
 	for( ; it != stack.end(); ++it)
-		(*it)->Draw();
+		(*it)->DoDraw();
 }
 
 
@@ -136,8 +136,8 @@ void UI::Push(Panel *panel)
 
 void UI::Push(const shared_ptr<Panel> &panel)
 {
-	panel->SetUI(this);
 	toPush.push_back(panel);
+	panel->SetUI(this);
 }
 
 
@@ -286,9 +286,13 @@ void UI::PushOrPop()
 		for(auto it = stack.begin(); it != stack.end(); ++it)
 			if(it->get() == panel)
 			{
-				it = stack.erase(it);
+				stack.erase(it);
 				break;
 			}
 	}
 	toPop.clear();
+
+	// Each panel potentially has its own children, which could be modified.
+	for(auto &panel : stack)
+		panel->AddOrRemove();
 }

@@ -160,7 +160,7 @@ namespace {
 
 
 
-bool GameWindow::Init()
+bool GameWindow::Init(bool headless)
 {
 	// This needs to be called before any other glfw commands.
 	if(!glfwInit())

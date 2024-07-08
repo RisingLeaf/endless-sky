@@ -16,6 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "Fleet.h"
 
 #include "DataNode.h"
+#include "FormationPattern.h"
 #include "GameData.h"
 #include "Government.h"
 #include "Logger.h"
@@ -109,6 +110,8 @@ void Fleet::Load(const DataNode &node)
 			cargo.LoadSingle(child);
 		else if(key == "personality")
 			personality.Load(child);
+		else if(key == "formation" && hasValue)
+			formation = GameData::Formations().Get(child.Token(1));
 		else if(key == "variant" && !remove)
 		{
 			if(resetVariants && !add)
@@ -250,7 +253,7 @@ void Fleet::Enter(const System &system, list<shared_ptr<Ship>> &ships, const Pla
 		vector<const StellarObject *> stellarVector;
 		if(!personality.IsSurveillance())
 			for(const StellarObject &object : system.Objects())
-				if(object.HasValidPlanet() && object.GetPlanet()->HasSpaceport()
+				if(object.HasValidPlanet() && object.GetPlanet()->IsInhabited()
 						&& (unrestricted || !government->IsRestrictedFrom(*object.GetPlanet()))
 						&& !object.GetPlanet()->GetGovernment()->IsEnemy(government))
 					stellarVector.push_back(&object);
@@ -306,7 +309,7 @@ void Fleet::Enter(const System &system, list<shared_ptr<Ship>> &ships, const Pla
 				if(object.GetPlanet() == planet)
 					stellarObjects.push_back(&object);
 
-			// If the souce planet isn't in the source for some reason, bail out.
+			// If the source planet isn't in the source for some reason, bail out.
 			if(stellarObjects.empty())
 			{
 				// Log this error.
@@ -425,11 +428,10 @@ void Fleet::Place(const System &system, list<shared_ptr<Ship>> &ships, bool carr
 // Do the randomization to make a ship enter or be in the given system.
 const System *Fleet::Enter(const System &system, Ship &ship, const System *source)
 {
-	bool unrestricted = ship.GetPersonality().IsUnrestricted();
-	bool canEnter = (source != nullptr || unrestricted || any_of(system.Links().begin(), system.Links().end(),
+	bool canEnter = (source != nullptr || any_of(system.Links().begin(), system.Links().end(),
 		[&ship](const System *link) noexcept -> bool
 		{
-			return !ship.GetGovernment()->IsRestrictedFrom(*link);
+			return !ship.IsRestrictedFrom(*link);
 		}
 	));
 
@@ -443,9 +445,8 @@ const System *Fleet::Enter(const System &system, Ship &ship, const System *sourc
 	if(!source)
 	{
 		vector<const System *> validSystems;
-		const Government *gov = ship.GetGovernment();
 		for(const System *link : system.Links())
-			if(unrestricted || !gov->IsRestrictedFrom(*link))
+			if(!ship.IsRestrictedFrom(*link))
 				validSystems.emplace_back(link);
 		auto it = validSystems.cbegin();
 		advance(it, Random::Int(validSystems.size()));
@@ -492,7 +493,7 @@ pair<Point, double> Fleet::ChooseCenter(const System &system)
 {
 	auto centers = vector<pair<Point, double>>();
 	for(const StellarObject &object : system.Objects())
-		if(object.HasValidPlanet() && object.GetPlanet()->HasSpaceport())
+		if(object.HasValidPlanet() && object.GetPlanet()->IsInhabited())
 			centers.emplace_back(object.Position(), object.Radius());
 
 	if(centers.empty())
@@ -527,6 +528,7 @@ vector<shared_ptr<Ship>> Fleet::Instantiate(const vector<const Ship *> &ships) c
 			ship->SetPersonality(fighterPersonality);
 		else
 			ship->SetPersonality(personality);
+		ship->SetFormationPattern(formation);
 
 		placed.push_back(ship);
 	}

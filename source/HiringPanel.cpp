@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "HiringPanel.h"
 
+#include "Command.h"
 #include "GameData.h"
 #include "Information.h"
 #include "Interface.h"
@@ -109,6 +110,12 @@ void HiringPanel::Draw()
 
 bool HiringPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
 {
+	if(command.Has(Command::HELP))
+	{
+		DoHelp("hiring", true);
+		return true;
+	}
+
 	if(!player.Flagship())
 		return false;
 
@@ -123,6 +130,8 @@ bool HiringPanel::KeyDown(int key, uint16_t mod, const Command &command, bool is
 		player.Flagship()->AddCrew(-min(maxFire, Modifier()));
 		player.UpdateCargoCapacities();
 	}
+	else
+		return false;
 
-	return false;
+	return true;
 }

@@ -61,7 +61,7 @@ namespace {
 
 		if(otherCount > 0 && maxCount > 0)
 		{
-			list[maxCount - 1].second = "(" + to_string(otherCount + 1) + " Others)";
+			list[maxCount - 1].second = "(" + to_string(otherCount + 1) + " others)";
 			while(otherCount--)
 			{
 				list[maxCount - 1].first += list.back().first;
@@ -284,6 +284,11 @@ bool PlayerInfoPanel::KeyDown(int key, uint16_t mod, const Command &command, boo
 			|| key == 'i' || command.Has(Command::INFO))
 	{
 		GetUI()->Pop(this);
+	}
+	else if(command.Has(Command::HELP))
+	{
+		if(panelState.Ships().size() > 1)
+			DoHelp("multiple ships", true);
 	}
 	else if(key == 's' || key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER || (control && key == GLFW_KEY_TAB))
 	{
@@ -661,13 +666,13 @@ void PlayerInfoPanel::DrawPlayer(const Rectangle &bounds)
 	vector<pair<int64_t, string>> salary;
 	for(const auto &it : player.Accounts().SalariesIncome())
 		salary.emplace_back(it.second, it.first);
-	sort(salary.begin(), salary.end());
+	sort(salary.begin(), salary.end(), std::greater<>());
 	DrawList(salary, table, "salary:", 4);
 
 	vector<pair<int64_t, string>> tribute;
 	for(const auto &it : player.GetTribute())
 		tribute.emplace_back(it.second, it.first->TrueName());
-	sort(tribute.begin(), tribute.end());
+	sort(tribute.begin(), tribute.end(), std::greater<>());
 	DrawList(tribute, table, "tribute:", 4);
 
 	int maxRows = static_cast<int>(250. - 30. - table.GetPoint().Y()) / 20;
@@ -768,7 +773,7 @@ void PlayerInfoPanel::DrawFleet(const Rectangle &bounds)
 		table.Draw(ship.DisplayModelName());
 
 		const System *system = ship.GetSystem();
-		table.Draw(system ? system->Name() : "");
+		table.Draw(system ? (player.KnowsName(*system) ? system->Name() : "???") : "");
 
 		string shields = to_string(static_cast<int>(100. * max(0., ship.Shields()))) + "%";
 		table.Draw(shields);
@@ -811,6 +816,9 @@ void PlayerInfoPanel::DrawFleet(const Rectangle &bounds)
 // Sorts the player's fleet given a comparator function (based on column).
 void PlayerInfoPanel::SortShips(InfoPanelState::ShipComparator *shipComparator)
 {
+	if(panelState.Ships().empty())
+		return;
+
 	// Clicking on a sort column twice reverses the comparison.
 	if(panelState.CurrentSort() == shipComparator)
 		shipComparator = GetReverseCompareFrom(*shipComparator);
@@ -839,7 +847,12 @@ void PlayerInfoPanel::SortShips(InfoPanelState::ShipComparator *shipComparator)
 		shipComparator
 	);
 
+	// Ships are now sorted.
+	panelState.SetCurrentSort(shipComparator);
+
 	// Load the same selected ships from before the sort.
+	if(selectedShips.empty())
+		return;
 	auto it = selectedShips.begin();
 	for(size_t i = 0; i < panelState.Ships().size(); ++i)
 		if(panelState.Ships()[i] == *it)
@@ -853,9 +866,6 @@ void PlayerInfoPanel::SortShips(InfoPanelState::ShipComparator *shipComparator)
 			if(it == selectedShips.end())
 				break;
 		}
-
-	// Ships are now sorted.
-	panelState.SetCurrentSort(shipComparator);
 }
 
 
@@ -913,6 +923,6 @@ PlayerInfoPanel::SortableColumn::SortableColumn(
 	Layout layout,
 	InfoPanelState::ShipComparator *shipSort
 )
-: name(name), offset(offset), endX(endX), layout(layout), shipSort(shipSort)
+	: name(name), offset(offset), endX(endX), layout(layout), shipSort(shipSort)
 {
 }

@@ -59,7 +59,8 @@ public:
 	};
 
 public:
-	static bool Init();
+	static std::string SDLVersions();
+	static bool Init(bool headless);
 	static void Quit();
 
 	// Paint the next frame in the main window.

@@ -36,11 +36,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "ShipEvent.h"
 #include "ShipInfoPanel.h"
 #include "System.h"
-#include "text/truncate.hpp"
 #include "UI.h"
 
 #include <algorithm>
 #include <GLFW/glfw3.h>
+#include <utility>
 
 using namespace std;
 
