@@ -1,31 +1,31 @@
-"Show main menu" 27
-"Forward thrust" 1073741906
-"Turn left" 1073741904
-"Turn right" 1073741903
+"Show main menu" 256
+"Forward thrust" 265
+"Turn left" 263
+"Turn right" 262
 "Auto steer" 101
-"Reverse" 1073741905
-"Fire primary weapon" 9
-"Fire secondary weapon" 113
-"Select secondary weapon" 119
-"Land on planet / station" 108
-"Board selected ship" 98
-"Talk to selected ship" 116
-"Scan selected ship" 115
-"Initiate hyperspace jump" 106
-"Select next ship" 110
-"Select nearest hostile ship" 114
-"Select nearest asteroid" 118
-"Deploy / recall fighters" 100
-"Fire afterburner" 97
-"Toggle cloaking device" 99
-"View star map" 109
-"View player info" 105
+"Reverse" 264
+"Fire primary weapon" 258
+"Fire secondary weapon" 81
+"Select secondary weapon" 69
+"Land on planet / station" 76
+"Board selected ship" 66
+"Talk to selected ship" 84
+"Scan selected ship" 83
+"Initiate hyperspace jump" 74
+"Select next ship" 78
+"Select nearest hostile ship" 82
+"Select nearest asteroid" 75
+"Deploy / recall fighters" 68
+"Fire afterburner" 88
+"Toggle cloaking device" 67
+"View star map" 77
+"View player info" 73
 "View message log" 47
-"Toggle fullscreen" 1073741892
-"Toggle fast-forward" 1073741881
-"Show help" 1073741882
-"Fleet: Fight my target" 102
-"Fleet: Gather around me" 103
-"Fleet: Hold position" 104
+"Toggle fullscreen" 299
+"Toggle fast-forward" 280
+"Show help" 298
+"Fleet: Fight my target" 70
+"Fleet: Gather around me" 71
+"Fleet: Hold position" 72
 "Fleet: Toggle ammo usage" 117
 "Fleet: Harvest flotsam" 122

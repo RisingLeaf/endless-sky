@@ -224,7 +224,7 @@ void TradingPanel::Draw()
 
 
 // Only override the ones you need; the default action is to return false.
-bool TradingPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool TradingPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	if(command.Has(Command::HELP))
 		DoHelp("trading", true);
@@ -236,9 +236,9 @@ bool TradingPanel::KeyDown(int key, uint16_t mod, const Command &command, bool i
 		Buy(1);
 	else if(key == GLFW_KEY_MINUS || key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_BACKSPACE || key == GLFW_KEY_DELETE)
 		Buy(-1);
-	else if(key == 'u' || key == 'B' || (key == 'b' && (mod & GameWindow::MOD_SHIFT)))
+	else if(key == 'u' || key == 'B' || (key == 'b' && GameWindow::ModActive(GameWindow::MOD_SHIFT)))
 		Buy(1000000000);
-	else if(key == 'e' || key == 'S' || (key == 's' && (mod & GameWindow::MOD_SHIFT)))
+	else if(key == 'e' || key == 'S' || (key == 's' && GameWindow::ModActive(GameWindow::MOD_SHIFT)))
 	{
 		for(const auto &it : player.Cargo().Commodities())
 		{

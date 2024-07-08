@@ -42,7 +42,7 @@ public:
 
 
 protected:
-	virtual bool KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress) override;
+	virtual bool KeyDown(int key, const Command &command, bool isNewPress) override;
 	virtual bool Click(int x, int y, int clicks) override;
 	virtual bool Hover(int x, int y) override;
 	virtual bool Drag(double dx, double dy) override;

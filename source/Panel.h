@@ -78,7 +78,7 @@ public:
 
 protected:
 	// Only override the ones you need; the default action is to return false.
-	virtual bool KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress);
+	virtual bool KeyDown(int key, const Command &command, bool isNewPress);
 	virtual bool Click(int x, int y, int clicks);
 	virtual bool RClick(int x, int y);
 	virtual bool Hover(int x, int y);
@@ -103,7 +103,7 @@ protected:
 	// arguments. In this form, the command is never set, so you can call this
 	// with a key representing a known keyboard shortcut without worrying that a
 	// user-defined command key will override it.
-	bool DoKey(int key, uint16_t mod = 0);
+	bool DoKey(int key);
 
 	// A lot of different UI elements allow a modifier to change the number of
 	// something you are buying, so the shared function is defined here:
@@ -134,7 +134,7 @@ private:
 	// these instead. These methods will recursively allow child panels to
 	// handle the event first, before calling the virtual method for the derived
 	// class to handle it.
-	bool DoKeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress);
+	bool DoKeyDown(int key, uint64_t mod, const Command &command, bool isNewPress);
 	bool DoClick(int x, int y, int clicks);
 	bool DoRClick(int x, int y);
 	bool DoHover(int x, int y);

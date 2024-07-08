@@ -207,7 +207,7 @@ Engine &MainPanel::GetEngine()
 
 
 // Only override the ones you need; the default action is to return false.
-bool MainPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool MainPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	if(player.IsDead())
 		return true;
@@ -232,7 +232,8 @@ bool MainPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNe
 	else if((key == GLFW_KEY_KP_ADD || key == GLFW_KEY_EQUAL) && !command)
 		Preferences::ZoomViewIn();
 	else if(key >= '0' && key <= '9' && !command)
-		engine.SelectGroup(key - '0', mod & GameWindow::MOD_SHIFT, mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI));
+		engine.SelectGroup(key - '0', GameWindow::ModActive(GameWindow::MOD_SHIFT), 
+			GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI));
 	else
 		return false;
 

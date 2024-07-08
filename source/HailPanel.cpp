@@ -285,11 +285,11 @@ void HailPanel::Draw()
 
 
 
-bool HailPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool HailPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	bool shipIsEnemy = (ship && ship->GetGovernment()->IsEnemy());
-
-	if(key == 'd' || key == GLFW_KEY_ESCAPE || key == GLFW_KEY_ENTER || (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
+	if(key == 'd' || key == GLFW_KEY_ESCAPE || key == GLFW_KEY_ENTER
+		|| (key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 	{
 		if(bribeCallback && bribed)
 			bribeCallback(bribed);

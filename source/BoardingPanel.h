@@ -43,7 +43,7 @@ public:
 
 protected:
 	// Overrides from Panel.
-	virtual bool KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress) override;
+	virtual bool KeyDown(int key, const Command &command, bool isNewPress) override;
 	virtual bool Click(int x, int y, int clicks) override;
 	virtual bool Drag(double dx, double dy) override;
 	virtual bool Scroll(double dx, double dy) override;

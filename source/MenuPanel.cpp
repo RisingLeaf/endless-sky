@@ -159,7 +159,7 @@ void MenuPanel::Draw()
 
 
 
-bool MenuPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool MenuPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	if(player.IsLoaded() && (key == 'e' || command.Has(Command::MENU)))
 	{

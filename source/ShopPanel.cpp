@@ -284,11 +284,11 @@ void ShopPanel::ToggleCargo()
 
 
 // Only override the ones you need; the default action is to return false.
-bool ShopPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool ShopPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	bool toStorage = planet && planet->HasOutfitter() && (key == 'r' || key == 'u');
 	if(key == 'l' || key == 'd' || key == GLFW_KEY_ESCAPE
-			|| (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
+			|| (key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 	{
 		if(!isOutfitter)
 			player.UpdateCargoCapacities();
@@ -392,9 +392,9 @@ bool ShopPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNe
 	else if(key >= '0' && key <= '9')
 	{
 		int group = key - '0';
-		if(mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))
+		if(GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))
 			player.SetGroup(group, &playerShips);
-		else if(mod & GameWindow::MOD_SHIFT)
+		else if(GameWindow::ModActive(GameWindow::MOD_SHIFT))
 		{
 			// If every single ship in this group is already selected, shift
 			// plus the group number means to deselect all those ships.

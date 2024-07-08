@@ -1,5 +1,4 @@
 #include "ESG.h"
-#define ES_VULKAN
 
 #ifdef ES_VULKAN
 #include "vulkan/VulkanDevice.h"

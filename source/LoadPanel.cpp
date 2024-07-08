@@ -272,7 +272,7 @@ void LoadPanel::Draw()
 
 
 
-bool LoadPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool LoadPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	if(key == 'n')
 	{
@@ -444,7 +444,7 @@ bool LoadPanel::Click(int x, int y, int clicks)
 				const bool sameSelected = selectedFile == it.first;
 				selectedFile = it.first;
 				if(sameSelected && clicks > 1)
-					KeyDown('l', 0, Command(), true);
+					KeyDown('l', Command(), true);
 				break;
 			}
 	}

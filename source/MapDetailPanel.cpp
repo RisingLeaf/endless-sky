@@ -193,7 +193,7 @@ bool MapDetailPanel::Scroll(double dx, double dy)
 
 
 // Only override the ones you need; the default action is to return false.
-bool MapDetailPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool MapDetailPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	const double planetCardHeight = MapPlanetCard::Height();
 	if(command.Has(Command::HELP))
@@ -215,7 +215,7 @@ bool MapDetailPanel::KeyDown(int key, uint16_t mod, const Command &command, bool
 		const System *source = plan.empty() ? player.GetSystem() : plan.front();
 		const System *next = nullptr;
 		Point previousUnit = Point(0., -1.);
-		if(!plan.empty() && !(mod & GameWindow::MOD_SHIFT))
+		if(!plan.empty() && !GameWindow::ModActive(GameWindow::MOD_SHIFT))
 		{
 			previousUnit = plan.front()->Position();
 			plan.erase(plan.begin());
@@ -345,7 +345,7 @@ bool MapDetailPanel::KeyDown(int key, uint16_t mod, const Command &command, bool
 		}
 	}
 	else
-		return MapPanel::KeyDown(key, mod, command, isNewPress);
+		return MapPanel::KeyDown(key, command, isNewPress);
 
 	return true;
 }

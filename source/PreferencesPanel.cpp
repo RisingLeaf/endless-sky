@@ -180,7 +180,7 @@ void PreferencesPanel::Draw()
 
 
 
-bool PreferencesPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool PreferencesPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	if(static_cast<unsigned>(editing) < zones.size())
 	{
@@ -195,7 +195,7 @@ bool PreferencesPanel::KeyDown(int key, uint16_t mod, const Command &command, bo
 		HandleUp();
 	else if(key == GLFW_KEY_ENTER)
 		HandleConfirm();
-	else if(key == 'b' || command.Has(Command::MENU) || (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
+	else if(key == 'b' || command.Has(Command::MENU) || (key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 		Exit();
 	else if(key == 'c' || key == 's' || key == 'p')
 	{
@@ -1181,7 +1181,7 @@ void PreferencesPanel::HandleSettingsString(const string &str, Point cursorPosit
 		// Convert to raw window coordinates, at the new zoom level.
 		cursorPosition *= Screen::Zoom() / 100.;
 		cursorPosition += .5 * Point(Screen::RawWidth(), Screen::RawHeight());
-		SDL_WarpMouseInWindow(nullptr, cursorPosition.X(), cursorPosition.Y());
+		GameWindow::SetMousePos(cursorPosition.X(), cursorPosition.Y());
 	}
 	else if(str == BOARDING_PRIORITY)
 		Preferences::ToggleBoarding();

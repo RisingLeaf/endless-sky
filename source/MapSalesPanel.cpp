@@ -92,7 +92,7 @@ void MapSalesPanel::Draw()
 
 
 
-bool MapSalesPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool MapSalesPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	if(command.Has(Command::HELP))
 		DoHelp("map advanced shops", true);
@@ -121,7 +121,7 @@ bool MapSalesPanel::KeyDown(int key, uint16_t mod, const Command &command, bool 
 		GetUI()->Push(new Dialog(
 			this, &MapSalesPanel::DoFind, "Search for:"));
 	else
-		return MapPanel::KeyDown(key, mod, command, isNewPress);
+		return MapPanel::KeyDown(key, command, isNewPress);
 
 	return true;
 }

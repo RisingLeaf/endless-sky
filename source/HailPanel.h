@@ -47,7 +47,7 @@ public:
 
 protected:
 	// Only override the ones you need; the default action is to return false.
-	virtual bool KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress) override;
+	virtual bool KeyDown(int key, const Command &command, bool isNewPress) override;
 
 
 private:

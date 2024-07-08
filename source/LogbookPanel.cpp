@@ -165,9 +165,9 @@ void LogbookPanel::Draw()
 
 
 
-bool LogbookPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool LogbookPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
-	if(key == 'd' || key == GLFW_KEY_ESCAPE || (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
+	if(key == 'd' || key == GLFW_KEY_ESCAPE || (key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 		GetUI()->Pop(this);
 	else if(key == GLFW_KEY_PAGE_UP || key == GLFW_KEY_PAGE_DOWN)
 	{

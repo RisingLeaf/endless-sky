@@ -276,10 +276,10 @@ bool PlayerInfoPanel::AllowsFastForward() const noexcept
 
 
 
-bool PlayerInfoPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool PlayerInfoPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
-	bool control = (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI));
-	bool shift = (mod & GameWindow::MOD_SHIFT);
+	bool control = GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI);
+	bool shift = GameWindow::ModActive(GameWindow::MOD_SHIFT);
 	if(key == 'd' || key == GLFW_KEY_ESCAPE || (key == 'w' && control)
 			|| key == 'i' || command.Has(Command::INFO))
 	{

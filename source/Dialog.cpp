@@ -198,16 +198,17 @@ bool Dialog::AllowsFastForward() const noexcept
 
 
 
-bool Dialog::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool Dialog::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	auto it = KEY_MAP.find(key);
-	bool isCloseRequest = key == GLFW_KEY_ESCAPE || (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)));
+	bool isCloseRequest = key == GLFW_KEY_ESCAPE ||
+		(key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI));
 	if((it != KEY_MAP.end() || (key >= ' ' && key <= '~')) && !isMission && (intFun || stringFun) && !isCloseRequest)
 	{
 		int ascii = (it != KEY_MAP.end()) ? it->second : key;
-		char c = ((mod & GameWindow::MOD_SHIFT) ? SHIFT[ascii] : ascii);
+		char c = (GameWindow::ModActive(GameWindow::MOD_SHIFT) ? SHIFT[ascii] : ascii);
 		// Caps lock should shift letters, but not any other keys.
-		if((mod & GameWindow::MOD_CAPS) && c >= 'a' && c <= 'z')
+		if(GameWindow::ModActive(GameWindow::MOD_CAPS) && c >= 'a' && c <= 'z')
 			c += 'A' - 'a';
 
 		if(stringFun)

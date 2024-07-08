@@ -108,7 +108,7 @@ void HiringPanel::Draw()
 
 
 
-bool HiringPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool HiringPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	if(command.Has(Command::HELP))
 	{

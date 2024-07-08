@@ -279,7 +279,7 @@ void MissionPanel::Draw()
 
 
 // Only override the ones you need; the default action is to return false.
-bool MissionPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool MissionPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	if(command.Has(Command::HELP))
 	{
@@ -288,10 +288,10 @@ bool MissionPanel::KeyDown(int key, uint16_t mod, const Command &command, bool i
 	}
 	else if(key == 'a' && CanAccept())
 	{
-		Accept((mod & GameWindow::MOD_CONTROL));
+		Accept(GameWindow::ModActive(GameWindow::MOD_CONTROL));
 		return true;
 	}
-	else if(key == 'A' || (key == 'a' && (mod & GameWindow::MOD_SHIFT)))
+	else if(key == 'A' || (key == 'a' && GameWindow::ModActive(GameWindow::MOD_SHIFT)))
 	{
 		if(acceptedIt != accepted.end() && acceptedIt->IsVisible())
 			GetUI()->Push(new Dialog(this, &MissionPanel::AbortMission,
@@ -355,7 +355,7 @@ bool MissionPanel::KeyDown(int key, uint16_t mod, const Command &command, bool i
 		}
 	}
 	else
-		return MapPanel::KeyDown(key, mod, command, isNewPress);
+		return MapPanel::KeyDown(key, command, isNewPress);
 
 	// To reach here, we changed the selected mission. Scroll the active
 	// mission list, update the selected system, and pan the map.

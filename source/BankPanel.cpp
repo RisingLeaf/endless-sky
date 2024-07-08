@@ -267,7 +267,7 @@ void BankPanel::Draw()
 
 
 // Handle key presses, or clicks that the interface has mapped to a key press.
-bool BankPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool BankPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	if(command.Has(Command::HELP))
 	{

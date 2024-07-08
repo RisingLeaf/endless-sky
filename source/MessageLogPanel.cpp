@@ -31,6 +31,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 #include "text/WrappedText.h"
 
+#include <GLFW/glfw3.h>
+
 using namespace std;
 
 namespace {
@@ -84,24 +86,25 @@ void MessageLogPanel::Draw()
 
 
 
-bool MessageLogPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool MessageLogPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
-	if(command.Has(Command::MESSAGE_LOG) || key == 'd' || key == SDLK_ESCAPE
-			|| (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI))))
+
+	if(command.Has(Command::MESSAGE_LOG) || key == 'd' || key == GLFW_KEY_ESCAPE
+			|| (key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 		GetUI()->Pop(this);
-	else if(key == SDLK_PAGEUP || key == SDLK_PAGEDOWN)
+	else if(key == GLFW_KEY_PAGE_UP || key == GLFW_KEY_PAGE_DOWN)
 	{
-		double direction = (key == SDLK_PAGEUP) - (key == SDLK_PAGEDOWN);
+		double direction = (key == GLFW_KEY_PAGE_UP) - (key == GLFW_KEY_PAGE_DOWN);
 		Drag(0., (Screen::Height() - 100.) * direction);
 	}
-	else if(key == SDLK_HOME || key == SDLK_END)
+	else if(key == GLFW_KEY_HOME || key == GLFW_KEY_END)
 	{
-		double direction = (key == SDLK_HOME) - (key == SDLK_END);
+		double direction = (key == GLFW_KEY_HOME) - (key == GLFW_KEY_END);
 		Drag(0., maxScroll * direction);
 	}
-	else if(key == SDLK_UP || key == SDLK_DOWN)
+	else if(key == GLFW_KEY_UP || key == GLFW_KEY_DOWN)
 	{
-		double direction = (key == SDLK_UP) - (key == SDLK_DOWN);
+		double direction = (key == GLFW_KEY_UP) - (key == GLFW_KEY_DOWN);
 		Drag(0., LINE_HEIGHT * direction);
 	}
 

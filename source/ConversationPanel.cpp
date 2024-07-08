@@ -224,7 +224,7 @@ void ConversationPanel::Draw()
 
 
 // Handle key presses.
-bool ConversationPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool ConversationPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	// Map popup happens when you press the map key, unless the name text entry
 	// fields are currently active. The name text entry fields are active if
@@ -251,9 +251,9 @@ bool ConversationPanel::KeyDown(int key, uint16_t mod, const Command &command, b
 		if(key >= ' ' && key <= '~')
 		{
 			// Apply the shift or caps lock key.
-			char c = ((mod & GameWindow::MOD_SHIFT) ? SHIFT[key] : key);
+			char c = (GameWindow::ModActive(GameWindow::MOD_SHIFT) ? SHIFT[key] : key);
 			// Caps lock should shift letters, but not any other keys.
-			if((mod & GameWindow::MOD_CAPS) && c >= 'a' && c <= 'z')
+			if(GameWindow::ModActive(GameWindow::MOD_CAPS) && c >= 'a' && c <= 'z')
 				c += 'A' - 'a';
 			// Don't allow characters that can't be used in a file name.
 			static const string FORBIDDEN = "/\\?*:|\"<>~";

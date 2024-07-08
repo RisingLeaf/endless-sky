@@ -95,7 +95,7 @@ public:
 protected:
 	// The user can click "ok" or "cancel", or use the tab key to toggle which
 	// button is highlighted and the enter key to select it.
-	virtual bool KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress) override;
+	virtual bool KeyDown(int key, const Command &command, bool isNewPress) override;
 	virtual bool Click(int x, int y, int clicks) override;
 
 

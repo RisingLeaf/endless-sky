@@ -41,6 +41,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <GLFW/glfw3.h>
 #include <utility>
+#include <cmath>
 
 using namespace std;
 
@@ -224,9 +225,10 @@ void BoardingPanel::Draw()
 
 
 // Handle key presses or button clicks that were mapped to key presses.
-bool BoardingPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool BoardingPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
-	if((key == 'd' || key == 'x' || key == GLFW_KEY_ESCAPE || (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))) && CanExit())
+	if((key == 'd' || key == 'x' || key == GLFW_KEY_ESCAPE ||
+		(key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))) && CanExit())
 	{
 		// When closing the panel, mark the player dead if their ship was captured.
 		if(playerDied)

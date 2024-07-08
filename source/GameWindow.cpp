@@ -33,8 +33,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <unordered_set>
 #include <vector>
 
-#define ES_VULKAN
-
 using namespace std;
 
 namespace {

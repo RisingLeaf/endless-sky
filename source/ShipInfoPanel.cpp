@@ -44,6 +44,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include <algorithm>
+#include <cmath>
 #include <GLFW/glfw3.h>
 
 using namespace std;
@@ -136,10 +137,10 @@ void ShipInfoPanel::Draw()
 
 
 
-bool ShipInfoPanel::KeyDown(int key, uint16_t mod, const Command &command, bool /* isNewPress */)
+bool ShipInfoPanel::KeyDown(int key, const Command &command, bool /* isNewPress */)
 {
-	bool control = (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI));
-	bool shift = (mod & GameWindow::MOD_SHIFT);
+	bool control = GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI);
+	bool shift = GameWindow::ModActive(GameWindow::MOD_SHIFT);
 	if(key == 'd' || key == GLFW_KEY_ESCAPE || (key == 'w' && control))
 		GetUI()->Pop(this);
 	else if(command.Has(Command::HELP))

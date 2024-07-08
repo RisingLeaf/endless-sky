@@ -104,7 +104,7 @@ void Panel::AddZone(const Rectangle &rect, const function<void()> &fun)
 
 void Panel::AddZone(const Rectangle &rect, int key)
 {
-	AddZone(rect, [this, key](){ this->KeyDown(key, 0, Command(), true); });
+	AddZone(rect, [this, key](){ this->KeyDown(key, Command(), true); });
 }
 
 
@@ -170,7 +170,7 @@ void Panel::AddOrRemove()
 
 
 // Only override the ones you need; the default action is to return false.
-bool Panel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool Panel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	return false;
 }
@@ -219,9 +219,9 @@ bool Panel::Release(int x, int y)
 
 
 
-bool Panel::DoKeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress)
+bool Panel::DoKeyDown(int key, uint64_t mod, const Command &command, bool isNewPress)
 {
-	return EventVisit(&Panel::KeyDown, key, mod, command, isNewPress);
+	return EventVisit(&Panel::KeyDown, key, command, isNewPress);
 }
 
 
@@ -322,9 +322,9 @@ UI *Panel::GetUI() const noexcept
 // arguments. In this form, the command is never set, so you can call this
 // with a key representing a known keyboard shortcut without worrying that a
 // user-defined command key will override it.
-bool Panel::DoKey(int key, uint16_t mod)
+bool Panel::DoKey(int key)
 {
-	return KeyDown(key, mod, Command(), true);
+	return KeyDown(key, Command(), true);
 }
 
 

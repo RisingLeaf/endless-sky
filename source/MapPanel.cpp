@@ -548,11 +548,11 @@ bool MapPanel::AllowsFastForward() const noexcept
 
 
 
-bool MapPanel::KeyDown(int key, uint16_t mod, const Command &command, bool isNewPress)
+bool MapPanel::KeyDown(int key, const Command &command, bool isNewPress)
 {
 	const Interface *mapInterface = GameData::Interfaces().Get("map");
 	if(command.Has(Command::MAP) || key == 'd' || key == GLFW_KEY_ESCAPE
-			|| (key == 'w' && (mod & (GameWindow::MOD_CONTROL | GameWindow::MOD_GUI))))
+			|| (key == 'w' && GameWindow::ModActive(GameWindow::MOD_CONTROL | GameWindow::MOD_GUI)))
 		GetUI()->Pop(this);
 	else if(key == 's' && buttonCondition != "is shipyards")
 	{
