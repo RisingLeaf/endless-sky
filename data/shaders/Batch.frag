@@ -2,7 +2,8 @@
 precision mediump float;
 
 precision mediump sampler2DArray;
-uniform sampler2DArray tex;
+//?opengl layout(binding = 1) uniform sampler2DArray tex;
+//?vulkan layout(set = 1, binding = 1) uniform sampler2DArray tex;
 uniform float frameCount;
 
 layout(location = 0) in vec3 fragTexCoord;

@@ -43,10 +43,12 @@ namespace {
 // Initialize the shaders.
 void BatchShader::Init()
 {
-	static const string vertexCode = Files::Read(Files::Data() + "shaders/Batch.vert");
-	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Batch.frag");
+	string vertexCode = Files::Read(Files::Data() + "shaders/Batch.vert");
+	string fragmentCode = Files::Read(Files::Data() + "shaders/Batch.frag");
 
-	// Compile the shaders.
+	// Compile the shaders.	ESG::ParseShader(vertexCode);
+	ESG::ParseShader(fragmentCode);
+
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 	// Get the indices of the uniforms and attributes.
 	scaleI = shader.Uniform("scale");
@@ -72,11 +74,11 @@ void BatchShader::Init()
 	glEnableVertexAttribArray(vertI);
 	glVertexAttribPointer(vertI, 2, GL_FLOAT, GL_FALSE, stride, nullptr);
 	// The 3 texture fields (s, t, frame) come after the x,y pixel fields.
-	auto textureOffset = reinterpret_cast<const GLvoid *>(2 * sizeof(float));
+	auto textureOffset = reinterpret_cast<const void *>(2 * sizeof(float));
 	glEnableVertexAttribArray(texCoordI);
 	glVertexAttribPointer(texCoordI, 3, GL_FLOAT, GL_FALSE, stride, textureOffset);
 	// The alpha value.
-	auto alphaOffset = reinterpret_cast<const GLvoid *>(5 * sizeof(float));
+	auto alphaOffset = reinterpret_cast<const void *>(5 * sizeof(float));
 	glEnableVertexAttribArray(alphaI);
 	glVertexAttribPointer(alphaI, 1, GL_FLOAT, GL_FALSE, stride, alphaOffset);
 
@@ -96,7 +98,7 @@ void BatchShader::Bind()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 	// Set up the screen scale.
-	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
+	float scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
 	glUniform2fv(scaleI, 1, scale);
 }
 

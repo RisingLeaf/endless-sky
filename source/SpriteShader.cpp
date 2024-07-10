@@ -56,8 +56,11 @@ namespace {
 void SpriteShader::Init()
 {
 
-	static const string vertexCode = Files::Read(Files::Data() + "shaders/Sprite.vert");
-	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Sprite.frag");
+	string vertexCode = Files::Read(Files::Data() + "shaders/Sprite.vert");
+	string fragmentCode = Files::Read(Files::Data() + "shaders/Sprite.frag");
+
+	ESG::ParseShader(vertexCode);
+	ESG::ParseShader(fragmentCode);
 
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 
@@ -81,7 +84,7 @@ void SpriteShader::Init()
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	GLfloat vertexData[] = {
+	float vertexData[] = {
 		-.5f, -.5f,
 		-.5f,  .5f,
 		 .5f, -.5f,
@@ -90,7 +93,7 @@ void SpriteShader::Init()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(shader.Attrib("vert"));
-	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -147,7 +150,7 @@ void SpriteShader::Bind()
 	glUseProgram(shader.Object());
 	glBindVertexArray(vao);
 
-	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
+	float scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
 	glUniform2fv(scaleI, 1, scale);
 }
 

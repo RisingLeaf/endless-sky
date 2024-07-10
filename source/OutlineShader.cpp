@@ -42,8 +42,10 @@ namespace {
 
 void OutlineShader::Init()
 {
-	static const string vertexCode = Files::Read(Files::Data() + "shaders/Outline.vert");
-	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Outline.frag");
+	string vertexCode = Files::Read(Files::Data() + "shaders/Outline.vert");
+	string fragmentCode = Files::Read(Files::Data() + "shaders/Outline.frag");
+	ESG::ParseShader(vertexCode);
+	ESG::ParseShader(fragmentCode);
 
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 
@@ -66,13 +68,13 @@ void OutlineShader::Init()
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	GLfloat vertexData[] = {
+	float vertexData[] = {
 		-.5f, -.5f, 0.f, 0.f,
 		 .5f, -.5f, 1.f, 0.f,
 		-.5f,  .5f, 0.f, 1.f,
 		 .5f,  .5f, 1.f, 1.f
 	};
-	constexpr auto stride = 4 * sizeof(GLfloat);
+	constexpr auto stride = 4 * sizeof(float);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(shader.Attrib("vert"));
@@ -80,7 +82,7 @@ void OutlineShader::Init()
 
 	glEnableVertexAttribArray(shader.Attrib("vertTexCoord"));
 	glVertexAttribPointer(shader.Attrib("vertTexCoord"), 2, GL_FLOAT, GL_TRUE,
-		stride, reinterpret_cast<const GLvoid*>(2 * sizeof(GLfloat)));
+		stride, reinterpret_cast<const void*>(2 * sizeof(float)));
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -95,10 +97,10 @@ void OutlineShader::Draw(const Sprite *sprite, const Point &pos, const Point &si
 	glUseProgram(shader.Object());
 	glBindVertexArray(vao);
 
-	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
+	float scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
 	glUniform2fv(scaleI, 1, scale);
 
-	GLfloat off[2] = {
+	float off[2] = {
 		static_cast<float>(.5 / size.X()),
 		static_cast<float>(.5 / size.Y())};
 	glUniform2fv(offI, 1, off);
@@ -108,7 +110,7 @@ void OutlineShader::Draw(const Sprite *sprite, const Point &pos, const Point &si
 
 	Point uw = unit * size.X();
 	Point uh = unit * size.Y();
-	GLfloat transform[4] = {
+	float transform[4] = {
 		static_cast<float>(-uw.Y()),
 		static_cast<float>(uw.X()),
 		static_cast<float>(-uh.X()),
@@ -116,7 +118,7 @@ void OutlineShader::Draw(const Sprite *sprite, const Point &pos, const Point &si
 	};
 	glUniformMatrix2fv(transformI, 1, false, transform);
 
-	GLfloat position[2] = {
+	float position[2] = {
 		static_cast<float>(pos.X()), static_cast<float>(pos.Y())};
 	glUniform2fv(positionI, 1, position);
 

@@ -65,8 +65,11 @@ namespace {
 
 void FogShader::Init()
 {
-	static const string vertexCode = Files::Read(Files::Data() + "shaders/Fog.vert");
-	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Fog.frag");
+	string vertexCode = Files::Read(Files::Data() + "shaders/Fog.vert");
+	string fragmentCode = Files::Read(Files::Data() + "shaders/Fog.frag");
+
+	ESG::ParseShader(vertexCode);
+	ESG::ParseShader(fragmentCode);
 
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 
@@ -85,7 +88,7 @@ void FogShader::Init()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 	// Corners of a rectangle to draw.
-	GLfloat vertexData[] = {
+	float vertexData[] = {
 		0.f, 0.f,
 		0.f, 1.f,
 		1.f, 0.f,
@@ -95,7 +98,7 @@ void FogShader::Init()
 
 	uint32_t vertI = shader.Attrib("vert");
 	glEnableVertexAttribArray(vertI);
-	glVertexAttribPointer(vertI, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+	glVertexAttribPointer(vertI, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
 	// Unbind the VBO and VAO.
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -210,11 +213,11 @@ void FogShader::Draw(const Point &center, double zoom, const PlayerInfo &player)
 	glUseProgram(shader.Object());
 	glBindVertexArray(vao);
 
-	GLfloat corner[2] = {
+	float corner[2] = {
 		static_cast<float>(left - .5 * GRID * zoom) / (.5f * Screen::Width()),
 		static_cast<float>(top - .5 * GRID * zoom) / (-.5f * Screen::Height())};
 	glUniform2fv(cornerI, 1, corner);
-	GLfloat dimensions[2] = {
+	float dimensions[2] = {
 		GRID * static_cast<float>(zoom) * (columns + 1.f) / (.5f * Screen::Width()),
 		GRID * static_cast<float>(zoom) * (rows + 1.f) / (-.5f * Screen::Height())};
 	glUniform2fv(dimensionsI, 1, dimensions);

@@ -157,10 +157,10 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 			unit /= pow(zoom, .75);
 
 			float baseZoom = static_cast<float>(2. * zoom);
-			GLfloat scale[2] = {baseZoom / Screen::Width(), -baseZoom / Screen::Height()};
+			float scale[2] = {baseZoom / Screen::Width(), -baseZoom / Screen::Height()};
 			glUniform2fv(scaleI, 1, scale);
 
-			GLfloat rotate[4] = {
+			float rotate[4] = {
 				static_cast<float>(unit.Y()), static_cast<float>(-unit.X()),
 				static_cast<float>(unit.X()), static_cast<float>(unit.Y())};
 			glUniformMatrix2fv(rotateI, pass, false, rotate);
@@ -186,7 +186,7 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 				for(int gx = minX; gx < maxX; gx += TILE_SIZE)
 				{
 					Point off = Point(gx + shove, gy + shove) - pos;
-					GLfloat translate[2] = {
+					float translate[2] = {
 						static_cast<float>(off.X()),
 						static_cast<float>(off.Y())
 					};
@@ -239,8 +239,10 @@ void StarField::Draw(const Point &pos, const Point &vel, double zoom, const Syst
 
 void StarField::SetUpGraphics()
 {
-	static const string vertexCode = Files::Read(Files::Data() + "shaders/StarField.vert");
-	static const string fragmentCode = Files::Read(Files::Data() + "shaders/StarField.frag");
+	string vertexCode = Files::Read(Files::Data() + "shaders/StarField.vert");
+	string fragmentCode = Files::Read(Files::Data() + "shaders/StarField.frag");
+	ESG::ParseShader(vertexCode);
+	ESG::ParseShader(fragmentCode);
 
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 
@@ -323,7 +325,7 @@ void StarField::MakeStars(int stars, int width)
 	partial_sum(tileIndex.begin(), tileIndex.end(), tileIndex.begin());
 
 	// Each star consists of five vertices, each with four data elements.
-	vector<GLfloat> data(6 * 4 * stars, 0.f);
+	vector<float> data(6 * 4 * stars, 0.f);
 	for(auto it = temp.begin(); it != temp.end(); )
 	{
 		// Figure out what tile this star is in.
@@ -361,18 +363,18 @@ void StarField::MakeStars(int stars, int width)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data.front()) * data.size(), data.data(), GL_STATIC_DRAW);
 
 	// Connect the xy to the "vert" attribute of the vertex shader.
-	constexpr auto stride = 4 * sizeof(GLfloat);
+	constexpr auto stride = 4 * sizeof(float);
 	glEnableVertexAttribArray(offsetI);
 	glVertexAttribPointer(offsetI, 2, GL_FLOAT, GL_FALSE,
 		stride, nullptr);
 
 	glEnableVertexAttribArray(sizeI);
 	glVertexAttribPointer(sizeI, 1, GL_FLOAT, GL_FALSE,
-		stride, reinterpret_cast<const GLvoid *>(2 * sizeof(GLfloat)));
+		stride, reinterpret_cast<const void *>(2 * sizeof(float)));
 
 	glEnableVertexAttribArray(cornerI);
 	glVertexAttribPointer(cornerI, 1, GL_FLOAT, GL_FALSE,
-		stride, reinterpret_cast<const GLvoid *>(3 * sizeof(GLfloat)));
+		stride, reinterpret_cast<const void *>(3 * sizeof(float)));
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

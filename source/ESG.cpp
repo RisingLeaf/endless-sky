@@ -1,5 +1,19 @@
 #include "ESG.h"
 
+namespace {
+	std::string ReplaceAll(std::string str, const std::string& from, const std::string& to)
+	{
+		size_t start_pos = 0;
+		while((start_pos = str.find(from, start_pos)) != std::string::npos)
+		{
+			str.replace(start_pos, from.length(), to);
+			start_pos += to.length();
+		}
+		return str;
+	}
+}
+
+
 #ifdef ES_VULKAN
 #include "vulkan/VulkanDevice.h"
 #include "vulkan/VulkanDescriptors.h"
@@ -88,7 +102,12 @@ namespace ESG {
 		}
 	}
 
-	bool HasAdaptiveVSyncSupport()	{ return false; }
+    void ParseShader(std::string &toParse)
+    {
+		toParse = ReplaceAll(toParse, "//?vulkan ", "");
+    }
+
+    bool HasAdaptiveVSyncSupport()	{ return false; }
 }
 
 
@@ -151,6 +170,12 @@ namespace ESG {
 		// Unbind the texture.
 		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 	}
+
+
+    void ParseShader(std::string &toParse)
+    {
+		toParse = ReplaceAll(toParse, "//?opengl ", "");
+    }
 }
 
 #endif

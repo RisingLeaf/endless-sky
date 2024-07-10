@@ -42,8 +42,10 @@ namespace {
 
 void PointerShader::Init()
 {
-	static const string vertexCode = Files::Read(Files::Data() + "shaders/Pointer.vert");
-	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Pointer.frag");
+	string vertexCode = Files::Read(Files::Data() + "shaders/Pointer.vert");
+	string fragmentCode = Files::Read(Files::Data() + "shaders/Pointer.frag");
+	ESG::ParseShader(vertexCode);
+	ESG::ParseShader(fragmentCode);
 
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 
@@ -61,7 +63,7 @@ void PointerShader::Init()
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	GLfloat vertexData[] = {
+	float vertexData[] = {
 		0.f, 0.f,
 		0.f, 1.f,
 		1.f, 0.f,
@@ -69,7 +71,7 @@ void PointerShader::Init()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(shader.Attrib("vert"));
-	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -98,7 +100,7 @@ void PointerShader::Bind()
 	glUseProgram(shader.Object());
 	glBindVertexArray(vao);
 
-	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
+	float scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
 	glUniform2fv(scaleI, 1, scale);
 }
 
@@ -107,13 +109,13 @@ void PointerShader::Bind()
 void PointerShader::Add(const Point &center, const Point &angle,
 	float width, float height, float offset, const Color &color)
 {
-	GLfloat c[2] = {static_cast<float>(center.X()), static_cast<float>(center.Y())};
+	float c[2] = {static_cast<float>(center.X()), static_cast<float>(center.Y())};
 	glUniform2fv(centerI, 1, c);
 
-	GLfloat a[2] = {static_cast<float>(angle.X()), static_cast<float>(angle.Y())};
+	float a[2] = {static_cast<float>(angle.X()), static_cast<float>(angle.Y())};
 	glUniform2fv(angleI, 1, a);
 
-	GLfloat size[2] = {width, height};
+	float size[2] = {width, height};
 	glUniform2fv(sizeI, 1, size);
 
 	glUniform1f(offsetI, offset);

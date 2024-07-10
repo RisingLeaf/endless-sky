@@ -106,11 +106,11 @@ void Font::DrawAliased(const string &str, double x, double y, const Color &color
 	{
 		screenWidth = Screen::Width();
 		screenHeight = Screen::Height();
-		GLfloat scale[2] = {2.f / screenWidth, -2.f / screenHeight};
+		float scale[2] = {2.f / screenWidth, -2.f / screenHeight};
 		glUniform2fv(scaleI, 1, scale);
 	}
 
-	GLfloat textPos[2] = {
+	float textPos[2] = {
 		static_cast<float>(x - 1.),
 		static_cast<float>(y)};
 	int previous = 0;
@@ -297,8 +297,10 @@ void Font::SetUpShader(float glyphW, float glyphH)
 	glyphW *= .5f;
 	glyphH *= .5f;
 
-	static const string vertexCode = Files::Read(Files::Data() + "shaders/Font.vert");
-	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Font.frag");
+	string vertexCode = Files::Read(Files::Data() + "shaders/Font.vert");
+	string fragmentCode = Files::Read(Files::Data() + "shaders/Font.frag");
+	ESG::ParseShader(vertexCode);
+	ESG::ParseShader(fragmentCode);
 
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 	glUseProgram(shader.Object());
@@ -312,7 +314,7 @@ void Font::SetUpShader(float glyphW, float glyphH)
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	GLfloat vertices[] = {
+	float vertices[] = {
 		   0.f,    0.f, 0.f, 0.f,
 		   0.f, glyphH, 0.f, 1.f,
 		glyphW,    0.f, 1.f, 0.f,
@@ -321,13 +323,13 @@ void Font::SetUpShader(float glyphW, float glyphH)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	// Connect the xy to the "vert" attribute of the vertex shader.
-	constexpr auto stride = 4 * sizeof(GLfloat);
+	constexpr auto stride = 4 * sizeof(float);
 	glEnableVertexAttribArray(shader.Attrib("vert"));
 	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, stride, nullptr);
 
 	glEnableVertexAttribArray(shader.Attrib("corner"));
 	glVertexAttribPointer(shader.Attrib("corner"), 2, GL_FLOAT, GL_FALSE,
-		stride, reinterpret_cast<const GLvoid *>(2 * sizeof(GLfloat)));
+		stride, reinterpret_cast<const void *>(2 * sizeof(float)));
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);

@@ -40,8 +40,10 @@ using namespace std;
 
 void FillShader::Init()
 {
-	static const string vertexCode = Files::Read(Files::Data() + "shaders/Fill.vert");
-	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Fill.frag");
+	string vertexCode = Files::Read(Files::Data() + "shaders/Fill.vert");
+	string fragmentCode = Files::Read(Files::Data() + "shaders/Fill.frag");
+	ESG::ParseShader(vertexCode);
+	ESG::ParseShader(fragmentCode);
 
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 	scaleI = shader.Uniform("scale");
@@ -56,7 +58,7 @@ void FillShader::Init()
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	GLfloat vertexData[] = {
+	float vertexData[] = {
 		-.5f, -.5f,
 		 .5f, -.5f,
 		-.5f,  .5f,
@@ -65,7 +67,7 @@ void FillShader::Init()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(shader.Attrib("vert"));
-	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -82,13 +84,13 @@ void FillShader::Fill(const Point &center, const Point &size, const Color &color
 	glUseProgram(shader.Object());
 	glBindVertexArray(vao);
 
-	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
+	float scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
 	glUniform2fv(scaleI, 1, scale);
 
-	GLfloat centerV[2] = {static_cast<float>(center.X()), static_cast<float>(center.Y())};
+	float centerV[2] = {static_cast<float>(center.X()), static_cast<float>(center.Y())};
 	glUniform2fv(centerI, 1, centerV);
 
-	GLfloat sizeV[2] = {static_cast<float>(size.X()), static_cast<float>(size.Y())};
+	float sizeV[2] = {static_cast<float>(size.X()), static_cast<float>(size.Y())};
 	glUniform2fv(sizeI, 1, sizeV);
 
 	glUniform4fv(colorI, 1, color.Get());

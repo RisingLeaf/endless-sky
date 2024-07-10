@@ -41,8 +41,10 @@ namespace {
 
 void LineShader::Init()
 {
-	static const string vertexCode = Files::Read(Files::Data() + "shaders/Line.vert");
-	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Line.frag");
+	string vertexCode = Files::Read(Files::Data() + "shaders/Line.vert");
+	string fragmentCode = Files::Read(Files::Data() + "shaders/Line.frag");
+	ESG::ParseShader(vertexCode);
+	ESG::ParseShader(fragmentCode);
 
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 	scaleI = shader.Uniform("scale");
@@ -58,7 +60,7 @@ void LineShader::Init()
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	GLfloat vertexData[] = {
+	float vertexData[] = {
 		0.f, -1.f,
 		1.f, -1.f,
 		0.f,  1.f,
@@ -67,7 +69,7 @@ void LineShader::Init()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(shader.Attrib("vert"));
-	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -84,18 +86,18 @@ void LineShader::Draw(const Point &from, const Point &to, float width, const Col
 	glUseProgram(shader.Object());
 	glBindVertexArray(vao);
 
-	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
+	float scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
 	glUniform2fv(scaleI, 1, scale);
 
-	GLfloat start[2] = {static_cast<float>(from.X()), static_cast<float>(from.Y())};
+	float start[2] = {static_cast<float>(from.X()), static_cast<float>(from.Y())};
 	glUniform2fv(startI, 1, start);
 
 	Point v = to - from;
 	Point u = v.Unit() * width;
-	GLfloat length[2] = {static_cast<float>(v.X()), static_cast<float>(v.Y())};
+	float length[2] = {static_cast<float>(v.X()), static_cast<float>(v.Y())};
 	glUniform2fv(lengthI, 1, length);
 
-	GLfloat w[2] = {static_cast<float>(u.Y()), static_cast<float>(-u.X())};
+	float w[2] = {static_cast<float>(u.Y()), static_cast<float>(-u.X())};
 	glUniform2fv(widthI,1, w);
 
 	glUniform4fv(colorI, 1, color.Get());

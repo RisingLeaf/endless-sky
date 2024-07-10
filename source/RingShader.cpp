@@ -45,8 +45,10 @@ namespace {
 
 void RingShader::Init()
 {
-	static const string vertexCode = Files::Read(Files::Data() + "shaders/Ring.vert");
-	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Ring.frag");
+	string vertexCode = Files::Read(Files::Data() + "shaders/Ring.vert");
+	string fragmentCode = Files::Read(Files::Data() + "shaders/Ring.frag");
+	ESG::ParseShader(vertexCode);
+	ESG::ParseShader(fragmentCode);
 
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 
@@ -66,7 +68,7 @@ void RingShader::Init()
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	GLfloat vertexData[] = {
+	float vertexData[] = {
 		-1.f, -1.f,
 		-1.f,  1.f,
 		 1.f, -1.f,
@@ -75,7 +77,7 @@ void RingShader::Init()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(shader.Attrib("vert"));
-	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+	glVertexAttribPointer(shader.Attrib("vert"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
 	// unbind the VBO and VAO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -112,7 +114,7 @@ void RingShader::Bind()
 	glUseProgram(shader.Object());
 	glBindVertexArray(vao);
 
-	GLfloat scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
+	float scale[2] = {2.f / Screen::Width(), -2.f / Screen::Height()};
 	glUniform2fv(scaleI, 1, scale);
 }
 
@@ -129,7 +131,7 @@ void RingShader::Add(const Point &pos, float out, float in, const Color &color)
 void RingShader::Add(const Point &pos, float radius, float width, float fraction,
 	const Color &color, float dash, float startAngle)
 {
-	GLfloat position[2] = {static_cast<float>(pos.X()), static_cast<float>(pos.Y())};
+	float position[2] = {static_cast<float>(pos.X()), static_cast<float>(pos.Y())};
 	glUniform2fv(positionI, 1, position);
 
 	glUniform1f(radiusI, radius);
