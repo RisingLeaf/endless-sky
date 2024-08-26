@@ -47,13 +47,13 @@ namespace {
 		"(very high)"
 	};
 
-	const int NAME_X = 20;
-	const int PRICE_X = 140;
-	const int LEVEL_X = 180;
-	const int PROFIT_X = 260;
-	const int BUY_X = 310;
-	const int SELL_X = 370;
-	const int HOLD_X = 430;
+	constexpr int NAME_X = 20;
+	constexpr int PRICE_X = 140;
+	constexpr int LEVEL_X = 180;
+	constexpr int PROFIT_X = 260;
+	constexpr int BUY_X = 310;
+	constexpr int SELL_X = 370;
+	constexpr int HOLD_X = 430;
 }
 
 

@@ -32,7 +32,7 @@ using namespace std;
 
 namespace {
 	// A default string to return if somehow the current state does not exist in the state map.
-	static const string ILLEGAL = "(ILLEGAL STATE)";
+	const string ILLEGAL = "(ILLEGAL STATE)";
 }
 
 

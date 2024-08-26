@@ -36,15 +36,15 @@ using namespace std;
 namespace {
 	// Dynamic economy parameters: how much of its production each system keeps
 	// and exports each day:
-	const double KEEP = .89;
-	const double EXPORT = .10;
+	constexpr double KEEP = .89;
+	constexpr double EXPORT = .10;
 	// Standard deviation of the daily production of each commodity:
-	const double VOLUME = 2000.;
+	constexpr double VOLUME = 2000.;
 	// Above this supply amount, price differences taper off:
-	const double LIMIT = 20000.;
+	constexpr double LIMIT = 20000.;
 }
 
-const double System::DEFAULT_NEIGHBOR_DISTANCE = 100.;
+constexpr double System::DEFAULT_NEIGHBOR_DISTANCE = 100.;
 
 
 
