@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "BatchShader.h"
 
+#include "Files.h"
 #include "Screen.h"
 #include "Shader.h"
 #include "image/Sprite.h"
@@ -40,48 +41,12 @@ namespace {
 // Initialize the shaders.
 void BatchShader::Init()
 {
-	static const char *vertexCode =
-		"// vertex batch shader\n"
-		"uniform vec2 scale;\n"
-		"in vec2 vert;\n"
-		"in vec3 texCoord;\n"
-		"in float alpha;\n"
-
-		"out vec3 fragTexCoord;\n"
-		"out float fragAlpha;\n"
-
-		"void main() {\n"
-		"  gl_Position = vec4(vert * scale, 0, 1);\n"
-		"  fragTexCoord = texCoord;\n"
-		"  fragAlpha = alpha;\n"
-		"}\n";
-
-	static const char *fragmentCode =
-		"// fragment batch shader\n"
-		"precision mediump float;\n"
-#ifdef ES_GLES
-		"precision mediump sampler2DArray;\n"
-#endif
-		"uniform sampler2DArray tex;\n"
-		"uniform float frameCount;\n"
-
-		"in vec3 fragTexCoord;\n"
-		"in float fragAlpha;\n"
-
-		"out vec4 finalColor;\n"
-
-		"void main() {\n"
-		"  float first = floor(fragTexCoord.z);\n"
-		"  float second = mod(ceil(fragTexCoord.z), frameCount);\n"
-		"  float fade = fragTexCoord.z - first;\n"
-		"  finalColor = mix(\n"
-		"    texture(tex, vec3(fragTexCoord.xy, first)),\n"
-		"    texture(tex, vec3(fragTexCoord.xy, second)), fade);\n"
-		"  finalColor *= vec4(fragAlpha);\n"
-		"}\n";
+	const string vertexCode = Files::Read(Files::Data() + "shaders/Batch.vert");
+	const string fragmentCode = Files::Read(Files::Data() + "shaders/Batch.frag");
 
 	// Compile the shaders.
-	shader = Shader(vertexCode, fragmentCode);
+	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
+
 	// Get the indices of the uniforms and attributes.
 	scaleI = shader.Uniform("scale");
 	frameCountI = shader.Uniform("frameCount");

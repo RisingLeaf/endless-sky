@@ -16,6 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "LineShader.h"
 
 #include "Color.h"
+#include "Files.h"
 #include "Point.h"
 #include "Screen.h"
 #include "Shader.h"
@@ -40,38 +41,12 @@ namespace {
 
 void LineShader::Init()
 {
-	static const char *vertexCode =
-		"// vertex line shader\n"
-		"uniform vec2 scale;\n"
-		"uniform vec2 start;\n"
-		"uniform vec2 len;\n"
-		"uniform vec2 width;\n"
+	const string vertexCode = Files::Read(Files::Data() + "shaders/Line.vert");
+	const string fragmentCode = Files::Read(Files::Data() + "shaders/Line.frag");
 
-		"in vec2 vert;\n"
-		"out vec2 tpos;\n"
-		"out float tscale;\n"
+	// Compile the shaders.
+	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 
-		"void main() {\n"
-		"  tpos = vert;\n"
-		"  tscale = length(len);\n"
-		"  gl_Position = vec4((start + vert.x * len + vert.y * width) * scale, 0, 1);\n"
-		"}\n";
-
-	static const char *fragmentCode =
-		"// fragment line shader\n"
-		"precision mediump float;\n"
-		"uniform vec4 color;\n"
-
-		"in vec2 tpos;\n"
-		"in float tscale;\n"
-		"out vec4 finalColor;\n"
-
-		"void main() {\n"
-		"  float alpha = min(tscale - abs(tpos.x * (2.f * tscale) - tscale), 1.f - abs(tpos.y));\n"
-		"  finalColor = color * alpha;\n"
-		"}\n";
-
-	shader = Shader(vertexCode, fragmentCode);
 	scaleI = shader.Uniform("scale");
 	startI = shader.Uniform("start");
 	lengthI = shader.Uniform("len");

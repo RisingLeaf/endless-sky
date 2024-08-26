@@ -15,6 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "FogShader.h"
 
+#include "Files.h"
 #include "GameData.h"
 #include "PlayerInfo.h"
 #include "Point.h"
@@ -64,36 +65,12 @@ namespace {
 
 void FogShader::Init()
 {
-	static const char *vertexCode =
-		"// vertex fog shader\n"
-		"uniform vec2 corner;\n"
-		"uniform vec2 dimensions;\n"
+	const string vertexCode = Files::Read(Files::Data() + "shaders/Fog.vert");
+	const string fragmentCode = Files::Read(Files::Data() + "shaders/Fog.frag");
 
-		"in vec2 vert;\n"
-		"out vec2 fragTexCoord;\n"
+	// Compile the shaders.
+	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 
-		"void main() {\n"
-		"  gl_Position = vec4(corner + vert * dimensions, 0, 1);\n"
-		"  fragTexCoord = vert;\n"
-		"}\n";
-
-	static const char *fragmentCode =
-		"// fragment fog shader\n"
-#ifdef ES_GLES
-		"precision mediump sampler2D;\n"
-#endif
-		"precision mediump float;\n"
-		"uniform sampler2D tex;\n"
-
-		"in vec2 fragTexCoord;\n"
-		"out vec4 finalColor;\n"
-
-		"void main() {\n"
-		"  finalColor = vec4(0, 0, 0, texture(tex, fragTexCoord).r);\n"
-		"}\n";
-
-	// Compile the shader and store indices to its variables.
-	shader = Shader(vertexCode, fragmentCode);
 	cornerI = shader.Uniform("corner");
 	dimensionsI = shader.Uniform("dimensions");
 

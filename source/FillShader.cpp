@@ -16,11 +16,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "FillShader.h"
 
 #include "Color.h"
+#include "Files.h"
 #include "Point.h"
 #include "Screen.h"
 #include "Shader.h"
 
 #include <stdexcept>
+#include <string>
+
+using namespace std;
 
 namespace {
 	Shader shader;
@@ -37,30 +41,12 @@ namespace {
 
 void FillShader::Init()
 {
-	static const char *vertexCode =
-		"// vertex fill shader\n"
-		"uniform vec2 scale;\n"
-		"uniform vec2 center;\n"
-		"uniform vec2 size;\n"
+	const string vertexCode = Files::Read(Files::Data() + "shaders/Fill.vert");
+	const string fragmentCode = Files::Read(Files::Data() + "shaders/Fill.frag");
 
-		"in vec2 vert;\n"
+	// Compile the shaders.
+	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 
-		"void main() {\n"
-		"  gl_Position = vec4((center + vert * size) * scale, 0, 1);\n"
-		"}\n";
-
-	static const char *fragmentCode =
-		"// fragment fill shader\n"
-		"precision mediump float;\n"
-		"uniform vec4 color;\n"
-
-		"out vec4 finalColor;\n"
-
-		"void main() {\n"
-		"  finalColor = color;\n"
-		"}\n";
-
-	shader = Shader(vertexCode, fragmentCode);
 	scaleI = shader.Uniform("scale");
 	centerI = shader.Uniform("center");
 	sizeI = shader.Uniform("size");
