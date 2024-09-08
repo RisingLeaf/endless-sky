@@ -36,7 +36,8 @@ float Sobel(float layer) {
   return sum;
 }
 
-void main() {
+void main()
+{
   float first = floor(frame);
   float second = mod(ceil(frame), frameCount);
   float fade = frame - first;

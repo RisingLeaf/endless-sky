@@ -8,7 +8,8 @@ in vec2 coord;
 
 out vec4 finalColor;
 
-void main() {
+void main()
+{
   float height = (coord.x + coord.y) / size.x;
   float taper = height * height * height;
   taper *= taper * .5 * size.x;

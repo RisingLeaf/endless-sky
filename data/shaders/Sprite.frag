@@ -16,7 +16,8 @@ in vec2 fragTexCoord;
 
 out vec4 finalColor;
 
-void main() {
+void main()
+{
   float first = floor(frame);
   float second = mod(ceil(frame), frameCount);
   float fade = frame - first;

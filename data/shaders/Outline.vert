@@ -8,7 +8,8 @@ in vec2 vertTexCoord;
 
 out vec2 fragTexCoord;
 
-void main() {
+void main()
+{
   fragTexCoord = vertTexCoord;
   gl_Position = vec4((transform * vert + position) * scale, 0, 1);
 }

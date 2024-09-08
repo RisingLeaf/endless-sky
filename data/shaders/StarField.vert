@@ -12,7 +12,8 @@ in float corner;
 out float fragmentAlpha;
 out vec2 coord;
 
-void main() {
+void main()
+{
   fragmentAlpha = brightness * (4. / (4. + elongation)) * size * .2 + .05;
   coord = vec2(sin(corner), cos(corner));
   vec2 elongated = vec2(coord.x * size, coord.y * (size + elongation));

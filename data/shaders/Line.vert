@@ -9,7 +9,8 @@ in vec2 vert;
 out vec2 tpos;
 out float tscale;
 
-void main() {
+void main()
+{
   tpos = vert;
   tscale = length(len);
   gl_Position = vec4((start + vert.x * len + vert.y * width) * scale, 0, 1);

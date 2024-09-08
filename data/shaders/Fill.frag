@@ -5,6 +5,7 @@ uniform vec4 color;
 
 out vec4 finalColor;
 
-void main() {
+void main()
+{
   finalColor = color;
 }

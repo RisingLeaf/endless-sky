@@ -11,7 +11,8 @@ in vec2 vert;
 
 out vec2 coord;
 
-void main() {
+void main()
+{
   coord = vert * size.x;
   vec2 base = center + angle * (offset - size.y * (vert.x + vert.y));
   vec2 wing = vec2(angle.y, -angle.x) * (size.x * .5 * (vert.x - vert.y));

@@ -8,6 +8,7 @@ in vec2 texCoord;
 
 out vec4 finalColor;
 
-void main() {
+void main()
+{
   finalColor = texture(tex, texCoord).a * color;
 }

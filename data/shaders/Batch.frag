@@ -10,7 +10,8 @@ in float fragAlpha;
 
 out vec4 finalColor;
 
-void main() {
+void main()
+{
   float first = floor(fragTexCoord.z);
   float second = mod(ceil(fragTexCoord.z), frameCount);
   float fade = fragTexCoord.z - first;

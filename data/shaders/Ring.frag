@@ -14,7 +14,8 @@ in vec2 coord;
 
 out vec4 finalColor;
 
-void main() {
+void main()
+{
   float arc = mod(atan(coord.x, coord.y) + pi + startAngle, 2.f * pi);
   float arcFalloff = 1.f - min(2.f * pi - arc, arc - angle) * radius;
   if(dash != 0.f)
