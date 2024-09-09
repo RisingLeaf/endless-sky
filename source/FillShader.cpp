@@ -41,8 +41,8 @@ namespace {
 
 void FillShader::Init()
 {
-	const string vertexCode = Files::Read(Files::Data() + "shaders/Fill.vert");
-	const string fragmentCode = Files::Read(Files::Data() + "shaders/Fill.frag");
+	static const string vertexCode = Files::Read(Files::Data() + "shaders/Fill.vert");
+	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Fill.frag");
 
 	// Compile the shaders.
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());

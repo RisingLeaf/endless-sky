@@ -41,8 +41,8 @@ namespace {
 // Initialize the shaders.
 void BatchShader::Init()
 {
-	const string vertexCode = Files::Read(Files::Data() + "shaders/Batch.vert");
-	const string fragmentCode = Files::Read(Files::Data() + "shaders/Batch.frag");
+	static const string vertexCode = Files::Read(Files::Data() + "shaders/Batch.vert");
+	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Batch.frag");
 
 	// Compile the shaders.
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());

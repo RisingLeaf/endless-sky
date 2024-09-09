@@ -18,6 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "alignment.hpp"
 #include "../Color.h"
 #include "DisplayText.h"
+#include "../Files.h"
 #include "../image/ImageBuffer.h"
 #include "../Point.h"
 #include "../Preferences.h"
@@ -33,48 +34,6 @@ using namespace std;
 
 namespace {
 	bool showUnderlines = false;
-
-	const char *vertexCode =
-		"// vertex font shader\n"
-		// "scale" maps pixel coordinates to GL coordinates (-1 to 1).
-		"uniform vec2 scale;\n"
-		// The (x, y) coordinates of the top left corner of the glyph.
-		"uniform vec2 position;\n"
-		// The glyph to draw. (ASCII value - 32).
-		"uniform int glyph;\n"
-		// Aspect ratio of rendered glyph (unity by default).
-		"uniform float aspect;\n"
-
-		// Inputs from the VBO.
-		"in vec2 vert;\n"
-		"in vec2 corner;\n"
-
-		// Output to the fragment shader.
-		"out vec2 texCoord;\n"
-
-		// Pick the proper glyph out of the texture.
-		"void main() {\n"
-		"  texCoord = vec2((float(glyph) + corner.x) / 98.f, corner.y);\n"
-		"  gl_Position = vec4((aspect * vert.x + position.x) * scale.x, (vert.y + position.y) * scale.y, 0.f, 1.f);\n"
-		"}\n";
-
-	const char *fragmentCode =
-		"// fragment font shader\n"
-		"precision mediump float;\n"
-		// The user must supply a texture and a color (white by default).
-		"uniform sampler2D tex;\n"
-		"uniform vec4 color;\n"
-
-		// This comes from the vertex shader.
-		"in vec2 texCoord;\n"
-
-		// Output color.
-		"out vec4 finalColor;\n"
-
-		// Multiply the texture by the user-specified color (including alpha).
-		"void main() {\n"
-		"  finalColor = texture(tex, texCoord).a * color;\n"
-		"}\n";
 
 	const int KERN = 2;
 }
@@ -338,7 +297,10 @@ void Font::SetUpShader(float glyphW, float glyphH)
 	glyphW *= .5f;
 	glyphH *= .5f;
 
-	shader = Shader(vertexCode, fragmentCode);
+	static const string vertexCode = Files::Read(Files::Data() + "shaders/Font.vert");
+	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Font.frag");
+
+	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 	glUseProgram(shader.Object());
 	glUniform1i(shader.Uniform("tex"), 0);
 	glUseProgram(0);

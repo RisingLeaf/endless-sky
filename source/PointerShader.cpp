@@ -42,8 +42,8 @@ namespace {
 
 void PointerShader::Init()
 {
-	const string vertexCode = Files::Read(Files::Data() + "shaders/Pointer.vert");
-	const string fragmentCode = Files::Read(Files::Data() + "shaders/Pointer.frag");
+	static const string vertexCode = Files::Read(Files::Data() + "shaders/Pointer.vert");
+	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Pointer.frag");
 
 	// Compile the shaders.
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());

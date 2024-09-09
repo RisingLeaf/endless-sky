@@ -15,11 +15,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "RenderBuffer.h"
 
+#include "Files.h"
 #include "Logger.h"
 #include "Screen.h"
 #include "Shader.h"
 
 #include "opengl.h"
+
+using namespace std;
 
 namespace {
 	Shader shader;
@@ -39,60 +42,10 @@ namespace {
 // Initialize the shaders.
 void RenderBuffer::Init()
 {
-	static const char *vertexCode =
-		"// vertex blit shader\n"
-		"precision mediump float;\n"
-		"uniform vec2 size;\n"
-		"uniform vec2 position;\n"
-		"uniform vec2 scale;\n"
+	static const string vertexCode = Files::Read(Files::Data() + "shaders/RenderBuffer.vert");
+	static const string fragmentCode = Files::Read(Files::Data() + "shaders/RenderBuffer.frag");
 
-		"uniform vec2 srcposition;\n"
-		"uniform vec2 srcscale;\n"
-
-		"in vec2 vert;\n"
-		"out vec2 tpos;\n"
-		"out vec2 vpos;\n"
-
-		"void main() \n"
-		"{\n"
-		"  gl_Position = vec4((position + vert * size) * scale, 0, 1);\n"
-		"  vpos = vert + vec2(.5, .5);\n"         // Convert from vertex to texture coordinates.
-		"  vec2 tsize = size * srcscale;\n"       // Convert from screen to texture coordinates.
-		"  vec2 tsrc = srcposition * srcscale;\n" // Convert from screen to texture coordinates.
-		"  tpos = vpos * tsize + tsrc;\n"
-		"  tpos.y = 1.0 - tpos.y;\n"              // Negative is up.
-		"}\n";
-
-	static const char *fragmentCode =
-		"// fragment blit shader\n"
-		"precision mediump float;\n"
-#ifdef ES_GLES
-		"precision mediump sampler2D;\n"
-#endif
-		"uniform sampler2D tex;\n"
-		"uniform vec4 fade;\n"
-
-		"in vec2 tpos;\n"
-		"in vec2 vpos;\n"
-		"out vec4 finalColor;\n"
-
-		"void main() {\n"
-		// Using epsilon here to prevent dividing by zero, which breaks the
-		// shader on nvidia cards.
-		"  float epsilon = .001;"
-		"  float weightTop = clamp((vpos.y + epsilon) / (fade[0] + epsilon), 0.0, 1.0);\n"
-		"  float weightBottom = clamp(((1.0 - vpos.y) + epsilon) / (fade[1] + epsilon), 0.0, 1.0);\n"
-		"  float weightLeft = clamp((vpos.x + epsilon) / (fade[2] + epsilon), 0.0, 1.0);\n"
-		"  float weightRight = clamp(((1.0 - vpos.x) + epsilon) / (fade[3] + epsilon), 0.0, 1.0);\n"
-		"  float weight = min(min(min(weightTop, weightBottom), weightLeft), weightRight);\n"
-		"  if(tpos.x > 0.0 && tpos.y > 0.0 &&\n"
-		"      tpos.x < 1.0 && tpos.y < 1.0 )\n"
-		"    finalColor = texture(tex, tpos) * weight;\n"
-		"  else\n"
-		"    discard;\n"
-		"}\n";
-
-	shader = Shader(vertexCode, fragmentCode);
+	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
 	sizeI = shader.Uniform("size");
 	positionI = shader.Uniform("position");
 	scaleI = shader.Uniform("scale");

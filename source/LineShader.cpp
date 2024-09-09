@@ -41,8 +41,8 @@ namespace {
 
 void LineShader::Init()
 {
-	const string vertexCode = Files::Read(Files::Data() + "shaders/Line.vert");
-	const string fragmentCode = Files::Read(Files::Data() + "shaders/Line.frag");
+	static const string vertexCode = Files::Read(Files::Data() + "shaders/Line.vert");
+	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Line.frag");
 
 	// Compile the shaders.
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());

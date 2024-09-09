@@ -65,8 +65,8 @@ namespace {
 
 void FogShader::Init()
 {
-	const string vertexCode = Files::Read(Files::Data() + "shaders/Fog.vert");
-	const string fragmentCode = Files::Read(Files::Data() + "shaders/Fog.frag");
+	static const string vertexCode = Files::Read(Files::Data() + "shaders/Fog.vert");
+	static const string fragmentCode = Files::Read(Files::Data() + "shaders/Fog.frag");
 
 	// Compile the shaders.
 	shader = Shader(vertexCode.c_str(), fragmentCode.c_str());
