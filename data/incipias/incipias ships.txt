@@ -238,8 +238,8 @@ ship "Gero"
 	"final explode" "final explosion medium"
 	description "The completion of Pon'tes caused a huge increase in travel between the station and Redias. Designers from Alto Shipyards quickly saw an opportunity and so the Incipias' first transport ship was built."
 
-ship "Rimor"
-	"sprite" ship/gero
+ship "Rimo"
+	"sprite" ship/rimo
 	"thumbnail" thumbnail/gero
 	"swizzle" 0
 	attributes
@@ -249,25 +249,22 @@ ship "Rimor"
 		"shields" 200
 		"required crew" 0
 		"bunks" 0
-		"mass" 40
+		"mass" 90
 		"drag" 8.4
 		"heat dissipation" .58
 		"cargo space" 20
-		"outfit space" 158
-		"engine capacity" 54
-		"gaslining" 1
-		"fuel capacity" 200
+		"outfit space" 85
+		"engine capacity" 60
+		"fuel capacity" 100
+		"solar collection" 0.1
 	outfits
-		"Gas-Class Shield"
 		"Metallic Hydrogen Cell"
 
 		"MH Blue-Class Thruster"
 		"MH Blue-Class Steering"
+	
+	engine 0 12.5
 
-	engine -41 76.5
-	engine 0 76.5
-	engine 41 76.5
-	explode "medium explosion" 20
-	explode "large explosion" 30
-	"final explode" "final explosion medium"
-	description "The completion of Pon'tes caused a huge increase in travel between the station and Redias. Designers from Alto Shipyards quickly saw an opportunity and so the Incipias' first transport ship was built."
+	explode "small explosion" 10
+	"final explode" "final explosion small"
+	description "The Rimo is a test drone for scientific purposes, because of the high level electronic research devices it costs a lot more than its size suggests."
