@@ -240,7 +240,8 @@ ship "Gero"
 
 ship "Rimo"
 	"sprite" ship/rimo
-	"thumbnail" thumbnail/gero
+		"frame rate" 0.5
+	"thumbnail" thumbnail/rimo
 	"swizzle" 0
 	attributes
 		"category" "Drone"

@@ -224,6 +224,7 @@ shipyard "Hicemus"
 	"Nimbo Stratus"
 	"Nimbus"
 	"Gero"
+	"Rimo"
 
 news "Incipias common"
 	location
