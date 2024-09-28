@@ -237,3 +237,37 @@ ship "Gero"
 	explode "large explosion" 30
 	"final explode" "final explosion medium"
 	description "The completion of Pon'tes caused a huge increase in travel between the station and Redias. Designers from Alto Shipyards quickly saw an opportunity and so the Incipias' first transport ship was built."
+
+ship "Rimor"
+	"sprite" ship/gero
+	"thumbnail" thumbnail/gero
+	"swizzle" 0
+	attributes
+		"category" "Drone"
+		"cost" 5000000
+		"hull" 20
+		"shields" 200
+		"required crew" 0
+		"bunks" 0
+		"mass" 40
+		"drag" 8.4
+		"heat dissipation" .58
+		"cargo space" 20
+		"outfit space" 158
+		"engine capacity" 54
+		"gaslining" 1
+		"fuel capacity" 200
+	outfits
+		"Gas-Class Shield"
+		"Metallic Hydrogen Cell"
+
+		"MH Blue-Class Thruster"
+		"MH Blue-Class Steering"
+
+	engine -41 76.5
+	engine 0 76.5
+	engine 41 76.5
+	explode "medium explosion" 20
+	explode "large explosion" 30
+	"final explode" "final explosion medium"
+	description "The completion of Pon'tes caused a huge increase in travel between the station and Redias. Designers from Alto Shipyards quickly saw an opportunity and so the Incipias' first transport ship was built."

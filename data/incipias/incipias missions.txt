@@ -1,0 +1,13 @@
+mission "Incipias: The first spy"
+	source "Pon'tes"
+	destination "Pon'tes"
+	to offer
+		has "Incipias: Help The Stranded 2: done"
+        random < 10
+	on offer
+		conversation
+			`As you enter <origin> spaceport, you notice a group of four Incipias standing out, as they each have metal band embeded with what look like very colorful gems around one of their tentacles. They recognize you and hastily float towards you.`
+            `   ""`
+	on complete
+		conversation
+			
